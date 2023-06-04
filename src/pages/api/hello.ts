@@ -1,13 +1,22 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import axios from "axios";
+import getConfig from "next/config";
 
-type Data = {
-  name: string
-}
+const CAConnectionInstance = axios.create({
+  timeout: 20000,
+  baseURL: "http://localhost:4000",
+});
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: 'John Doe' })
-}
+const { publicRuntimeConfig } = getConfig();
+
+export default axios.create({
+  baseURL: publicRuntimeConfig.apiURl,
+});
+
+CAConnectionInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export { CAConnectionInstance };
