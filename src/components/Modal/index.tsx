@@ -34,10 +34,10 @@ const CAModal = ({
           py: theme.spacing(3),
           px: hasPaddingHorizontal ? theme.spacing(3) : 0,
           [theme.breakpoints.up("md")]: {
-            width: theme.spacing(75),
+            width: theme.spacing(55),
           },
           [theme.breakpoints.up("lg")]: {
-            width: theme.spacing(90),
+            width: theme.spacing(70),
           },
           ...containerProps?.sx,
         }}

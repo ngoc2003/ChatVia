@@ -7,14 +7,21 @@ export interface CreateConversationParams {
   email: string;
 }
 
-const CreateConversationModal = (props: Omit<ModalProps, "children">) => {
+interface CreateConversationModalProps extends Omit<ModalProps, "children"> {
+  setConversation: any;
+}
+
+const CreateConversationModal = ({
+  setConversation,
+  ...props
+}: CreateConversationModalProps) => {
   return (
     <CAModal {...props}>
       <>
         <Typography mb={2} variant="h6">
           Create new conversation
         </Typography>
-        <CreateConversationForm />
+        <CreateConversationForm onCloseModal={props.onClose} setConversation={setConversation} />
       </>
     </CAModal>
   );

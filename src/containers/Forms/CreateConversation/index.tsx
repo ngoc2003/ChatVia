@@ -9,8 +9,18 @@ import { CreateConversationParams } from "@containers/Modals/CreateConversation"
 import { CAConnectionInstance } from "@pages/api/hello";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
+import useSocket from "@hooks/useSocket";
 
-const CreateConversationForm = () => {
+interface CreateConversationFormProps {
+  setConversation: (conversations: any) => void;
+  onCloseModal: () => void;
+}
+
+const CreateConversationForm = ({
+  setConversation,
+  onCloseModal,
+}: CreateConversationFormProps) => {
+  const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
   const schema = Yup.object({
     email: Yup.string().email("Must be valid email").required("Required"),
@@ -21,8 +31,6 @@ const CreateConversationForm = () => {
     handleSubmit,
   } = useForm<CreateConversationParams>({ resolver: yupResolver(schema) });
 
-  console.log(user);
-
   const onSubmit = async (values: CreateConversationParams) => {
     const response = await CAConnectionInstance.post(
       "http://localhost:4000/conversations",
@@ -31,7 +39,16 @@ const CreateConversationForm = () => {
         receiverEmail: values.email,
       }
     );
-    console.log(response);
+
+    setConversation((prev) => [response.data, ...prev]);
+
+    socket.current.emit("createConversation", {
+      ...response.data,
+      receiverId: response.data.members.find(
+        (conv: string) => conv !== user.id
+      ),
+    });
+    onCloseModal();
   };
 
   return (

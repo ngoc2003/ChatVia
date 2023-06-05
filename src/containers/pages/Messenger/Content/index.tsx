@@ -9,18 +9,18 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
+import useSocket from "@hooks/useSocket";
+import { io } from "socket.io-client";
 
 interface ContentProps extends BoxProps {
   messages: any;
   setMessages: (conversation: any) => void;
   arrivalMessage: any;
-  socket: any;
   receiverId: string;
   conversationId: string;
 }
 
 const Content = ({
-  socket,
   conversationId,
   setMessages,
   messages,
@@ -31,6 +31,7 @@ const Content = ({
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const [text, setText] = useState<string>("");
   const scrollRef = useRef<HTMLElement | null>(null);
+  const socket = useSocket();
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -44,22 +45,22 @@ const Content = ({
       text,
       conversationId,
     };
-
-    socket.current.emit("sendMessage", {
-      senderId: currentUserId,
-      receiverId: receiverId,
-      text,
-    });
     const response = await axios.post(
       `http://localhost:4000/messages`,
       message
     );
     setMessages([...messages, response.data]);
     setText("");
+
+    socket.current.emit("sendMessage", {
+      senderId: currentUserId,
+      receiverId: receiverId,
+      text,
+    });
   };
 
   useEffect(() => {
-    scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef?.current?.scrollIntoView();
   }, [messages?.length]);
 
   useEffect(() => {

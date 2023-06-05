@@ -4,47 +4,25 @@ import Online from "@containers/pages/Messenger/Online";
 import { Box } from "@mui/material";
 import { theme } from "@theme";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import cookie from "cookie";
 import { NextSeo } from "next-seo";
-import { Socket, io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import Topbar from "@containers/pages/Messenger/Topbar";
-import CreateConversationModal from "@containers/Modals/CreateConversation";
+import useSocket from "@hooks/useSocket";
 
 const Messenger = () => {
-  const [friendInformation, setFriendInformation] = useState(null);
-  const [currentConversation, setCurrentConversation] = useState(null);
+  const socket = useSocket();
   const [messages, setMessages] = useState<any>([]);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-  const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
-    useState<boolean>(true);
+  const [friendInformation, setFriendInformation] = useState(null);
+  const [currentConversation, setCurrentConversation] = useState(null);
+  const [arrivalConversation, setArrivalConversation] = useState<any>(null);
 
   const user = useSelector((state: AppState) => state.auth);
 
-  const socket = useRef<Socket | null>(null);
-
   useEffect(() => {
-    if (user.id && socket?.current) {
-      socket.current.emit("addUser", user.id);
-      socket.current.on("getUsers ", (users) => {
-        console.log(users);
-      });
-    }
-  }, [user.id]);
-
-  const handleOpenAddConversationModal = () => {
-    setIsOpenAddConversationModal(true);
-  };
-  const handleCloseAddConversationModal = () => {
-    setIsOpenAddConversationModal(false);
-  };
-
-  useEffect(() => {
-    socket.current = io("localhost:5000", {
-      transports: ["websocket"],
-    });
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
@@ -52,7 +30,15 @@ const Messenger = () => {
         createdAt: new Date(),
       });
     });
+    socket.current.on("getConversation", (data) => {
+      console.log(data);
+      setArrivalConversation(data);
+    });
   }, []);
+
+  console.log(arrivalMessage);
+
+  console.log(arrivalConversation);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -68,13 +54,13 @@ const Messenger = () => {
     getMessages();
   }, [currentConversation?._id]);
 
+  if (!socket) {
+    return;
+  }
+
   return (
     <Box height="100vh" display="flex" flexDirection="column">
       <Topbar />
-      <CreateConversationModal
-        open={isOpenAddConversationModal}
-        onClose={handleCloseAddConversationModal}
-      />
       <NextSeo
         {...(friendInformation
           ? { title: "Chat via - " + friendInformation.name }
@@ -87,7 +73,7 @@ const Messenger = () => {
         bgcolor={theme.palette.common.white}
       >
         <MenuChat
-          setOpenAddConversationModal={handleOpenAddConversationModal}
+          arrivalConversation={arrivalConversation}
           currentConversationId={currentConversation?._id ?? ""}
           setCurrentConversation={setCurrentConversation}
           setFriendInformation={setFriendInformation}
@@ -97,7 +83,6 @@ const Messenger = () => {
         <Content
           conversationId={currentConversation?._id ?? ""}
           arrivalMessage={arrivalMessage}
-          socket={socket}
           receiverId={
             currentConversation?.members.find((member) => member !== user.id) ??
             ""

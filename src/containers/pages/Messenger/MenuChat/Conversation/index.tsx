@@ -33,7 +33,7 @@ const Conversation = ({
   isActive,
   ...props
 }: ConversationProps) => {
-  const [user, setUser] = useState<any>();
+  const [friend, setFriend] = useState<any>();
   const currentUserId = useSelector((state: AppState) => state.auth.id);
 
   useEffect(() => {
@@ -47,17 +47,19 @@ const Conversation = ({
           userId: friendId,
         },
       });
-      setUser(response.data);
+      setFriend(response.data);
     };
     getUser();
-  }, []);
+  }, [conversation.members, currentUserId]);
+
+  console.log(conversation);
 
   return (
     <Box
       {...props}
       onClick={() => {
         onClick();
-        setFriendInformation({ name: user.username });
+        setFriendInformation({ name: friend.username });
       }}
       sx={{
         p: 1.5,
@@ -84,18 +86,18 @@ const Conversation = ({
         >
           <Avatar
             sx={{ width: 36, height: 36 }}
-            src={user?.avatar ?? "/images/avatar-default.svg"}
+            src={friend?.avatar ?? "/images/avatar-default.svg"}
           />
         </StyledBadge>
       </Box>
       <Box flex={1}>
-        <Typography fontWeight={600}>{user?.username ?? ""}</Typography>
+        <Typography fontWeight={600}>{friend?.username ?? ""}</Typography>
         {!!conversation?.lastMessage && (
           <Typography variant="caption" color={theme.palette.grey[600]}>
-            {conversation.lastMessage.sender === currentUserId
+            {(conversation.lastMessage.sender !== currentUserId
               ? "Bạn: "
-              : `${getLastWordOfString(user?.username)}: ` +
-                conversation.lastMessage.text}
+              : `${getLastWordOfString(friend?.username)}: `) +
+              conversation.lastMessage.text}
           </Typography>
         )}
       </Box>

@@ -4,11 +4,14 @@ import { theme } from "@theme";
 import Image from "next/image";
 import React from "react";
 import getConfig from "next/config";
+import { useRouter } from "next/router";
 const { publicRuntimeConfig } = getConfig();
 
 const Topbar = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const router = useRouter();
   const { clearCookieData } = useGetCookieData();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -16,8 +19,9 @@ const Topbar = () => {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    clearCookieData(publicRuntimeConfig.ACCESS_TOKEN_SECRET as string);
     handleClose();
+    router.push("/auth");
+    clearCookieData(publicRuntimeConfig.ACCESS_TOKEN_SECRET as string);
   };
   return (
     <Box
