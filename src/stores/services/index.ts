@@ -1,5 +1,5 @@
-import { CAConnectionInstance } from '@pages/api/hello';
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { CAConnectionInstance } from "@pages/api/hello";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 const axiosBaseQuery = () => async (axiosConfigs) => {
   const { body, ...configs } = axiosConfigs;
@@ -28,7 +28,7 @@ const baseRtkApi = createApi({
   keepUnusedDataFor: 15,
   refetchOnReconnect: true,
   endpoints: () => ({}),
-  tagTypes: ['user'],
+  tagTypes: ["conversation", "message", "user"],
 });
 
 export default baseRtkApi;

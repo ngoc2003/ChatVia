@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import Topbar from "@containers/pages/Messenger/Topbar";
 import useSocket from "@hooks/useSocket";
+import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
 
 const Messenger = () => {
   const socket = useSocket();
@@ -35,19 +36,15 @@ const Messenger = () => {
     });
   }, []);
 
+  const [getMessage] = useLazyGetMessageListByConversationIdQuery();
+
   useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/messages/${currentConversation?._id}`
-        );
-        setMessages(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getMessages();
-  }, [currentConversation?._id]);
+    getMessage({ conversationId: currentConversation?._id })
+      .unwrap()
+      .then((response) => {
+        setMessages(response);
+      });
+  }, [currentConversation?._id, getMessage]);
 
   if (!socket) {
     return;

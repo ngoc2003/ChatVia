@@ -3,13 +3,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { ErrorText } from "@components/TextField/ErrorText";
-import { Button, Box } from "@mui/material";
+import { Button, Box, CircularProgress } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateConversationParams } from "@containers/Modals/CreateConversation";
-import { CAConnectionInstance } from "@pages/api/hello";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
+import { useCreateConversationMutation } from "@stores/services/conversation";
 
 interface CreateConversationFormProps {
   setConversation: (conversations: any) => void;
@@ -24,35 +24,38 @@ const CreateConversationForm = ({
 }: CreateConversationFormProps) => {
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
+
+  const [createConversation, { isLoading: isCreateConversationLoading }] =
+    useCreateConversationMutation();
+
   const schema = Yup.object({
     email: Yup.string().email("Must be valid email").required("Required"),
   }).required();
   const {
     register,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm<CreateConversationParams>({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: CreateConversationParams) => {
-    const response = await CAConnectionInstance.post(
-      "http://localhost:4000/conversations",
-      {
-        senderId: user.id,
-        receiverEmail: values.email,
-      }
-    );
+    createConversation({
+      senderId: user.id,
+      receiverEmail: values.email,
+    })
+      .unwrap()
+      .then((response) => {
+        console.log(response);
+        setConversation((prev) => [response, ...prev]);
 
-    setConversation((prev) => [response.data, ...prev]);
-
-    socket.current.emit("createConversation", {
-      ...response.data,
-      receiverId: response.data.members.find(
-        (conv: string) => conv !== user.id
-      ),
-    });
-    if (onCloseModal) {
-      onCloseModal({}, "escapeKeyDown");
-    }
+        socket.current.emit("createConversation", {
+          ...response,
+          receiverId: response.members.find((conv: string) => conv !== user.id),
+        });
+        if (onCloseModal) {
+          onCloseModal({}, "escapeKeyDown");
+        }
+      });
   };
 
   return (
@@ -68,8 +71,17 @@ const CreateConversationForm = ({
           content={errors.email?.message}
         />
       </Box>
-      <Button variant="contained" fullWidth onClick={handleSubmit(onSubmit)}>
-        Create
+      <Button
+        disabled={!watch("email")}
+        variant="contained"
+        fullWidth
+        onClick={handleSubmit(onSubmit)}
+      >
+        {isCreateConversationLoading ? (
+          <CircularProgress size={20} />
+        ) : (
+          <>Create</>
+        )}
       </Button>
     </>
   );

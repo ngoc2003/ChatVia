@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import useSocket from "@hooks/useSocket";
 import { Avatar, Badge, Box, BoxProps, Typography } from "@mui/material";
 import { AppState } from "@stores";
+import { useLazyGetUserByIdQuery } from "@stores/services/user";
 import { theme } from "@theme";
 import { getLastWordOfString } from "@utils/common";
 import axios from "axios";
@@ -42,29 +43,32 @@ const Conversation = ({
     const friendId = conversation.members?.find(
       (conv: string) => conv !== currentUserId
     );
+
     socket?.current.on("getUsers", (users) => {
       console.log(users);
       setIsOnline(users.some((user) => user.userId === friendId));
     });
   }, []);
 
+  const [getUserById] = useLazyGetUserByIdQuery();
+
   useEffect(() => {
     const friendId = conversation.members?.find(
       (conv: string) => conv !== currentUserId
     );
 
-    const getUser = async () => {
-      const response = await axios.get("http://localhost:4000/users", {
-        params: {
-          userId: friendId,
-        },
+    getUserById({
+      userId: friendId,
+    })
+      .unwrap()
+      .then((response) => {
+        setFriend(response);
       });
-      setFriend(response.data);
-    };
-    getUser();
-  }, [conversation.members, currentUserId]);
+  }, [conversation.members, currentUserId, getUserById]);
 
-  console.log(isOnline);
+  if (!friend) {
+    return <></>;
+  }
 
   return (
     <Box
@@ -107,7 +111,7 @@ const Conversation = ({
         <Typography fontWeight={600}>{friend?.username ?? ""}</Typography>
         {!!conversation?.lastMessage && (
           <Typography variant="caption" color={theme.palette.grey[600]}>
-            {(conversation.lastMessage.sender !== currentUserId
+            {(conversation.lastMessage.sender === currentUserId
               ? "Bạn: "
               : `${getLastWordOfString(friend?.username)}: `) +
               conversation.lastMessage.text}

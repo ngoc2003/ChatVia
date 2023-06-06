@@ -1,20 +1,17 @@
-import baseRtkApi from '..';
-import { AuthResponse } from '../../../typing/auth';
-import { GetUserHeader } from '../typing';
+import baseRtkApi from "..";
 
-export const requestApi = baseRtkApi.injectEndpoints({
+const UserApi = baseRtkApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<AuthResponse, GetUserHeader>({
-      query: (headers) => ({
-        url: 'auth/me',
-        method: 'POST',
-        headers,
+    getUserById: builder.query({
+      query: (params) => ({
+        url: "/users",
+        params,
       }),
-      providesTags: ['user'],
+      providesTags: ["user"],
     }),
   }),
 });
 
-export default requestApi;
+export default UserApi;
 
-export const { useGetUserQuery, useLazyGetUserQuery } = requestApi;
+export const { useLazyGetUserByIdQuery } = UserApi;

@@ -1,4 +1,10 @@
-import { Box, BoxProps, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { theme } from "@theme";
 import React, { useState, useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -10,6 +16,10 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
 import useSocket from "@hooks/useSocket";
+import {
+  useGetConversationListByUserIdQuery,
+  useLazyGetConversationListByUserIdQuery,
+} from "@stores/services/conversation";
 
 interface MenuChatProps extends BoxProps {
   messages: any;
@@ -30,11 +40,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   ...props
 }: MenuChatProps) => {
   const socket = useSocket();
+  const user = useSelector((state: AppState) => state.auth);
+  const [conversations, setConversations] = useState<any>([]);
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
-  const [conversations, setConversations] = useState<any>([]);
-
-  const user = useSelector((state: AppState) => state.auth);
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -92,17 +101,16 @@ const MenuChat: React.FC<MenuChatProps> = ({
     }
   }, [messages.length]);
 
+  const [getConversation, { isFetching: isGetConversationFetching }] =
+    useLazyGetConversationListByUserIdQuery();
+
   useEffect(() => {
-    const getConversation = async () => {
-      const response = await axios.get(
-        `http://localhost:4000/conversations/${user.id}`
-      );
-      setConversations(response.data);
-    };
     if (user.id) {
-      getConversation();
+      getConversation({ userId: user.id })
+        .unwrap()
+        .then((response) => setConversations(response));
     }
-  }, [setConversations, user.id, arrivalMessage]);
+  }, [setConversations, user.id, arrivalMessage, getConversation]);
 
   useEffect(() => {
     arrivalConversation &&
@@ -154,15 +162,21 @@ const MenuChat: React.FC<MenuChatProps> = ({
       <Typography variant="subtitle2" fontWeight={600} my={3}>
         Recent
       </Typography>
-      {conversations.map((conversation: any) => (
-        <Conversation
-          isActive={currentConversationId === conversation._id}
-          onClick={() => setCurrentConversation(conversation)}
-          setFriendInformation={setFriendInformation}
-          conversation={conversation}
-          key={"conversation" + conversation._id}
-        />
-      ))}
+      {isGetConversationFetching ? (
+        <Box>
+          <CircularProgress size={20} />
+        </Box>
+      ) : (
+        conversations.map((conversation: any) => (
+          <Conversation
+            isActive={currentConversationId === conversation._id}
+            onClick={() => setCurrentConversation(conversation)}
+            setFriendInformation={setFriendInformation}
+            conversation={conversation}
+            key={"conversation" + conversation._id}
+          />
+        ))
+      )}
     </Box>
   );
 };

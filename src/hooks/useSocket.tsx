@@ -1,11 +1,14 @@
 import { AppState } from "@stores";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Socket, io } from "socket.io-client";
 
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
+
 const useSocket = () => {
   const socket = useRef<Socket>(
-    io("localhost:5000", {
+    io(publicRuntimeConfig.SOCKET_API, {
       transports: ["websocket"],
     })
   );

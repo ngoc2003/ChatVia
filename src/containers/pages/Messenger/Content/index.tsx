@@ -10,6 +10,7 @@ import { AppState } from "@stores";
 import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
+import { useCreateMessageMutation } from "@stores/services/message";
 
 interface ContentProps extends BoxProps {
   messages: any;
@@ -36,6 +37,8 @@ const Content = ({
     setText(e.target.value);
   };
 
+  const [createMessage] = useCreateMessageMutation();
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -44,19 +47,20 @@ const Content = ({
       text,
       conversationId,
     };
-    const response = await axios.post(
-      `http://localhost:4000/messages`,
-      message
-    );
-    setMessages([...messages, response.data]);
-    setText("");
 
-    socket.current.emit("sendMessage", {
-      conversationId,
-      senderId: currentUserId,
-      receiverId: receiverId,
-      text,
-    });
+    createMessage(message)
+      .unwrap()
+      .then((response) => {
+        setMessages([...messages, response]);
+        setText("");
+
+        socket.current.emit("sendMessage", {
+          conversationId,
+          senderId: currentUserId,
+          receiverId: receiverId,
+          text,
+        });
+      });
   };
 
   useEffect(() => {

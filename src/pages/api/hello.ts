@@ -1,15 +1,10 @@
 import axios from "axios";
 import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
 
 const CAConnectionInstance = axios.create({
   timeout: 20000,
-  baseURL: "http://localhost:4000",
-});
-
-const { publicRuntimeConfig } = getConfig();
-
-export default axios.create({
-  baseURL: publicRuntimeConfig.apiURl,
+  baseURL: publicRuntimeConfig.BASE_API,
 });
 
 CAConnectionInstance.interceptors.response.use(

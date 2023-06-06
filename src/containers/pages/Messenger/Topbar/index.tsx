@@ -1,11 +1,11 @@
+import React from "react";
+import Image from "next/image";
+import { theme } from "@theme";
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
+import { useRouter } from "next/router";
 import useGetCookieData from "@hooks/useGetCookieData";
 import { Avatar, Box, Menu, MenuItem } from "@mui/material";
-import { theme } from "@theme";
-import Image from "next/image";
-import React from "react";
-import getConfig from "next/config";
-import { useRouter } from "next/router";
-const { publicRuntimeConfig } = getConfig();
 
 const Topbar = () => {
   const router = useRouter();
