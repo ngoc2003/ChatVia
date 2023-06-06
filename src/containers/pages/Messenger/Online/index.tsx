@@ -1,11 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { BoxProps } from "@mui/system";
+import { FriendInformationType } from "@pages";
 import { theme } from "@theme";
 import Image from "next/image";
 import React from "react";
 
 interface OnlineProps extends BoxProps {
-  friendInformation: any;
+  friendInformation: FriendInformationType | null;
 }
 
 const Online = ({ friendInformation, ...props }: OnlineProps) => {

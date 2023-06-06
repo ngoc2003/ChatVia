@@ -10,9 +10,10 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
 import { useCreateConversationMutation } from "@stores/services/conversation";
+import { ConversationType } from "@typing/common";
 
 interface CreateConversationFormProps {
-  setConversation: (conversations: any) => void;
+  setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
   onCloseModal?:
     | ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
     | undefined;
@@ -39,13 +40,16 @@ const CreateConversationForm = ({
   } = useForm<CreateConversationParams>({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: CreateConversationParams) => {
+    if (!user.id) {
+      return;
+    }
+
     createConversation({
       senderId: user.id,
       receiverEmail: values.email,
     })
       .unwrap()
       .then((response) => {
-        console.log(response);
         setConversation((prev) => [response, ...prev]);
 
         socket.current.emit("createConversation", {

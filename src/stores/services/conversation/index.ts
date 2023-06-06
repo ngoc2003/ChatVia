@@ -1,8 +1,16 @@
+import { ConversationType } from "@typing/common";
 import baseRtkApi from "..";
+import {
+  CreateConversationBody,
+  GetConversationListByUserIdReqest,
+} from "./typing";
 
 const ConversationApi = baseRtkApi.injectEndpoints({
   endpoints: (builder) => ({
-    createConversation: builder.mutation({
+    createConversation: builder.mutation<
+      ConversationType,
+      CreateConversationBody
+    >({
       query: (body) => ({
         method: "POST",
         url: "/conversations",
@@ -10,7 +18,10 @@ const ConversationApi = baseRtkApi.injectEndpoints({
       }),
       invalidatesTags: ["conversation"],
     }),
-    getConversationListByUserId: builder.query({
+    getConversationListByUserId: builder.query<
+      ConversationType[],
+      GetConversationListByUserIdReqest
+    >({
       query: ({ userId }) => ({
         method: "GET",
         url: `/conversations/${userId}`,

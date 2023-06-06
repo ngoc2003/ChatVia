@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import useSocket from "@hooks/useSocket";
 import { Avatar, Badge, Box, BoxProps, Typography } from "@mui/material";
+import { FriendInformationType } from "@pages";
 import { AppState } from "@stores";
 import { useLazyGetUserByIdQuery } from "@stores/services/user";
 import { theme } from "@theme";
+import { ConversationType, UserType } from "@typing/common";
 import { getLastWordOfString } from "@utils/common";
-import axios from "axios";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,8 +22,10 @@ const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
 }));
 
 interface ConversationProps extends BoxProps {
-  conversation: any;
-  setFriendInformation: (friendInformation: any) => void;
+  conversation: ConversationType;
+  setFriendInformation: React.Dispatch<
+    React.SetStateAction<FriendInformationType>
+  >;
   onClick: () => void;
   isActive: boolean;
 }
@@ -35,7 +38,7 @@ const Conversation = ({
   ...props
 }: ConversationProps) => {
   const socket = useSocket();
-  const [friend, setFriend] = useState<any>();
+  const [friend, setFriend] = useState<UserType | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(false);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
 
@@ -56,6 +59,10 @@ const Conversation = ({
     const friendId = conversation.members?.find(
       (conv: string) => conv !== currentUserId
     );
+
+    if (!friendId) {
+      return;
+    }
 
     getUserById({
       userId: friendId,
@@ -111,7 +118,7 @@ const Conversation = ({
         <Typography fontWeight={600}>{friend?.username ?? ""}</Typography>
         {!!conversation?.lastMessage && (
           <Typography variant="caption" color={theme.palette.grey[600]}>
-            {(conversation.lastMessage.sender === currentUserId
+            {(conversation.lastMessage.id === currentUserId
               ? "Bạn: "
               : `${getLastWordOfString(friend?.username)}: `) +
               conversation.lastMessage.text}

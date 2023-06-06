@@ -11,22 +11,24 @@ import AddIcon from "@mui/icons-material/Add";
 import MSTextField from "@components/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import Conversation from "./Conversation";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
 import useSocket from "@hooks/useSocket";
-import {
-  useGetConversationListByUserIdQuery,
-  useLazyGetConversationListByUserIdQuery,
-} from "@stores/services/conversation";
+import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
+import { ConversationType, MessageType } from "@typing/common";
+import { ArrivalMessageType, FriendInformationType } from "@pages";
 
 interface MenuChatProps extends BoxProps {
-  messages: any;
-  arrivalMessage: any;
-  arrivalConversation: any;
-  setCurrentConversation: (conversation: any) => void;
-  setFriendInformation: (friendInformation: any) => void;
+  messages: MessageType[];
+  arrivalMessage: ArrivalMessageType;
+  arrivalConversation: ConversationType;
+  setCurrentConversation: React.Dispatch<
+    React.SetStateAction<ConversationType | null>
+  >;
+  setFriendInformation: React.Dispatch<
+    React.SetStateAction<FriendInformationType>
+  >;
   currentConversationId: string;
 }
 
@@ -41,7 +43,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
 }: MenuChatProps) => {
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
-  const [conversations, setConversations] = useState<any>([]);
+  const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
 
@@ -82,6 +84,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   useEffect(() => {
     if (messages.length) {
       const lastMessages = messages[messages.length - 1];
+
+      if (!currentConversationId || !lastMessages) {
+        return;
+      }
 
       setConversations(
         conversations.map((conv) => {
@@ -167,7 +173,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
           <CircularProgress size={20} />
         </Box>
       ) : (
-        conversations.map((conversation: any) => (
+        conversations.map((conversation: ConversationType) => (
           <Conversation
             isActive={currentConversationId === conversation._id}
             onClick={() => setCurrentConversation(conversation)}

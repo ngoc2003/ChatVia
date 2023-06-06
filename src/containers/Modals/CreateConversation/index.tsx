@@ -1,6 +1,7 @@
 import CAModal from "@components/Modal";
 import CreateConversationForm from "@containers/Forms/CreateConversation";
 import { ModalProps, Typography } from "@mui/material";
+import { ConversationType } from "@typing/common";
 import React from "react";
 
 export interface CreateConversationParams {
@@ -8,7 +9,7 @@ export interface CreateConversationParams {
 }
 
 interface CreateConversationModalProps extends Omit<ModalProps, "children"> {
-  setConversation: any;
+  setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
 }
 
 const CreateConversationModal = ({

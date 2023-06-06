@@ -3,7 +3,6 @@ import MenuChat from "@containers/pages/Messenger/MenuChat";
 import Online from "@containers/pages/Messenger/Online";
 import { Box } from "@mui/material";
 import { theme } from "@theme";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import cookie from "cookie";
 import { NextSeo } from "next-seo";
@@ -12,13 +11,23 @@ import { AppState } from "@stores";
 import Topbar from "@containers/pages/Messenger/Topbar";
 import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
+import { ConversationType, MessageType } from "@typing/common";
+
+export interface FriendInformationType {
+  name: string;
+}
+
+export interface ArrivalMessageType
+  extends Pick<MessageType, "sender" | "text" | "createdAt"> {}
 
 const Messenger = () => {
   const socket = useSocket();
-  const [messages, setMessages] = useState<any>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-  const [friendInformation, setFriendInformation] = useState(null);
-  const [currentConversation, setCurrentConversation] = useState(null);
+  const [friendInformation, setFriendInformation] =
+    useState<FriendInformationType | null>(null);
+  const [currentConversation, setCurrentConversation] =
+    useState<ConversationType | null>(null);
   const [arrivalConversation, setArrivalConversation] = useState<any>(null);
 
   const user = useSelector((state: AppState) => state.auth);
@@ -39,6 +48,9 @@ const Messenger = () => {
   const [getMessage] = useLazyGetMessageListByConversationIdQuery();
 
   useEffect(() => {
+    if (!currentConversation?._id) {
+      return;
+    }
     getMessage({ conversationId: currentConversation?._id })
       .unwrap()
       .then((response) => {

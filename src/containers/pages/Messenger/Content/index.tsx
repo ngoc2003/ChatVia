@@ -4,18 +4,18 @@ import { Box, BoxProps, IconButton } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SendIcon from "@mui/icons-material/Send";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
 import { useCreateMessageMutation } from "@stores/services/message";
+import { MessageType } from "@typing/common";
 
 interface ContentProps extends BoxProps {
-  messages: any;
-  setMessages: (conversation: any) => void;
-  arrivalMessage: any;
+  messages: MessageType[];
+  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
+  arrivalMessage: MessageType;
   receiverId: string;
   conversationId: string;
 }
@@ -41,6 +41,10 @@ const Content = ({
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    if (!currentUserId) {
+      return;
+    }
 
     const message = {
       sender: currentUserId,
@@ -68,7 +72,8 @@ const Content = ({
   }, [messages?.length]);
 
   useEffect(() => {
-    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+    arrivalMessage &&
+      setMessages((prev: MessageType[]) => [...prev, arrivalMessage]);
   }, [arrivalMessage, setMessages]);
 
   if (!receiverId) {
@@ -96,7 +101,7 @@ const Content = ({
         sx={{ overflowY: "auto" }}
       >
         {messages?.length ? (
-          messages.map((message: any) => (
+          messages.map((message: MessageType) => (
             <ChatContent
               ref={scrollRef}
               key={message._id}

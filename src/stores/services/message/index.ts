@@ -1,14 +1,22 @@
+import { MessageType } from "@typing/common";
 import baseRtkApi from "..";
+import {
+  CreateMessageBody,
+  GetMessageListByConversationIdRequest,
+} from "./typing";
 
 const MessageApi = baseRtkApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMessageListByConversationId: builder.query({
+    getMessageListByConversationId: builder.query<
+      MessageType[],
+      GetMessageListByConversationIdRequest
+    >({
       query: ({ conversationId }) => ({
         url: `/messages/${conversationId}`,
       }),
       providesTags: ["message"],
     }),
-    createMessage: builder.mutation({
+    createMessage: builder.mutation<MessageType, CreateMessageBody>({
       query: (body) => ({
         method: "POST",
         url: "/messages",

@@ -1,8 +1,10 @@
+import { UserType } from "@typing/common";
 import baseRtkApi from "..";
+import { GetUserByIdParam } from "./typing";
 
 const UserApi = baseRtkApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUserById: builder.query({
+    getUserById: builder.query<UserType, GetUserByIdParam>({
       query: (params) => ({
         url: "/users",
         params,
