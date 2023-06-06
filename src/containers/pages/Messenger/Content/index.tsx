@@ -10,7 +10,6 @@ import { AppState } from "@stores";
 import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
-import { io } from "socket.io-client";
 
 interface ContentProps extends BoxProps {
   messages: any;
@@ -53,6 +52,7 @@ const Content = ({
     setText("");
 
     socket.current.emit("sendMessage", {
+      conversationId,
       senderId: currentUserId,
       receiverId: receiverId,
       text,

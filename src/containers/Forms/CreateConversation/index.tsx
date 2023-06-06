@@ -13,7 +13,9 @@ import useSocket from "@hooks/useSocket";
 
 interface CreateConversationFormProps {
   setConversation: (conversations: any) => void;
-  onCloseModal: () => void;
+  onCloseModal?:
+    | ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
+    | undefined;
 }
 
 const CreateConversationForm = ({
@@ -48,7 +50,9 @@ const CreateConversationForm = ({
         (conv: string) => conv !== user.id
       ),
     });
-    onCloseModal();
+    if (onCloseModal) {
+      onCloseModal({}, "escapeKeyDown");
+    }
   };
 
   return (

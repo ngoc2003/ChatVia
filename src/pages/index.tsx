@@ -31,14 +31,9 @@ const Messenger = () => {
       });
     });
     socket.current.on("getConversation", (data) => {
-      console.log(data);
       setArrivalConversation(data);
     });
   }, []);
-
-  console.log(arrivalMessage);
-
-  console.log(arrivalConversation);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -73,6 +68,8 @@ const Messenger = () => {
         bgcolor={theme.palette.common.white}
       >
         <MenuChat
+          messages={messages}
+          arrivalMessage={arrivalMessage}
           arrivalConversation={arrivalConversation}
           currentConversationId={currentConversation?._id ?? ""}
           setCurrentConversation={setCurrentConversation}
@@ -91,7 +88,7 @@ const Messenger = () => {
           messages={messages}
           flex={3}
         />
-        <Online flex={1} />
+        <Online friendInformation={friendInformation} flex={1} />
       </Box>
     </Box>
   );

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import useSocket from "@hooks/useSocket";
 import { Avatar, Badge, Box, BoxProps, Typography } from "@mui/material";
 import { AppState } from "@stores";
 import { theme } from "@theme";
@@ -8,14 +9,13 @@ import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const StyledBadge = styled(Badge)(() => ({
+const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
   "& .MuiBadge-badge": {
     width: 10,
     height: 10,
     borderRadius: 9999,
-    backgroundColor: "#44b700",
-    color: "#44b700",
     border: "2px solid #fff",
+    backgroundColor: isOnline ? "#44b700" : theme.palette.grey[700],
   },
 }));
 
@@ -33,8 +33,20 @@ const Conversation = ({
   isActive,
   ...props
 }: ConversationProps) => {
+  const socket = useSocket();
   const [friend, setFriend] = useState<any>();
+  const [isOnline, setIsOnline] = useState<boolean>(false);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
+
+  useEffect(() => {
+    const friendId = conversation.members?.find(
+      (conv: string) => conv !== currentUserId
+    );
+    socket?.current.on("getUsers", (users) => {
+      console.log(users);
+      setIsOnline(users.some((user) => user.userId === friendId));
+    });
+  }, []);
 
   useEffect(() => {
     const friendId = conversation.members?.find(
@@ -52,7 +64,7 @@ const Conversation = ({
     getUser();
   }, [conversation.members, currentUserId]);
 
-  console.log(conversation);
+  console.log(isOnline);
 
   return (
     <Box
@@ -80,6 +92,7 @@ const Conversation = ({
     >
       <Box mr={2}>
         <StyledBadge
+          isOnline={isOnline}
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"

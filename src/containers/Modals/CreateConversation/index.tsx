@@ -21,7 +21,10 @@ const CreateConversationModal = ({
         <Typography mb={2} variant="h6">
           Create new conversation
         </Typography>
-        <CreateConversationForm onCloseModal={props.onClose} setConversation={setConversation} />
+        <CreateConversationForm
+          onCloseModal={props.onClose}
+          setConversation={setConversation}
+        />
       </>
     </CAModal>
   );

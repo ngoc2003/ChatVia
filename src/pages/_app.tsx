@@ -17,7 +17,6 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp({ Component, pageProps, token, id }: MyAppProps) {
-  console.log(id);
   return (
     <Provider store={store}>
       <ThemeWrapperProvider token={token} id={id}>

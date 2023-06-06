@@ -9,8 +9,11 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
+import useSocket from "@hooks/useSocket";
 
 interface MenuChatProps extends BoxProps {
+  messages: any;
+  arrivalMessage: any;
   arrivalConversation: any;
   setCurrentConversation: (conversation: any) => void;
   setFriendInformation: (friendInformation: any) => void;
@@ -18,12 +21,15 @@ interface MenuChatProps extends BoxProps {
 }
 
 const MenuChat: React.FC<MenuChatProps> = ({
+  messages,
+  arrivalMessage,
   setCurrentConversation,
   setFriendInformation,
   currentConversationId,
   arrivalConversation,
   ...props
 }: MenuChatProps) => {
+  const socket = useSocket();
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
   const [conversations, setConversations] = useState<any>([]);
@@ -39,6 +45,54 @@ const MenuChat: React.FC<MenuChatProps> = ({
   };
 
   useEffect(() => {
+    if (arrivalMessage) {
+      const handleUpdateMessage = () => {
+        setConversations(
+          conversations.map((conv) => {
+            if (conv._id !== currentConversationId) {
+              return conv;
+            }
+            return {
+              ...conv,
+              lastMessage: {
+                id: arrivalMessage?.sender,
+                text: arrivalMessage?.text,
+                createdAt: arrivalMessage?.createdAt,
+              },
+            };
+          })
+        );
+      };
+
+      socket.current.on("getMessage", () => {
+        handleUpdateMessage();
+      });
+    }
+  }, [arrivalMessage?.text]);
+
+  useEffect(() => {
+    if (messages.length) {
+      const lastMessages = messages[messages.length - 1];
+
+      setConversations(
+        conversations.map((conv) => {
+          if (conv._id !== currentConversationId) {
+            return conv;
+          }
+          return {
+            ...conv,
+            lastMessage: {
+              id: lastMessages?.sender,
+              text: lastMessages?.text,
+              createdAt: lastMessages?.createdAt,
+            },
+          };
+        })
+      );
+    }
+  }, [messages.length]);
+
+  useEffect(() => {
     const getConversation = async () => {
       const response = await axios.get(
         `http://localhost:4000/conversations/${user.id}`
@@ -48,7 +102,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
     if (user.id) {
       getConversation();
     }
-  }, [setConversations, user.id]);
+  }, [setConversations, user.id, arrivalMessage]);
 
   useEffect(() => {
     arrivalConversation &&
@@ -106,7 +160,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
           onClick={() => setCurrentConversation(conversation)}
           setFriendInformation={setFriendInformation}
           conversation={conversation}
-          key={"conversation" + conversation.id}
+          key={"conversation" + conversation._id}
         />
       ))}
     </Box>

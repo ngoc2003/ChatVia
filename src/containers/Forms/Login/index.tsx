@@ -37,7 +37,6 @@ const LoginForm = () => {
     dispatch(handleLogin(values))
       .unwrap()
       .then((response) => {
-        console.log(response);
         setCookieData("tokenMessage", response.token);
         router.push("/");
       })
