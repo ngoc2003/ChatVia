@@ -4,13 +4,19 @@ import { theme } from "@theme";
 import React, { ReactNode } from "react";
 
 interface DefaultLayoutProps {
+  setTabActive: React.Dispatch<React.SetStateAction<string>>;
   children: ReactNode;
+  tabActive: string;
 }
-const DefaultLayout = ({ children }: DefaultLayoutProps) => {
+const DefaultLayout = ({
+  children,
+  setTabActive,
+  tabActive,
+}: DefaultLayoutProps) => {
   return (
     <Fade in>
       <Box height="100vh" display="flex" flexDirection="column">
-        <Topbar />
+        <Topbar tabActive={tabActive} setTabActive={setTabActive} />
         <Box
           display="flex"
           overflow="hidden"

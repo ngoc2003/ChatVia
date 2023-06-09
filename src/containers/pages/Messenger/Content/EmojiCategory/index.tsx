@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import { theme } from "@theme";
 
-const EmojiCategory = ({ setText }) => {
+interface EmojiCategoryProps {
+  setText: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const EmojiCategory = ({ setText }: EmojiCategoryProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -13,7 +17,7 @@ const EmojiCategory = ({ setText }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleAddIcon = (icon) => {
+  const handleAddIcon = (icon: string) => {
     setText((prev) => prev + icon);
   };
 

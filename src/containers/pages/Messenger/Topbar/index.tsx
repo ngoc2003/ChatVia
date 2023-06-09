@@ -10,11 +10,10 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-
+import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 const topLink = [
   {
-    icon: <ChatOutlinedIcon />,
+    icon: <MarkChatUnreadOutlinedIcon />,
     path: "/",
   },
   {
@@ -49,7 +48,7 @@ const IconWrapper = ({ children, ...props }: BoxProps) => {
   );
 };
 
-const Topbar = () => {
+const Topbar = ({ setTabActive, tabActive }) => {
   const router = useRouter();
   const { clearCookieData } = useGetCookieData();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -87,19 +86,19 @@ const Topbar = () => {
         {topLink.map((link, index) => (
           <IconWrapper
             bgcolor={
-              router.pathname === link.path
+              link.path === tabActive
                 ? theme.palette.primary.light
                 : "transparent"
             }
             color={
-              router.pathname === link.path
+              link.path === tabActive
                 ? theme.palette.primary.main
                 : theme.palette.grey[600]
             }
             ml={index == 0 ? 0 : 3}
             key={link.path}
             onClick={() => {
-              router.push(link.path);
+              setTabActive(link.path);
             }}
           >
             {link.icon}
@@ -120,6 +119,7 @@ const Topbar = () => {
             sx={{ cursor: "pointer", width: 30, height: 30 }}
           />
           <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+            <MenuItem>My profile</MenuItem>
             <MenuItem onClick={handleLogout}>Log out</MenuItem>
           </Menu>
         </Box>

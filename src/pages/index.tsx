@@ -10,6 +10,9 @@ import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
 import { ConversationType, MessageType } from "@typing/common";
 import DefaultLayout from "@containers/layouts/DefaultLayout";
+import Topbar from "@containers/pages/Messenger/Topbar";
+import { useRouter } from "next/router";
+import ContactList from "@containers/pages/Messenger/ContactList";
 
 export interface FriendInformationType {
   name: string;
@@ -20,6 +23,7 @@ export interface ArrivalMessageType
 
 const Messenger = () => {
   const socket = useSocket();
+  const router = useRouter();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
   const [friendInformation, setFriendInformation] =
@@ -56,26 +60,32 @@ const Messenger = () => {
       });
   }, [currentConversation?._id, getMessage]);
 
+  const [tabActive, setTabActive] = useState<any>(router.pathname);
+  console.log(tabActive);
   if (!socket) {
     return;
   }
 
   return (
-    <DefaultLayout>
+    <DefaultLayout tabActive={tabActive} setTabActive={setTabActive}>
       <NextSeo
         {...(friendInformation
           ? { title: "Chat via - " + friendInformation.name }
           : { title: "Chat via" })}
       />
-      <MenuChat
-        messages={messages}
-        arrivalMessage={arrivalMessage}
-        arrivalConversation={arrivalConversation}
-        currentConversationId={currentConversation?._id ?? ""}
-        setCurrentConversation={setCurrentConversation}
-        setFriendInformation={setFriendInformation}
-        width={380}
-      />
+
+      {tabActive === "/" && (
+        <MenuChat
+          messages={messages}
+          arrivalMessage={arrivalMessage}
+          arrivalConversation={arrivalConversation}
+          currentConversationId={currentConversation?._id ?? ""}
+          setCurrentConversation={setCurrentConversation}
+          setFriendInformation={setFriendInformation}
+          width={380}
+        />
+      )}
+      {tabActive === "/contact" && <ContactList />}
       <Content
         conversationId={currentConversation?._id ?? ""}
         arrivalMessage={arrivalMessage}
