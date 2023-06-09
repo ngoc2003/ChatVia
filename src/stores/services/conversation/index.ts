@@ -22,9 +22,10 @@ const ConversationApi = baseRtkApi.injectEndpoints({
       ConversationType[],
       GetConversationListByUserIdReqest
     >({
-      query: ({ userId }) => ({
+      query: ({ userId, query }) => ({
         method: "GET",
         url: `/conversations/${userId}`,
+        params: query,
       }),
       providesTags: ["conversation"],
     }),

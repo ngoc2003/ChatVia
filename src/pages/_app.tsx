@@ -20,7 +20,7 @@ export default function MyApp({ Component, pageProps, token, id }: MyAppProps) {
   return (
     <Provider store={store}>
       <ThemeWrapperProvider token={token} id={id}>
-        <DefaultSeo title="HIHII" />
+        <DefaultSeo title="Chat via" />
         <Component {...pageProps} />
       </ThemeWrapperProvider>
     </Provider>

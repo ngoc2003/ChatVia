@@ -1,17 +1,15 @@
 import Content from "@containers/pages/Messenger/Content";
 import MenuChat from "@containers/pages/Messenger/MenuChat";
 import Online from "@containers/pages/Messenger/Online";
-import { Box } from "@mui/material";
-import { theme } from "@theme";
 import { useEffect, useState } from "react";
 import cookie from "cookie";
 import { NextSeo } from "next-seo";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
-import Topbar from "@containers/pages/Messenger/Topbar";
 import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
 import { ConversationType, MessageType } from "@typing/common";
+import DefaultLayout from "@containers/layouts/DefaultLayout";
 
 export interface FriendInformationType {
   name: string;
@@ -63,43 +61,34 @@ const Messenger = () => {
   }
 
   return (
-    <Box height="100vh" display="flex" flexDirection="column">
-      <Topbar />
+    <DefaultLayout>
       <NextSeo
         {...(friendInformation
           ? { title: "Chat via - " + friendInformation.name }
           : { title: "Chat via" })}
       />
-      <Box
-        display="flex"
-        overflow="hidden"
-        flex={1}
-        bgcolor={theme.palette.common.white}
-      >
-        <MenuChat
-          messages={messages}
-          arrivalMessage={arrivalMessage}
-          arrivalConversation={arrivalConversation}
-          currentConversationId={currentConversation?._id ?? ""}
-          setCurrentConversation={setCurrentConversation}
-          setFriendInformation={setFriendInformation}
-          flex={1.2}
-          minWidth={380}
-        />
-        <Content
-          conversationId={currentConversation?._id ?? ""}
-          arrivalMessage={arrivalMessage}
-          receiverId={
-            currentConversation?.members.find((member) => member !== user.id) ??
-            ""
-          }
-          setMessages={setMessages}
-          messages={messages}
-          flex={3}
-        />
-        <Online friendInformation={friendInformation} flex={1} />
-      </Box>
-    </Box>
+      <MenuChat
+        messages={messages}
+        arrivalMessage={arrivalMessage}
+        arrivalConversation={arrivalConversation}
+        currentConversationId={currentConversation?._id ?? ""}
+        setCurrentConversation={setCurrentConversation}
+        setFriendInformation={setFriendInformation}
+        width={380}
+      />
+      <Content
+        conversationId={currentConversation?._id ?? ""}
+        arrivalMessage={arrivalMessage}
+        receiverId={
+          currentConversation?.members.find((member) => member !== user.id) ??
+          ""
+        }
+        setMessages={setMessages}
+        messages={messages}
+        flex={3}
+      />
+      <Online friendInformation={friendInformation} flex={1} />
+    </DefaultLayout>
   );
 };
 

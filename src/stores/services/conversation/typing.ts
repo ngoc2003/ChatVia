@@ -5,4 +5,7 @@ export interface CreateConversationBody {
 
 export interface GetConversationListByUserIdReqest {
   userId: string;
+  query: {
+    searchValue: string;
+  };
 }

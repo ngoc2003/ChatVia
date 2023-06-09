@@ -5,7 +5,49 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 import { useRouter } from "next/router";
 import useGetCookieData from "@hooks/useGetCookieData";
-import { Avatar, Box, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, BoxProps, Menu, MenuItem } from "@mui/material";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LanguageIcon from "@mui/icons-material/Language";
+import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
+
+const topLink = [
+  {
+    icon: <ChatOutlinedIcon />,
+    path: "/",
+  },
+  {
+    icon: <PersonOutlineOutlinedIcon />,
+    path: "/me",
+  },
+  {
+    icon: <ContactsOutlinedIcon />,
+    path: "/contact",
+  },
+];
+
+const IconWrapper = ({ children, ...props }: BoxProps) => {
+  return (
+    <Box
+      display="grid"
+      borderRadius={1}
+      sx={{
+        placeItems: "center",
+        cursor: "pointer",
+        "&:hover": {
+          bgcolor: theme.palette.grey[100],
+        },
+      }}
+      width={40}
+      height={40}
+      color={theme.palette.grey[600]}
+      {...props}
+    >
+      {children}
+    </Box>
+  );
+};
 
 const Topbar = () => {
   const router = useRouter();
@@ -15,17 +57,21 @@ const Topbar = () => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleLogout = () => {
     handleClose();
     router.push("/auth");
     clearCookieData(publicRuntimeConfig.ACCESS_TOKEN_SECRET as string);
   };
+
   return (
     <Box
-      p={2}
+      px={2}
+      py={1}
       width="100%"
       display="flex"
       alignItems="center"
@@ -37,20 +83,46 @@ const Topbar = () => {
       }}
     >
       <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
-      <Box>
-        <Avatar
-          onClick={handleClick}
-          src="/images/avatar-default.svg"
-          sx={{ cursor: "pointer", width: 30, height: 30 }}
-        />
-        <Menu
-          sx={{}}
-          anchorEl={anchorEl}
-          open={!!anchorEl}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleLogout}>Log out</MenuItem>
-        </Menu>
+      <Box display="flex">
+        {topLink.map((link, index) => (
+          <IconWrapper
+            bgcolor={
+              router.pathname === link.path
+                ? theme.palette.primary.light
+                : "transparent"
+            }
+            color={
+              router.pathname === link.path
+                ? theme.palette.primary.main
+                : theme.palette.grey[600]
+            }
+            ml={index == 0 ? 0 : 3}
+            key={link.path}
+            onClick={() => {
+              router.push(link.path);
+            }}
+          >
+            {link.icon}
+          </IconWrapper>
+        ))}
+      </Box>
+      <Box display="flex" alignItems="center">
+        <IconWrapper>
+          <LanguageIcon />
+        </IconWrapper>
+        <IconWrapper ml={3}>
+          <DarkModeOutlinedIcon />
+        </IconWrapper>
+        <Box ml={3}>
+          <Avatar
+            onClick={handleClick}
+            src="/images/avatar-default.svg"
+            sx={{ cursor: "pointer", width: 30, height: 30 }}
+          />
+          <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+          </Menu>
+        </Box>
       </Box>
     </Box>
   );

@@ -18,6 +18,7 @@ import useSocket from "@hooks/useSocket";
 import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
 import { ConversationType, MessageType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
+import useCallbackDebounce from "@hooks/useCallbackDebounce";
 
 interface MenuChatProps extends BoxProps {
   messages: MessageType[];
@@ -44,6 +45,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
 
@@ -54,6 +56,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const handleCloseAddConversationModal = () => {
     setIsOpenAddConversationModal(false);
   };
+
+  const handleChangeText = useCallbackDebounce((e) => {
+    setSearchValue(e.target.value);
+  });
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -79,6 +85,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
         handleUpdateMessage();
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrivalMessage?.text]);
 
   useEffect(() => {
@@ -105,6 +112,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages.length]);
 
   const [getConversation, { isFetching: isGetConversationFetching }] =
@@ -112,11 +120,11 @@ const MenuChat: React.FC<MenuChatProps> = ({
 
   useEffect(() => {
     if (user.id) {
-      getConversation({ userId: user.id })
+      getConversation({ userId: user.id, query: { searchValue } })
         .unwrap()
         .then((response) => setConversations(response));
     }
-  }, [setConversations, user.id, arrivalMessage, getConversation]);
+  }, [setConversations, user.id, arrivalMessage, getConversation, searchValue]);
 
   useEffect(() => {
     arrivalConversation &&
@@ -164,6 +172,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
         fullWidth
         placeholder="Search messages or users"
         icon={<SearchIcon fontSize="small" />}
+        onChange={handleChangeText}
       />
       <Typography variant="subtitle2" fontWeight={600} my={3}>
         Recent
