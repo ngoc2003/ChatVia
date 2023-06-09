@@ -10,7 +10,6 @@ import React, { useState, useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import MSTextField from "@components/TextField";
 import SearchIcon from "@mui/icons-material/Search";
-import Conversation from "./Conversation";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
@@ -19,6 +18,7 @@ import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conver
 import { ConversationType, MessageType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
+import ConversationList from "./ConversationList";
 
 interface MenuChatProps extends BoxProps {
   messages: MessageType[];
@@ -137,6 +137,8 @@ const MenuChat: React.FC<MenuChatProps> = ({
       bgcolor={theme.palette.primary.light}
       sx={{ overflowY: "hidden" }}
       p={3}
+      display="flex"
+      flexDirection="column"
       borderRight={`1px solid ${theme.palette.grey[100]}`}
     >
       <CreateConversationModal
@@ -178,19 +180,22 @@ const MenuChat: React.FC<MenuChatProps> = ({
         Recent
       </Typography>
       {isGetConversationFetching ? (
-        <Box>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          flex={1}
+        >
           <CircularProgress size={20} />
         </Box>
       ) : (
-        conversations.map((conversation: ConversationType) => (
-          <Conversation
-            isActive={currentConversationId === conversation._id}
-            onClick={() => setCurrentConversation(conversation)}
-            setFriendInformation={setFriendInformation}
-            conversation={conversation}
-            key={"conversation" + conversation._id}
-          />
-        ))
+        <ConversationList
+          conversations={conversations}
+          setCurrentConversation={setCurrentConversation}
+          setFriendInformation={setFriendInformation}
+          currentConversationId={currentConversationId}
+        />
       )}
     </Box>
   );

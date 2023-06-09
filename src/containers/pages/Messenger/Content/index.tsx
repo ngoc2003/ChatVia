@@ -2,7 +2,6 @@ import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
 import { Box, BoxProps, IconButton } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
@@ -11,6 +10,8 @@ import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
 import { useCreateMessageMutation } from "@stores/services/message";
 import { MessageType } from "@typing/common";
+import HeartIcon from "@icons/HeartIcon";
+import EmojiCategory from "./EmojiCategory";
 
 interface ContentProps extends BoxProps {
   messages: MessageType[];
@@ -154,8 +155,11 @@ const Content = ({
             },
           }}
         >
-          <FavoriteIcon color="error" />
+          <HeartIcon />
         </IconButton>
+        <Box>
+          <EmojiCategory setText={setText} />
+        </Box>
       </Box>
     </Box>
   );

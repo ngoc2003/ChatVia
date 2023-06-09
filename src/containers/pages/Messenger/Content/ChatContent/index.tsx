@@ -1,11 +1,25 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { theme } from "@theme";
 import React from "react";
+import parse from "html-react-parser";
 interface ChatContentProps {
   me?: boolean;
   text: string;
   createdAt: Date;
 }
+
+const handleRenderText = (str: string, me: boolean) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+
+  if (urlRegex.test(str)) {
+    return parse(
+      `<a href=${str} style="color: ${
+        me ? theme.palette.common.white : theme.palette.text.primary
+      }" target="_blank" rel="noopener noreferrer">${str}</a>`
+    );
+  }
+  return str;
+};
 // eslint-disable-next-line react/display-name
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
   ({ me, text, createdAt }, ref) => {
@@ -48,7 +62,7 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
                   : theme.palette.text.primary,
               }}
             >
-              {text}
+              {handleRenderText(text, me as boolean)}
             </Typography>
           </Box>
         </Box>
