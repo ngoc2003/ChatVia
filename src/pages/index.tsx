@@ -10,7 +10,6 @@ import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
 import { ConversationType, MessageType } from "@typing/common";
 import DefaultLayout from "@containers/layouts/DefaultLayout";
-import Topbar from "@containers/pages/Messenger/Topbar";
 import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
 
@@ -97,7 +96,7 @@ const Messenger = () => {
         messages={messages}
         flex={3}
       />
-      <Online friendInformation={friendInformation} flex={1} />
+      {/* <Online friendInformation={friendInformation} flex={1} /> */}
     </DefaultLayout>
   );
 };

@@ -11,9 +11,15 @@ const UserApi = baseRtkApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    getUserContact: builder.query({
+      query: (params) => ({
+        url: "/users/friendList",
+        params,
+      }),
+    }),
   }),
 });
 
 export default UserApi;
 
-export const { useLazyGetUserByIdQuery } = UserApi;
+export const { useLazyGetUserByIdQuery, useGetUserContactQuery } = UserApi;

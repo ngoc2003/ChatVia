@@ -6,7 +6,6 @@ const { publicRuntimeConfig } = getConfig();
 import { useRouter } from "next/router";
 import useGetCookieData from "@hooks/useGetCookieData";
 import { Avatar, Box, BoxProps, Menu, MenuItem } from "@mui/material";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -15,10 +14,6 @@ const topLink = [
   {
     icon: <MarkChatUnreadOutlinedIcon />,
     path: "/",
-  },
-  {
-    icon: <PersonOutlineOutlinedIcon />,
-    path: "/me",
   },
   {
     icon: <ContactsOutlinedIcon />,
