@@ -1,15 +1,18 @@
 import React from "react";
 import Image from "next/image";
-import { theme } from "@theme";
 import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 import { useRouter } from "next/router";
-import useGetCookieData from "@hooks/useGetCookieData";
 import { Avatar, Box, BoxProps, Menu, MenuItem } from "@mui/material";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
+import { useTranslation } from "next-i18next";
+import useGetCookieData from "@hooks/useGetCookieData";
+import { theme } from "@theme";
+import SwitchLanguage from "./SwitchLanguage";
+
 const topLink = [
   {
     icon: <MarkChatUnreadOutlinedIcon />,
@@ -21,7 +24,7 @@ const topLink = [
   },
 ];
 
-const IconWrapper = ({ children, ...props }: BoxProps) => {
+export const IconWrapper = ({ children, ...props }: BoxProps) => {
   return (
     <Box
       display="grid"
@@ -44,6 +47,7 @@ const IconWrapper = ({ children, ...props }: BoxProps) => {
 };
 
 const Topbar = ({ setTabActive, tabActive }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { clearCookieData } = useGetCookieData();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -101,9 +105,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
         ))}
       </Box>
       <Box display="flex" alignItems="center">
-        <IconWrapper>
-          <LanguageIcon />
-        </IconWrapper>
+        <SwitchLanguage />
         <IconWrapper ml={3}>
           <DarkModeOutlinedIcon />
         </IconWrapper>
@@ -114,8 +116,8 @@ const Topbar = ({ setTabActive, tabActive }) => {
             sx={{ cursor: "pointer", width: 30, height: 30 }}
           />
           <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-            <MenuItem>My profile</MenuItem>
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            <MenuItem>{t("myProfile")}</MenuItem>
+            <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
           </Menu>
         </Box>
       </Box>

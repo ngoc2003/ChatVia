@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import { useGetUserContactQuery } from "@stores/services/user";
+import { useTranslation } from "next-i18next";
 
 const handleFormat = (input) => {
   if (!input) {
@@ -34,6 +35,7 @@ const handleFormat = (input) => {
 };
 
 const ContactList = () => {
+  const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const [friend, setFriend] = useState<any>();
   const { data, isFetching } = useGetUserContactQuery({ userId: user.id });
@@ -59,7 +61,7 @@ const ContactList = () => {
         alignItems="center"
       >
         <Typography variant="h5" fontWeight={600}>
-          Contacts
+          {t("title.contact")}
         </Typography>
       </Box>
       <MSTextField
@@ -75,7 +77,7 @@ const ContactList = () => {
           },
         }}
         fullWidth
-        placeholder="Search users"
+        placeholder={t("placeholder.searchForUser")}
         icon={<SearchIcon fontSize="small" />}
       />
       <Box my={3}>
@@ -122,9 +124,7 @@ const ContactList = () => {
             </Box>
           ))
         ) : (
-          <Typography fontStyle="italic">
-            You dont have any friend contact
-          </Typography>
+          <Typography fontStyle="italic">{t("noContact")}</Typography>
         )}
       </Box>
     </Box>

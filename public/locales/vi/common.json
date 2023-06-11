@@ -1,0 +1,41 @@
+{
+  "logout": "Đăng xuất",
+  "myProfile": "Thông tin của tôi",
+  "signIn": "Đăng nhập",
+  "signInSubTitle": "Đăng nhập để tiếp tục với Chatvia",
+  "signUp": "Đăng ký",
+  "signUpSubtitle": "Nhận tài khoản Chatvia của bạn ngay bây giờ.",
+  "password": "Mật khẩu",
+  "fullname": "Họ và tên",
+  "signUpNow": "Đăng ký ngay",
+  "acceptTermOfUse": "Bằng việc nhấn nút đăng ký, bạn đồng ý với điều khoản sử dụng của Chatvia",
+  "createNewConversation": "Tạo cuộc trò chuyện mới",
+  "noContact": "Bạn chưa có liên hệ nào",
+  "openConversation": "Chọn 1 cuộc trò chuyện và bắt đầu Chat ngay nào!",
+  "startMessage": "Bắt đầu cuộc trò chuyện với 1 lời chào nhé",
+  "you": "Bạn: ",
+  "noConversationFounded": "Không cuộc trò chuyện nào được tìm thấy",
+
+  "button": {
+    "create": "Tạo mới"
+  },
+  "placeholder": {
+    "typeEmailHere": "Nhập email tại đây",
+    "searchForUser": "Tìm liên hệ",
+    "searchForMessageOrUser": "Tìm kiếm tin nhắn hoặc người dùng"
+  },
+  "error": {
+    "required": "Bắt buộc",
+    "invalid": "Không hợp lệ",
+    "min": "Ít nhất 6 ký tự",
+    "max": "Nhiều nhất 50 ký tự"
+  },
+  "question": {
+    "dontHaveAnAccount": "Chưa có tài khoản?",
+    "alreadyHaveAnAccount": "Đã có tài khoản?"
+  },
+  "title": {
+    "contact": "Liên hệ",
+    "recent": "Mới nhất"
+  }
+}

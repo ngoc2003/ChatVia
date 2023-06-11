@@ -1,16 +1,20 @@
 import LoginForm from "@containers/Forms/Login";
 import cookie from "cookie";
 import AuthLayout from "@containers/layouts/AuthLayout";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const Auth = () => {
+  const { t } = useTranslation();
   return (
-    <AuthLayout title="Sign in" subTitle="Sign in to continue to Chhatvia">
+    <AuthLayout title={t("signIn")} subTitle={t("signInSubTitle")}>
       <LoginForm />
     </AuthLayout>
   );
 };
 
 export async function getServerSideProps(ctx) {
-  const { tokenMessage } = cookie.parse(ctx.req?.headers.cookie ?? "");
+  const { locale, ...rest } = ctx;
+  const { tokenMessage } = cookie.parse(rest.req?.headers.cookie ?? "");
 
   if (tokenMessage) {
     return {
@@ -21,7 +25,9 @@ export async function getServerSideProps(ctx) {
     };
   }
 
-  return { props: {} };
+  return {
+    props: { ...(await serverSideTranslations(locale, ["common"])), locale },
+  };
 }
 
 export default Auth;

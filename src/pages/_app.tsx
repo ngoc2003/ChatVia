@@ -1,13 +1,14 @@
-import { store } from "@stores";
+import { store } from "../stores";
 import { DefaultSeo } from "next-seo";
 import { Provider } from "react-redux";
 import dynamic from "next/dynamic";
 import App, { AppProps } from "next/app";
 import cookie from "cookie";
 import { CAConnectionInstance } from "./api/hello";
+import { appWithTranslation } from "next-i18next";
 
 const ThemeWrapperProvider = dynamic(
-  () => import("@/containers/layouts/ThemeWrapper"),
+  () => import("../containers/layouts/ThemeWrapper"),
   { ssr: true }
 );
 
@@ -16,7 +17,7 @@ interface MyAppProps extends AppProps {
   id: string | null;
 }
 
-export default function MyApp({ Component, pageProps, token, id }: MyAppProps) {
+const MyApp = ({ Component, pageProps, token, id }: MyAppProps) => {
   return (
     <Provider store={store}>
       <ThemeWrapperProvider token={token} id={id}>
@@ -25,7 +26,7 @@ export default function MyApp({ Component, pageProps, token, id }: MyAppProps) {
       </ThemeWrapperProvider>
     </Provider>
   );
-}
+};
 
 MyApp.getInitialProps = async (appContext: any) => {
   const ctx = appContext.ctx;
@@ -57,3 +58,5 @@ MyApp.getInitialProps = async (appContext: any) => {
     return { ...appProps };
   }
 };
+
+export default appWithTranslation(MyApp);

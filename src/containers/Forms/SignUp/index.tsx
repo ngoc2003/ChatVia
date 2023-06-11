@@ -15,18 +15,20 @@ import LockIcon from "@mui/icons-material/Lock";
 import MSTextField from "@components/TextField";
 import { useRouter } from "next/router";
 import { ErrorText } from "@components/TextField/ErrorText";
+import { useTranslation } from "next-i18next";
 
 const SignUpForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const schema = Yup.object({
-    username: Yup.string().required("Required"),
-    email: Yup.string().email().required("Required"),
+    username: Yup.string().required(t("error.required")),
+    email: Yup.string().email().required(t("error.required")),
     password: Yup.string()
-      .min(6, "Min 6 characters")
-      .max(50, "Max 50 characters")
-      .required("Required"),
+      .min(6, t("error.min"))
+      .max(50, t("error.max"))
+      .required(t("error.required")),
   }).required();
 
   const {
@@ -69,7 +71,7 @@ const SignUpForm = () => {
 
         <Box mb={3}>
           <MSTextField
-            label="Fullname"
+            label={t("fullname")}
             icon={<PersonIcon fontSize="small" />}
             fullWidth
             inputProps={{ ...register("username") }}
@@ -81,7 +83,7 @@ const SignUpForm = () => {
         </Box>
         <Box mb={3}>
           <MSTextField
-            label="Password"
+            label={t("password")}
             icon={<LockIcon fontSize="small" />}
             fullWidth
             inputProps={{ ...register("password") }}
@@ -101,7 +103,9 @@ const SignUpForm = () => {
           {isLoading ? (
             <CircularProgress size={20} />
           ) : (
-            <Typography color={theme.palette.common.white}>Sign in</Typography>
+            <Typography color={theme.palette.common.white}>
+              {t("signIn")}
+            </Typography>
           )}
         </Button>
         <Typography
@@ -110,13 +114,13 @@ const SignUpForm = () => {
           mt={3}
           color={theme.palette.text.primary}
         >
-          By registering you agree to the Chatvia Terms of Use
+          {t("acceptTermOfUse")}
         </Typography>
       </Box>
       <Typography mt={6}>
-        Already have an account ?
+        {t("question.alreadyHaveAnAccount")}
         <Link fontWeight={500} sx={{ textDecoration: "none" }} href="/auth">
-          Sign in
+          {t("signIn")}
         </Link>
       </Typography>
     </Box>

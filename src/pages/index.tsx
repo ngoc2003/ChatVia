@@ -1,6 +1,7 @@
 import Content from "@containers/pages/Messenger/Content";
 import MenuChat from "@containers/pages/Messenger/MenuChat";
 import Online from "@containers/pages/Messenger/Online";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useEffect, useState } from "react";
 import cookie from "cookie";
 import { NextSeo } from "next-seo";
@@ -104,7 +105,8 @@ const Messenger = () => {
 export default Messenger;
 
 export async function getServerSideProps(ctx) {
-  const { tokenMessage } = cookie.parse(ctx.req.headers.cookie ?? "");
+  const { locale, ...rest } = ctx;
+  const { tokenMessage } = cookie.parse(rest.req.headers.cookie ?? "");
 
   if (!tokenMessage) {
     return {
@@ -115,5 +117,7 @@ export async function getServerSideProps(ctx) {
     };
   }
 
-  return { props: {} };
+  return {
+    props: { ...(await serverSideTranslations(locale, ["common"])), locale },
+  };
 }

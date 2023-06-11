@@ -11,6 +11,7 @@ import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
 import { useCreateConversationMutation } from "@stores/services/conversation";
 import { ConversationType } from "@typing/common";
+import { useTranslation } from "next-i18next";
 
 interface CreateConversationFormProps {
   setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
@@ -23,6 +24,7 @@ const CreateConversationForm = ({
   setConversation,
   onCloseModal,
 }: CreateConversationFormProps) => {
+  const { t } = useTranslation();
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
 
@@ -30,7 +32,7 @@ const CreateConversationForm = ({
     useCreateConversationMutation();
 
   const schema = Yup.object({
-    email: Yup.string().email("Must be valid email").required("Required"),
+    email: Yup.string().email(t("error.invalid")).required(t("error.required")),
   }).required();
   const {
     register,
@@ -68,7 +70,7 @@ const CreateConversationForm = ({
         <MSTextField
           inputProps={{ ...register("email") }}
           fullWidth
-          placeholder="Type email here"
+          placeholder={t("placeholder.typeEmailHere")}
         />
         <ErrorText
           isError={!!errors.email?.message}
@@ -84,7 +86,7 @@ const CreateConversationForm = ({
         {isCreateConversationLoading ? (
           <CircularProgress size={20} />
         ) : (
-          <>Create</>
+          t("button.create")
         )}
       </Button>
     </>

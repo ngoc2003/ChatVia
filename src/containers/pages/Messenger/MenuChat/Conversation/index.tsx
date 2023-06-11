@@ -9,6 +9,7 @@ import { ConversationType, UserType } from "@typing/common";
 import { getLastWordOfString } from "@utils/common";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
@@ -38,6 +39,7 @@ const Conversation = ({
   ...props
 }: ConversationProps) => {
   const socket = useSocket();
+  const { t } = useTranslation();
   const [friend, setFriend] = useState<UserType | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(false);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
@@ -119,7 +121,7 @@ const Conversation = ({
         {!!conversation?.lastMessage && (
           <Typography variant="caption" color={theme.palette.grey[600]}>
             {(conversation.lastMessage.id === currentUserId
-              ? "Bạn: "
+              ? t("you")
               : `${getLastWordOfString(friend?.username)}: `) +
               conversation.lastMessage.text}
           </Typography>

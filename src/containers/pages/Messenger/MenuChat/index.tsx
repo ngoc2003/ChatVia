@@ -19,6 +19,7 @@ import { ConversationType, MessageType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
+import { useTranslation } from "next-i18next";
 
 interface MenuChatProps extends BoxProps {
   messages: MessageType[];
@@ -42,6 +43,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
   arrivalConversation,
   ...props
 }: MenuChatProps) => {
+  const { t } = useTranslation();
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
@@ -172,12 +174,12 @@ const MenuChat: React.FC<MenuChatProps> = ({
           },
         }}
         fullWidth
-        placeholder="Search messages or users"
+        placeholder={t("placeholder.searchForMessageOrUser")}
         icon={<SearchIcon fontSize="small" />}
         onChange={handleChangeText}
       />
       <Typography variant="subtitle2" fontWeight={600} my={3}>
-        Recent
+        {t("title.recent")}
       </Typography>
       {isGetConversationFetching ? (
         <Box

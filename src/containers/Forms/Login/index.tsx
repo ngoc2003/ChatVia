@@ -13,15 +13,17 @@ import { theme } from "@theme";
 import MSTextField from "@components/TextField";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import { useTranslation } from "next-i18next";
 const LoginForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
   const { setCookieData } = useGetCookieData();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = Yup.object({
     email: Yup.string().email().required(),
-    password: Yup.string().min(6, "").max(50, ""),
+    password: Yup.string().min(6, t("error.min")).max(50, t("error.max")),
   }).required();
 
   const {
@@ -63,8 +65,7 @@ const LoginForm = () => {
             bgcolor={theme.palette.warning.light}
             borderColor={theme.palette.warning.main}
           >
-            Username and password are invalid. Please enter correct username and
-            password
+            {t("error.invalid")}
           </Box>
         ) : (
           <></>
@@ -76,7 +77,7 @@ const LoginForm = () => {
           inputProps={{ ...register("email") }}
         />
         <MSTextField
-          label="Password"
+          label={t("password")}
           icon={<LockIcon fontSize="small" />}
           fullWidth
           containerProps={{ sx: { my: 3, mb: 4 } }}
@@ -91,18 +92,20 @@ const LoginForm = () => {
           {isLoading ? (
             <CircularProgress size={20} />
           ) : (
-            <Typography color={theme.palette.common.white}>Sign in</Typography>
+            <Typography color={theme.palette.common.white}>
+              {t("signIn")}
+            </Typography>
           )}
         </Button>
       </Box>
       <Typography mt={6}>
-        Dont have an account?{" "}
+        {t("question.dontHaveAnAccount")}{" "}
         <Link
           fontWeight={500}
           sx={{ textDecoration: "none" }}
           href="/auth/sign-up"
         >
-          Sign up now
+          {t("signUpNow")}
         </Link>
       </Typography>
     </Box>

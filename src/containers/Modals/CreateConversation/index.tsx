@@ -3,6 +3,7 @@ import CreateConversationForm from "@containers/Forms/CreateConversation";
 import { ModalProps, Typography } from "@mui/material";
 import { ConversationType } from "@typing/common";
 import React from "react";
+import { useTranslation } from "next-i18next";
 
 export interface CreateConversationParams {
   email: string;
@@ -16,11 +17,12 @@ const CreateConversationModal = ({
   setConversation,
   ...props
 }: CreateConversationModalProps) => {
+  const { t } = useTranslation();
   return (
     <CAModal {...props}>
       <>
         <Typography mb={2} variant="h6">
-          Create new conversation
+          {t("createNewConversation")}
         </Typography>
         <CreateConversationForm
           onCloseModal={props.onClose}

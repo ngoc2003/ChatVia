@@ -1,0 +1,43 @@
+{
+  "logout": "Log out",
+  "myProfile": "My profile",
+  "signIn": "Sign in",
+  "signInSubTitle": "Sign in to continue to Chhatvia",
+
+  "signUp": "Sign up",
+  "signUpSubtitle": "Get your Chatvia account now.",
+
+  "password": "Password",
+  "fullname": "Fullname",
+  "acceptTermOfUse": "By registering you agree to the Chatvia Terms of Use",
+  "createNewConversation": "Create new conversation",
+  "noContact": "You dont have any friend contact",
+  "openConversation": "Open a conversation to chat with your friend now!",
+  "startMessage": "You havent had any messages yet. Say hi",
+  "you": "You: ",
+  "noConversationFounded": "No conversations founded!",
+
+  "signUpNow": "Sign up now",
+  "button": {
+    "create": "Create"
+  },
+  "placeholder": {
+    "typeEmailHere": "Type email here",
+    "searchForUser": "Search for users",
+    "searchForMessageOrUser": "Search messages or users"
+  },
+  "error": {
+    "required": "Required",
+    "invalid": "Invalid",
+    "min": "Min 6 characters",
+    "max": "Max 50 characters"
+  },
+  "question": {
+    "alreadyHaveAnAccount": "Already have an account ?",
+    "dontHaveAnAccount": "Dont have an account?"
+  },
+  "title": {
+    "contact": "Contacts",
+    "recent": "Recent"
+  }
+}

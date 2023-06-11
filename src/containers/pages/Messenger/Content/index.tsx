@@ -12,6 +12,7 @@ import { useCreateMessageMutation } from "@stores/services/message";
 import { MessageType } from "@typing/common";
 import HeartIcon from "@icons/HeartIcon";
 import EmojiCategory from "./EmojiCategory";
+import { useTranslation } from "next-i18next";
 
 interface ContentProps extends BoxProps {
   messages: MessageType[];
@@ -29,6 +30,7 @@ const Content = ({
   receiverId,
   ...props
 }: ContentProps) => {
+  const { t } = useTranslation();
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const [text, setText] = useState<string>("");
   const scrollRef = useRef<HTMLElement | null>(null);
@@ -86,7 +88,7 @@ const Content = ({
         pb={7.2}
         {...props}
       >
-        Open a conversation to chat with your friend now!
+        {t("openConversation")}
       </Box>
     );
   }
@@ -113,7 +115,7 @@ const Content = ({
           ))
         ) : (
           <Box display="grid" height="100%" sx={{ placeItems: "center" }}>
-            You havent had any messages yet. Say hi {parser(sayHiSymbol)}
+            {t("startMessage")} {parser(sayHiSymbol)}
           </Box>
         )}
       </Box>

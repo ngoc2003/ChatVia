@@ -3,6 +3,7 @@ import Conversation from "../Conversation";
 import { ConversationType } from "@typing/common";
 import { FriendInformationType } from "@pages";
 import { Typography } from "@mui/material";
+import { useTranslation } from "next-i18next";
 
 interface ConversationListProps {
   conversations: ConversationType[];
@@ -21,10 +22,11 @@ const ConversationList = ({
   setCurrentConversation,
   setFriendInformation,
 }: ConversationListProps) => {
+  const { t } = useTranslation();
   return (
     <>
       {!conversations.length ? (
-        <Typography fontStyle="italic">No conversations founded!</Typography>
+        <Typography fontStyle="italic">{t("noConversationFounded")}</Typography>
       ) : (
         conversations.map((conversation: ConversationType) => (
           <Conversation
