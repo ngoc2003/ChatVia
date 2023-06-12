@@ -65,7 +65,7 @@ const CreateConversationForm = ({
   };
 
   return (
-    <>
+    <Box>
       <Box mb={3}>
         <MSTextField
           inputProps={{ ...register("email") }}
@@ -89,7 +89,7 @@ const CreateConversationForm = ({
           t("button.create")
         )}
       </Button>
-    </>
+    </Box>
   );
 };
 

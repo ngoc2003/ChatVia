@@ -2,6 +2,8 @@ import { Avatar, Box, Typography } from "@mui/material";
 import { theme } from "@theme";
 import React from "react";
 import parse from "html-react-parser";
+import { useSelector } from "react-redux";
+import { AppState } from "@stores";
 interface ChatContentProps {
   me?: boolean;
   text: string;
@@ -23,6 +25,8 @@ const handleRenderText = (str: string, me: boolean) => {
 // eslint-disable-next-line react/display-name
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
   ({ me, text, createdAt }, ref) => {
+    const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
     return (
       <Box
         ref={ref}
@@ -47,7 +51,11 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
             sx={{
               wordWrap: "break-word",
               whiteSpace: "normal",
-              bgcolor: me ? theme.palette.primary.main : theme.palette.grey[50],
+              bgcolor: me
+                ? theme.palette.primary.main
+                : darkMode
+                ? theme.palette.darkTheme.lighter
+                : theme.palette.grey[50],
             }}
           >
             <Typography
@@ -58,6 +66,8 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
               whiteSpace="pre-line"
               sx={{
                 color: me
+                  ? theme.palette.common.white
+                  : darkMode
                   ? theme.palette.common.white
                   : theme.palette.text.primary,
               }}

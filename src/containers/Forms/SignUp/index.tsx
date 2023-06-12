@@ -64,7 +64,13 @@ const SignUpForm = () => {
             label="Email"
             icon={<EmailIcon fontSize="small" />}
             fullWidth
+            preventDarkMode
             inputProps={{ ...register("email") }}
+            containerProps={{
+              sx: {
+                bgcolor: theme.palette.common.white,
+              },
+            }}
           />
           <ErrorText isError={!!errors.email} content={errors.email?.message} />
         </Box>
@@ -74,7 +80,13 @@ const SignUpForm = () => {
             label={t("fullname")}
             icon={<PersonIcon fontSize="small" />}
             fullWidth
+            preventDarkMode
             inputProps={{ ...register("username") }}
+            containerProps={{
+              sx: {
+                bgcolor: theme.palette.common.white,
+              },
+            }}
           />
           <ErrorText
             isError={!!errors.username}
@@ -86,6 +98,12 @@ const SignUpForm = () => {
             label={t("password")}
             icon={<LockIcon fontSize="small" />}
             fullWidth
+            preventDarkMode
+            containerProps={{
+              sx: {
+                bgcolor: theme.palette.common.white,
+              },
+            }}
             inputProps={{ ...register("password") }}
           />
           <ErrorText

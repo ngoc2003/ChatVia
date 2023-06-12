@@ -13,6 +13,7 @@ import { MessageType } from "@typing/common";
 import HeartIcon from "@icons/HeartIcon";
 import EmojiCategory from "./EmojiCategory";
 import { useTranslation } from "next-i18next";
+import { theme } from "@theme";
 
 interface ContentProps extends BoxProps {
   messages: MessageType[];
@@ -31,10 +32,11 @@ const Content = ({
   ...props
 }: ContentProps) => {
   const { t } = useTranslation();
-  const currentUserId = useSelector((state: AppState) => state.auth.id);
+  const socket = useSocket();
   const [text, setText] = useState<string>("");
   const scrollRef = useRef<HTMLElement | null>(null);
-  const socket = useSocket();
+  const currentUserId = useSelector((state: AppState) => state.auth.id);
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -84,7 +86,13 @@ const Content = ({
       <Box
         height="100%"
         display="grid"
-        sx={{ placeItems: "center" }}
+        sx={{
+          placeItems: "center",
+          ...(darkMode && {
+            bgcolor: theme.palette.darkTheme.dark,
+            color: theme.palette.text.secondary,
+          }),
+        }}
         pb={7.2}
         {...props}
       >
@@ -94,7 +102,12 @@ const Content = ({
   }
 
   return (
-    <Box position="relative" pb={7.2} {...props}>
+    <Box
+      position="relative"
+      pb={7.2}
+      bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
+      {...props}
+    >
       <Box
         width="100%"
         height="100%"
@@ -127,6 +140,10 @@ const Content = ({
         bottom={0}
         right={0}
         left={0}
+        bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
+        borderTop={`0.5px solid ${
+          darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
+        }`}
       >
         <MSTextField
           placeholder="Aa"
@@ -135,6 +152,7 @@ const Content = ({
               height: 40,
             },
           }}
+          disableBorderInput
           fullWidth
           value={text}
           onChange={handleTextChange}

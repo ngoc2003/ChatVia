@@ -25,6 +25,7 @@ const Messenger = () => {
   const socket = useSocket();
   const router = useRouter();
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [tabActive, setTabActive] = useState<any>(router.pathname);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
   const [friendInformation, setFriendInformation] =
     useState<FriendInformationType | null>(null);
@@ -60,8 +61,6 @@ const Messenger = () => {
       });
   }, [currentConversation?._id, getMessage]);
 
-  const [tabActive, setTabActive] = useState<any>(router.pathname);
-  console.log(tabActive);
   if (!socket) {
     return;
   }

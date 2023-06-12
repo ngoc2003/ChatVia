@@ -46,10 +46,14 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const { t } = useTranslation();
   const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
+
+  const [getConversation, { isFetching: isGetConversationFetching }] =
+    useLazyGetConversationListByUserIdQuery();
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -62,6 +66,8 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const handleChangeText = useCallbackDebounce((e) => {
     setSearchValue(e.target.value);
   });
+
+  console.log(darkMode);
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -117,9 +123,6 @@ const MenuChat: React.FC<MenuChatProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages.length]);
 
-  const [getConversation, { isFetching: isGetConversationFetching }] =
-    useLazyGetConversationListByUserIdQuery();
-
   useEffect(() => {
     if (user.id) {
       getConversation({ userId: user.id, query: { searchValue } })
@@ -136,12 +139,13 @@ const MenuChat: React.FC<MenuChatProps> = ({
   return (
     <Box
       {...props}
-      bgcolor={theme.palette.primary.light}
+      bgcolor={
+        darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
+      }
       sx={{ overflowY: "hidden" }}
       p={3}
       display="flex"
       flexDirection="column"
-      borderRight={`1px solid ${theme.palette.grey[100]}`}
     >
       <CreateConversationModal
         open={isOpenAddConversationModal}
@@ -154,7 +158,11 @@ const MenuChat: React.FC<MenuChatProps> = ({
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography variant="h5" fontWeight={600}>
+        <Typography
+          variant="h5"
+          fontWeight={600}
+          color={darkMode ? theme.palette.common.white : undefined}
+        >
           Chat
         </Typography>
         <IconButton size="small" onClick={handleOpenAddConversationModal}>
@@ -168,17 +176,18 @@ const MenuChat: React.FC<MenuChatProps> = ({
             pr: 0,
           },
         }}
-        containerProps={{
-          sx: {
-            bgcolor: theme.palette.grey[400],
-          },
-        }}
+        disableBorderInput
         fullWidth
         placeholder={t("placeholder.searchForMessageOrUser")}
         icon={<SearchIcon fontSize="small" />}
         onChange={handleChangeText}
       />
-      <Typography variant="subtitle2" fontWeight={600} my={3}>
+      <Typography
+        variant="subtitle2"
+        fontWeight={600}
+        my={3}
+        color={darkMode ? theme.palette.common.white : undefined}
+      >
         {t("title.recent")}
       </Typography>
       {isGetConversationFetching ? (

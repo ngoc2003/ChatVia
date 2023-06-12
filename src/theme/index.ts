@@ -10,7 +10,7 @@ const colors = {
     0: "#FBFBFC",
     50: "#F2F2F2",
     100: "#f8f9fa",
-    150: "#fbfbfc",
+    150: "#a6b0cf",
     200: "#f5f7fb",
     300: "#f0eff5",
     400: "#e6ebf5",
@@ -20,85 +20,89 @@ const colors = {
     800: "#343a40",
     900: "#212529",
   },
+  darkTheme: {
+    main: "#303841",
+    light: "#36404a",
+    dark: "#262e35",
+    lighter: "#3e4a56",
+  },
   error: { main: "#ef476f" },
   success: { main: "#06d6a0", light: "#cdf7ec", dark: "#025640" },
   warning: { main: "#f9b5c5", light: "#fcdae2", dark: "#601c2c" },
-  text: { primary: "#7a7f9a", dark: "#343a40" },
+  text: { primary: "#7a7f9a", secondary: "#a6b0cf" },
 };
 
-export let theme = createTheme();
-
-const themeOptions: ThemeOptions = {
-  palette: colors,
-
-  typography: {
-    allVariants: {
-      fontFamily: `'Roboto', sans-serif`,
-      WebkitFontSmoothing: "antialiased",
-      color: colors.grey[700],
-    },
-    h1: {
-      fontSize: "96px",
-      fontWeight: 600,
-      lineHeight: "104px",
-    },
-    h2: {
-      fontSize: "60px",
-      fontWeight: 600,
-      lineHeight: "68px",
-    },
-    h3: {
-      fontSize: "48px",
-      fontWeight: 600,
-      lineHeight: "52px",
-    },
-    h4: {
-      fontSize: "34px",
-      fontWeight: 600,
-      lineHeight: "40px",
-    },
-    h5: {
-      fontSize: "26px",
-      fontWeight: 600,
-      lineHeight: "32px",
-    },
-    h6: {
-      fontSize: "20px",
-      fontWeight: 600,
-      lineHeight: "24px",
-    },
-    subtitle1: {
-      fontSize: "20px",
-      fontWeight: 500,
-      lineHeight: "24px",
-    },
-    subtitle2: {
-      fontSize: "18px",
-      fontWeight: 500,
-      lineHeight: "22px",
-    },
-    body1: {
-      fontSize: "16px",
-      lineHeight: "24px",
-    },
-    body2: {
-      fontSize: "14px",
-      lineHeight: "20px",
-    },
-    body3: {
-      fontSize: "12px",
-      lineHeight: "16px",
-      fontWeight: 500,
-    },
-    caption: {
-      fontSize: "12px",
-      lineHeight: "16px",
-    },
-    overline: {
-      fontSize: "10px",
-      lineHeight: "14px",
-    },
+const typography = {
+  allVariants: {
+    fontFamily: `'Roboto', sans-serif`,
+    WebkitFontSmoothing: "antialiased",
+    color: colors.grey[700],
   },
+  h1: {
+    fontSize: "96px",
+    fontWeight: 600,
+    lineHeight: "104px",
+  },
+  h2: {
+    fontSize: "60px",
+    fontWeight: 600,
+    lineHeight: "68px",
+  },
+  h3: {
+    fontSize: "48px",
+    fontWeight: 600,
+    lineHeight: "52px",
+  },
+  h4: {
+    fontSize: "34px",
+    fontWeight: 600,
+    lineHeight: "40px",
+  },
+  h5: {
+    fontSize: "26px",
+    fontWeight: 600,
+    lineHeight: "32px",
+  },
+  h6: {
+    fontSize: "20px",
+    fontWeight: 600,
+    lineHeight: "24px",
+  },
+  subtitle1: {
+    fontSize: "20px",
+    fontWeight: 500,
+    lineHeight: "24px",
+  },
+  subtitle2: {
+    fontSize: "18px",
+    fontWeight: 500,
+    lineHeight: "22px",
+  },
+  body1: {
+    fontSize: "16px",
+    lineHeight: "24px",
+  },
+  body2: {
+    fontSize: "14px",
+    lineHeight: "20px",
+  },
+  body3: {
+    fontSize: "12px",
+    lineHeight: "16px",
+    fontWeight: 500,
+  },
+  caption: {
+    fontSize: "12px",
+    lineHeight: "16px",
+  },
+  overline: {
+    fontSize: "10px",
+    lineHeight: "14px",
+  },
+};
+
+const themeOptionCommon: ThemeOptions = {
+  typography,
   components: {
     MuiButton: {
       variants: [
@@ -133,7 +137,7 @@ const themeOptions: ThemeOptions = {
         contained: {
           color: "#FFFFFF",
           "&.Mui-disabled": {
-            backgroundColor: colors.primary.light,
+            backgroundColor: colors.grey[600],
             color: "#FFFFFF",
           },
         },
@@ -193,6 +197,18 @@ const themeOptions: ThemeOptions = {
   },
 };
 
+const light = {
+  type: "light",
+  ...colors,
+};
+
+export let theme = createTheme();
+
+const themeOptions: ThemeOptions = {
+  palette: light,
+  ...themeOptionCommon,
+};
+
 theme = createTheme(themeOptions);
 
 export type CustomizedTheme = typeof theme;
@@ -213,6 +229,15 @@ declare module "@mui/material/Typography" {
 }
 
 declare module "@mui/material" {
+  interface Palette {
+    darkTheme: {
+      main: string;
+      dark: string;
+      light: string;
+      lighter: string;
+    };
+  }
+
   interface Color {
     0: string;
     50: string;
