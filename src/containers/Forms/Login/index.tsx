@@ -74,13 +74,22 @@ const LoginForm = () => {
           label="Email"
           icon={<PersonIcon fontSize="small" />}
           fullWidth
+          preventDarkMode
           inputProps={{ ...register("email") }}
+          containerProps={{
+            sx: {
+              bgcolor: theme.palette.common.white,
+            },
+          }}
         />
         <MSTextField
           label={t("password")}
           icon={<LockIcon fontSize="small" />}
+          preventDarkMode
           fullWidth
-          containerProps={{ sx: { my: 3, mb: 4 } }}
+          containerProps={{
+            sx: { my: 3, mb: 4, bgcolor: theme.palette.common.white },
+          }}
           inputProps={{ ...register("password") }}
         />
         <Button

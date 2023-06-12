@@ -6,12 +6,14 @@ import { useRouter } from "next/router";
 import { Avatar, Box, BoxProps, Menu, MenuItem } from "@mui/material";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import LanguageIcon from "@mui/icons-material/Language";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import { useTranslation } from "next-i18next";
 import useGetCookieData from "@hooks/useGetCookieData";
 import { theme } from "@theme";
 import SwitchLanguage from "./SwitchLanguage";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "@stores";
+import { darkModeActions } from "@stores/slices/darkMode";
 
 const topLink = [
   {
@@ -25,6 +27,8 @@ const topLink = [
 ];
 
 export const IconWrapper = ({ children, ...props }: BoxProps) => {
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
   return (
     <Box
       display="grid"
@@ -33,7 +37,9 @@ export const IconWrapper = ({ children, ...props }: BoxProps) => {
         placeItems: "center",
         cursor: "pointer",
         "&:hover": {
-          bgcolor: theme.palette.grey[100],
+          bgcolor: darkMode
+            ? theme.palette.darkTheme.lighter
+            : theme.palette.grey[100],
         },
       }}
       width={40}
@@ -51,6 +57,8 @@ const Topbar = ({ setTabActive, tabActive }) => {
   const router = useRouter();
   const { clearCookieData } = useGetCookieData();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
+  const dispatch = useDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -74,10 +82,12 @@ const Topbar = ({ setTabActive, tabActive }) => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      bgcolor={theme.palette.common.white}
+      bgcolor={
+        darkMode ? theme.palette.darkTheme.light : theme.palette.common.white
+      }
       sx={{
         borderBottom: 1,
-        borderColor: theme.palette.grey[200],
+        borderColor: darkMode ? "transparent" : theme.palette.grey[200],
       }}
     >
       <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
@@ -86,12 +96,16 @@ const Topbar = ({ setTabActive, tabActive }) => {
           <IconWrapper
             bgcolor={
               link.path === tabActive
-                ? theme.palette.primary.light
+                ? darkMode
+                  ? theme.palette.darkTheme.lighter
+                  : theme.palette.primary.light
                 : "transparent"
             }
             color={
               link.path === tabActive
                 ? theme.palette.primary.main
+                : darkMode
+                ? theme.palette.text.secondary
                 : theme.palette.grey[600]
             }
             ml={index == 0 ? 0 : 3}
@@ -106,7 +120,10 @@ const Topbar = ({ setTabActive, tabActive }) => {
       </Box>
       <Box display="flex" alignItems="center">
         <SwitchLanguage />
-        <IconWrapper ml={3}>
+        <IconWrapper
+          ml={3}
+          onClick={() => dispatch(darkModeActions.toggleDarkMode())}
+        >
           <DarkModeOutlinedIcon />
         </IconWrapper>
         <Box ml={3}>
@@ -115,7 +132,21 @@ const Topbar = ({ setTabActive, tabActive }) => {
             src="/images/avatar-default.svg"
             sx={{ cursor: "pointer", width: 30, height: 30 }}
           />
-          <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+          <Menu
+            sx={{
+              ".MuiMenu-paper": {
+                ...(darkMode && {
+                  bgcolor: theme.palette.darkTheme.dark,
+                  "*": {
+                    color: theme.palette.text.secondary,
+                  },
+                }),
+              },
+            }}
+            anchorEl={anchorEl}
+            open={!!anchorEl}
+            onClose={handleClose}
+          >
             <MenuItem>{t("myProfile")}</MenuItem>
             <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
           </Menu>

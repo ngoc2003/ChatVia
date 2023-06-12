@@ -4,6 +4,9 @@ import { ConversationType } from "@typing/common";
 import { FriendInformationType } from "@pages";
 import { Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { theme } from "@theme";
+import { useSelector } from "react-redux";
+import { AppState } from "@stores";
 
 interface ConversationListProps {
   conversations: ConversationType[];
@@ -23,10 +26,17 @@ const ConversationList = ({
   setFriendInformation,
 }: ConversationListProps) => {
   const { t } = useTranslation();
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
   return (
     <>
       {!conversations.length ? (
-        <Typography fontStyle="italic">{t("noConversationFounded")}</Typography>
+        <Typography
+          color={darkMode ? theme.palette.text.secondary : undefined}
+          fontStyle="italic"
+        >
+          {t("noConversationFounded")}
+        </Typography>
       ) : (
         conversations.map((conversation: ConversationType) => (
           <Conversation

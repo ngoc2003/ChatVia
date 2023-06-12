@@ -37,6 +37,7 @@ const handleFormat = (input) => {
 const ContactList = () => {
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const [friend, setFriend] = useState<any>();
   const { data, isFetching } = useGetUserContactQuery({ userId: user.id });
 
@@ -52,7 +53,9 @@ const ContactList = () => {
       flexDirection="column"
       width={380}
       p={3}
-      bgcolor={theme.palette.primary.light}
+      bgcolor={
+        darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
+      }
     >
       <Box
         mb={3}
@@ -60,7 +63,11 @@ const ContactList = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography variant="h5" fontWeight={600}>
+        <Typography
+          color={darkMode ? theme.palette.common.white : undefined}
+          variant="h5"
+          fontWeight={600}
+        >
           {t("title.contact")}
         </Typography>
       </Box>
@@ -71,11 +78,7 @@ const ContactList = () => {
             pr: 0,
           },
         }}
-        containerProps={{
-          sx: {
-            bgcolor: theme.palette.grey[400],
-          },
-        }}
+        disableBorderInput
         fullWidth
         placeholder={t("placeholder.searchForUser")}
         icon={<SearchIcon fontSize="small" />}
@@ -108,11 +111,13 @@ const ContactList = () => {
                     alignItems="center"
                     key={item.username}
                     justifyContent="space-between"
+                    color={darkMode ? theme.palette.common.white : undefined}
                   >
                     <Typography
                       variant="body2"
                       fontWeight={600}
                       py={1.5}
+                      color="inherit"
                       px={2}
                     >
                       {item.username}

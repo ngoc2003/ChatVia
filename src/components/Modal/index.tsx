@@ -4,6 +4,8 @@ import React from "react";
 
 import * as Styles from "./Modal.styled";
 import { theme } from "@theme";
+import { useSelector } from "react-redux";
+import { AppState } from "@stores";
 
 export interface CAModalButtonProps {
   color?: string;
@@ -26,10 +28,15 @@ const CAModal = ({
   hasPaddingHorizontal = true,
   ...props
 }: CAModalProps) => {
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
   return (
     <Modal {...props}>
       <Styles.ModalContainer
         sx={{
+          bgcolor: darkMode
+            ? theme.palette.darkTheme.main
+            : theme.palette.common.white,
           width: theme.spacing(30),
           py: theme.spacing(3),
           px: hasPaddingHorizontal ? theme.spacing(3) : 0,
@@ -49,7 +56,6 @@ const CAModal = ({
               <Typography
                 ml="auto"
                 mr="auto"
-                variant="title3"
                 fontWeight={600}
                 lineHeight={theme.spacing(4)}
                 minWidth={0}

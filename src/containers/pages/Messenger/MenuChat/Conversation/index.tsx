@@ -40,6 +40,7 @@ const Conversation = ({
 }: ConversationProps) => {
   const socket = useSocket();
   const { t } = useTranslation();
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const [friend, setFriend] = useState<UserType | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(false);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
@@ -53,6 +54,7 @@ const Conversation = ({
       console.log(users);
       setIsOnline(users.some((user) => user.userId === friendId));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [getUserById] = useLazyGetUserByIdQuery();
@@ -91,11 +93,15 @@ const Conversation = ({
         cursor: "pointer",
         transitionDuration: "0.3s",
         "&:hover": {
-          bgcolor: theme.palette.grey[400],
+          bgcolor: darkMode
+            ? theme.palette.darkTheme.light
+            : theme.palette.grey[400],
           borderRadius: 0.5,
         },
         ...(isActive && {
-          bgcolor: theme.palette.grey[400],
+          bgcolor: darkMode
+            ? theme.palette.darkTheme.light
+            : theme.palette.grey[400],
           borderRadius: 0.5,
         }),
       }}
@@ -117,9 +123,19 @@ const Conversation = ({
         </StyledBadge>
       </Box>
       <Box flex={1}>
-        <Typography fontWeight={600}>{friend?.username ?? ""}</Typography>
+        <Typography
+          color={darkMode ? theme.palette.common.white : undefined}
+          fontWeight={600}
+        >
+          {friend.username}
+        </Typography>
         {!!conversation?.lastMessage && (
-          <Typography variant="caption" color={theme.palette.grey[600]}>
+          <Typography
+            variant="caption"
+            color={
+              darkMode ? theme.palette.text.secondary : theme.palette.grey[600]
+            }
+          >
             {(conversation.lastMessage.id === currentUserId
               ? t("you")
               : `${getLastWordOfString(friend?.username)}: `) +
@@ -129,7 +145,12 @@ const Conversation = ({
       </Box>
       {!!conversation?.lastMessage && (
         <Box alignSelf="flex-start">
-          <Typography variant="caption" color={theme.palette.grey[600]}>
+          <Typography
+            variant="caption"
+            color={
+              darkMode ? theme.palette.text.secondary : theme.palette.grey[600]
+            }
+          >
             {format(new Date(conversation.lastMessage.createdAt), "HH:mm")}
           </Typography>
         </Box>

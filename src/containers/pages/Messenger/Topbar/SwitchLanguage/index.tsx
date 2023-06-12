@@ -4,10 +4,14 @@ import { IconWrapper } from "..";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { AppState } from "@stores";
+import { theme } from "@theme";
 
 const SwitchLanguage = () => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,7 +34,21 @@ const SwitchLanguage = () => {
       <IconWrapper onClick={handleClick} ml={3}>
         <LanguageIcon />
       </IconWrapper>
-      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+      <Menu
+        sx={{
+          ".MuiMenu-paper": {
+            ...(darkMode && {
+              bgcolor: theme.palette.darkTheme.dark,
+              "*": {
+                color: theme.palette.text.secondary,
+              },
+            }),
+          },
+        }}
+        anchorEl={anchorEl}
+        open={!!anchorEl}
+        onClose={handleClose}
+      >
         <MenuItem onClick={switchToEnglish}>
           <Image src="/images/eng.jpeg" width={16} height={10} alt="english" />
           <Typography ml={1}>English</Typography>

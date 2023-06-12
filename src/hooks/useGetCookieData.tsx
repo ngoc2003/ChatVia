@@ -62,7 +62,7 @@ const useGetCookieData = () => {
     return () => {
       clearInterval(timer);
     };
-  }, [dispatch]);
+  }, [currentUser, dispatch]);
 
   return {
     token: currentToken,
