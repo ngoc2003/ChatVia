@@ -24,6 +24,7 @@ export interface ArrivalMessageType
 const Messenger = () => {
   const socket = useSocket();
   const router = useRouter();
+  const user = useSelector((state: AppState) => state.auth);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [tabActive, setTabActive] = useState<any>(router.pathname);
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
@@ -32,8 +33,11 @@ const Messenger = () => {
   const [currentConversation, setCurrentConversation] =
     useState<ConversationType | null>(null);
   const [arrivalConversation, setArrivalConversation] = useState<any>(null);
+  const [isInitialization, setIsInitialization] = useState(false);
 
-  const user = useSelector((state: AppState) => state.auth);
+  useEffect(() => {
+    setIsInitialization(true);
+  }, []);
 
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
@@ -66,38 +70,43 @@ const Messenger = () => {
   }
 
   return (
-    <DefaultLayout tabActive={tabActive} setTabActive={setTabActive}>
-      <NextSeo
-        {...(friendInformation
-          ? { title: "Chat via - " + friendInformation.name }
-          : { title: "Chat via" })}
-      />
+    <>
+      {isInitialization && (
+        <DefaultLayout tabActive={tabActive} setTabActive={setTabActive}>
+          <NextSeo
+            {...(friendInformation
+              ? { title: "Chat via - " + friendInformation.name }
+              : { title: "Chat via" })}
+          />
 
-      {tabActive === "/" && (
-        <MenuChat
-          messages={messages}
-          arrivalMessage={arrivalMessage}
-          arrivalConversation={arrivalConversation}
-          currentConversationId={currentConversation?._id ?? ""}
-          setCurrentConversation={setCurrentConversation}
-          setFriendInformation={setFriendInformation}
-          width={380}
-        />
+          {tabActive === "/" && (
+            <MenuChat
+              messages={messages}
+              arrivalMessage={arrivalMessage}
+              arrivalConversation={arrivalConversation}
+              currentConversationId={currentConversation?._id ?? ""}
+              setCurrentConversation={setCurrentConversation}
+              setFriendInformation={setFriendInformation}
+              width={380}
+            />
+          )}
+          {tabActive === "/contact" && <ContactList />}
+          <Content
+            conversationId={currentConversation?._id ?? ""}
+            arrivalMessage={arrivalMessage}
+            receiverId={
+              currentConversation?.members.find(
+                (member) => member !== user.id
+              ) ?? ""
+            }
+            setMessages={setMessages}
+            messages={messages}
+            flex={3}
+          />
+          {/* <Online friendInformation={friendInformation} flex={1} /> */}
+        </DefaultLayout>
       )}
-      {tabActive === "/contact" && <ContactList />}
-      <Content
-        conversationId={currentConversation?._id ?? ""}
-        arrivalMessage={arrivalMessage}
-        receiverId={
-          currentConversation?.members.find((member) => member !== user.id) ??
-          ""
-        }
-        setMessages={setMessages}
-        messages={messages}
-        flex={3}
-      />
-      {/* <Online friendInformation={friendInformation} flex={1} /> */}
-    </DefaultLayout>
+    </>
   );
 };
 
