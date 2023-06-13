@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -31,6 +32,7 @@
     "next": "13.4.4",
     "next-i18next": "^13.3.0",
     "next-seo": "^6.0.0",
+    "prettier": "2.8.2",
     "react": "18.2.0",
     "react-cool-dimensions": "^3.0.1",
     "react-dom": "18.2.0",
@@ -43,10 +45,16 @@
     "typescript": "5.0.4",
     "yup": "^1.2.0"
   },
+  "husky": {
+    "hooks": {}
+  },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.5",
+    "@commitlint/config-conventional": "^17.6.5",
     "@types/cookie": "^0.5.1",
     "@types/lodash": "^4.14.192",
     "@types/socket.io-client": "^3.0.0",
+    "husky": "^8.0.3",
     "typescript": "^4.9.3"
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useMediaQuery } from '@mui/material';
 import { theme } from '@theme';
 

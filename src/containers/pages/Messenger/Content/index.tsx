@@ -62,11 +62,24 @@ const DefaultContent = ({
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const { isDesktopLg } = useResponsive();
+
+  const contentHeader = useDimensions({
+    useBorderBoxSize: true,
+  });
+
+  const contentFooter = useDimensions({
+    useBorderBoxSize: true,
+  });
+
+  const contentContainer = useDimensions({
+    useBorderBoxSize: true,
+  });
+
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
 
-  const [createMessage] = useCreateMessageMutation();
+  const [createMessage, { isLoading }] = useCreateMessageMutation();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -104,18 +117,6 @@ const DefaultContent = ({
     arrivalMessage &&
       setMessages((prev: MessageType[]) => [...prev, arrivalMessage]);
   }, [arrivalMessage, setMessages]);
-
-  const contentHeader = useDimensions({
-    useBorderBoxSize: true,
-  });
-
-  const contentFooter = useDimensions({
-    useBorderBoxSize: true,
-  });
-
-  const contentContainer = useDimensions({
-    useBorderBoxSize: true,
-  });
 
   if (!receiverId) {
     return (
@@ -226,7 +227,7 @@ const DefaultContent = ({
           onChange={handleTextChange}
         />
         <IconButton
-          disabled={!text}
+          disabled={!text || isLoading}
           onClick={handleSubmit}
           sx={{
             "&:hover": {

@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useRef } from 'react';
 
 const useCallbackDebounce = (callback: (...args: any[]) => void, debounceTime?: number) => {
+  // eslint-disable-next-line no-undef
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   const debounce = (...args: unknown[]) => {

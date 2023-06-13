@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { createTheme, ThemeOptions } from "@mui/material/styles";
+import React from "react";
 
 const colors = {
   primary: { main: "#7269ef", light: "#f7f7fe", dark: "#5b54bf" },

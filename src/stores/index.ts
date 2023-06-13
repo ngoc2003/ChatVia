@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import rootReducer from "./reducers";
 

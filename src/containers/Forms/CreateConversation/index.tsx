@@ -15,9 +15,8 @@ import { useTranslation } from "next-i18next";
 
 interface CreateConversationFormProps {
   setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
-  onCloseModal?:
-    | ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
-    | undefined;
+  onCloseModal?: // eslint-disable-next-line no-unused-vars
+  ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void) | undefined;
 }
 
 const CreateConversationForm = ({
@@ -68,6 +67,7 @@ const CreateConversationForm = ({
     <Box>
       <Box mb={3}>
         <MSTextField
+          disableBorderInput
           inputProps={{ ...register("email") }}
           fullWidth
           placeholder={t("placeholder.typeEmailHere")}
