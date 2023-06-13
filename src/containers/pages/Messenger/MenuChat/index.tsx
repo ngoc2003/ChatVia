@@ -67,8 +67,6 @@ const MenuChat: React.FC<MenuChatProps> = ({
     setSearchValue(e.target.value);
   });
 
-  console.log(darkMode);
-
   useEffect(() => {
     if (arrivalMessage) {
       const handleUpdateMessage = () => {
@@ -129,7 +127,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
         .unwrap()
         .then((response) => setConversations(response));
     }
-  }, [setConversations, user.id, arrivalMessage, getConversation, searchValue]);
+  }, [setConversations, user.id, getConversation, searchValue]);
 
   useEffect(() => {
     arrivalConversation &&

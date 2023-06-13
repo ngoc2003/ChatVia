@@ -13,9 +13,11 @@ import { ConversationType, MessageType } from "@typing/common";
 import DefaultLayout from "@containers/layouts/DefaultLayout";
 import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
+import useResponsive from "@hooks/useResponsive";
 
 export interface FriendInformationType {
   name: string;
+  avatar?: string;
 }
 
 export interface ArrivalMessageType
@@ -65,6 +67,7 @@ const Messenger = () => {
       });
   }, [currentConversation?._id, getMessage]);
 
+  const { isDesktopLg } = useResponsive();
   if (!socket) {
     return;
   }
@@ -87,21 +90,25 @@ const Messenger = () => {
               currentConversationId={currentConversation?._id ?? ""}
               setCurrentConversation={setCurrentConversation}
               setFriendInformation={setFriendInformation}
-              width={380}
+              {...(isDesktopLg ? { width: 380 } : { flex: 1 })}
             />
           )}
-          {tabActive === "/contact" && <ContactList />}
+          {tabActive === "/contact" && (
+            <ContactList {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
+          )}
           <Content
             conversationId={currentConversation?._id ?? ""}
+            setCurrentConversation={setCurrentConversation}
             arrivalMessage={arrivalMessage}
+            setMessages={setMessages}
+            messages={messages}
+            flex={3}
+            friendInformation={friendInformation}
             receiverId={
               currentConversation?.members.find(
                 (member) => member !== user.id
               ) ?? ""
             }
-            setMessages={setMessages}
-            messages={messages}
-            flex={3}
           />
           {/* <Online friendInformation={friendInformation} flex={1} /> */}
         </DefaultLayout>

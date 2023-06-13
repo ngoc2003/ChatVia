@@ -1,5 +1,5 @@
 import MSTextField from "@components/TextField";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, BoxProps, CircularProgress, Typography } from "@mui/material";
 import { theme } from "@theme";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,7 +34,7 @@ const handleFormat = (input) => {
   return result;
 };
 
-const ContactList = () => {
+const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
@@ -51,11 +51,11 @@ const ContactList = () => {
     <Box
       display="flex"
       flexDirection="column"
-      width={380}
       p={3}
       bgcolor={
         darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
       }
+      {...props}
     >
       <Box
         mb={3}

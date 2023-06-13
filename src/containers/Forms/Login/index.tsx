@@ -16,8 +16,8 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useTranslation } from "next-i18next";
 const LoginForm = () => {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
+  const dispatch = useDispatch<AppDispatch>();
   const { setCookieData } = useGetCookieData();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -48,12 +48,13 @@ const LoginForm = () => {
   };
 
   return (
-    <Box>
+    <Box px={1}>
       <Box
         p={4}
         borderRadius={0.5}
         bgcolor={theme.palette.common.white}
-        width={460}
+        width="100%"
+        maxWidth={460}
       >
         {errors.email || errors.password ? (
           <Box

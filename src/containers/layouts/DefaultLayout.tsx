@@ -15,7 +15,16 @@ const DefaultLayout = ({
 }: DefaultLayoutProps) => {
   return (
     <Fade in>
-      <Box height="100vh" display="flex" flexDirection="column">
+      <Box
+        height="100vh"
+        display="flex"
+        sx={{
+          [theme.breakpoints.down("lg")]: {
+            flexDirection: "column-reverse",
+          },
+        }}
+        flexDirection="column"
+      >
         <Topbar tabActive={tabActive} setTabActive={setTabActive} />
         <Box
           display="flex"

@@ -102,6 +102,15 @@ const typography = {
 };
 
 const themeOptionCommon: ThemeOptions = {
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 576,
+      md: 768,
+      lg: 990,
+      xl: 1200,
+    },
+  },
   typography,
   components: {
     MuiButton: {

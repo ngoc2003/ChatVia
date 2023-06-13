@@ -1,6 +1,13 @@
 import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
-import { Box, BoxProps, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  BoxProps,
+  Drawer,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
@@ -9,26 +16,43 @@ import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
 import { useCreateMessageMutation } from "@stores/services/message";
-import { MessageType } from "@typing/common";
+import { ConversationType, MessageType } from "@typing/common";
 import HeartIcon from "@icons/HeartIcon";
 import EmojiCategory from "./EmojiCategory";
 import { useTranslation } from "next-i18next";
 import { theme } from "@theme";
+import useResponsive from "@hooks/useResponsive";
+import { FriendInformationType } from "@pages";
+import useDimensions from "react-cool-dimensions";
+import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 
-interface ContentProps extends BoxProps {
+interface CurrentContentProps extends BoxProps {
   messages: MessageType[];
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
   arrivalMessage: MessageType;
   receiverId: string;
   conversationId: string;
+  friendInformation: FriendInformationType | null;
 }
 
-const Content = ({
+interface ContentProps extends CurrentContentProps {
+  handleCloseDrawer?: () => void;
+}
+
+interface WrapperContentProps extends CurrentContentProps {
+  setCurrentConversation: React.Dispatch<
+    React.SetStateAction<ConversationType | null>
+  >;
+}
+
+const DefaultContent = ({
   conversationId,
   setMessages,
   messages,
   arrivalMessage,
   receiverId,
+  friendInformation,
+  handleCloseDrawer,
   ...props
 }: ContentProps) => {
   const { t } = useTranslation();
@@ -37,7 +61,7 @@ const Content = ({
   const scrollRef = useRef<HTMLElement | null>(null);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
-
+  const { isDesktopLg } = useResponsive();
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
@@ -81,6 +105,18 @@ const Content = ({
       setMessages((prev: MessageType[]) => [...prev, arrivalMessage]);
   }, [arrivalMessage, setMessages]);
 
+  const contentHeader = useDimensions({
+    useBorderBoxSize: true,
+  });
+
+  const contentFooter = useDimensions({
+    useBorderBoxSize: true,
+  });
+
+  const contentContainer = useDimensions({
+    useBorderBoxSize: true,
+  });
+
   if (!receiverId) {
     return (
       <Box
@@ -107,13 +143,48 @@ const Content = ({
       pb={7.2}
       bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
       {...props}
+      ref={contentContainer.observe}
     >
       <Box
+        borderBottom={`0.5px solid ${
+          darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
+        }`}
+        ref={contentHeader.observe}
+        p={2}
+        display="flex"
+        alignItems="center"
+      >
+        {!isDesktopLg && (
+          <KeyboardArrowLeftOutlinedIcon
+            onClick={() => {
+              if (handleCloseDrawer) {
+                handleCloseDrawer();
+              }
+            }}
+            sx={{ mr: 1 }}
+          />
+        )}
+        <Avatar
+          sx={{ width: 40, height: 40, mr: 1 }}
+          src="/images/avatar-default.svg"
+        />
+        <Typography
+          ml={1}
+          color={darkMode ? theme.palette.common.white : undefined}
+          fontWeight={600}
+        >
+          {friendInformation?.name}
+        </Typography>
+      </Box>
+      <Box
         width="100%"
-        height="100%"
+        height={
+          contentContainer.height - contentHeader.height - contentFooter.height
+        }
         display="flex"
         flexDirection="column"
-        px={2}
+        p={2}
+        pt={0}
         sx={{ overflowY: "auto" }}
       >
         {messages?.length ? (
@@ -136,10 +207,7 @@ const Content = ({
         display="flex"
         py={1}
         px={2}
-        position="absolute"
-        bottom={0}
-        right={0}
-        left={0}
+        ref={contentFooter.observe}
         bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
         borderTop={`0.5px solid ${
           darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
@@ -182,6 +250,41 @@ const Content = ({
         </Box>
       </Box>
     </Box>
+  );
+};
+
+const Content = ({ setCurrentConversation, ...props }: WrapperContentProps) => {
+  const { isDesktopLg } = useResponsive();
+  const [isOpen, setIsOpen] = useState(!!props.conversationId);
+
+  const handleCloseDrawer = () => {
+    setIsOpen(false);
+    setCurrentConversation(null);
+  };
+
+  useEffect(() => {
+    setIsOpen(!!props.conversationId);
+  }, [props.conversationId]);
+
+  if (isDesktopLg) {
+    return <DefaultContent {...props} />;
+  }
+
+  return (
+    <Drawer
+      sx={{
+        ".MuiPaper-root": {
+          width: "100vw",
+        },
+      }}
+      anchor="right"
+      open={isOpen}
+      onClose={handleCloseDrawer}
+    >
+      <Box sx={{ height: "100vh", display: "flex", overflow: "hidden" }}>
+        <DefaultContent handleCloseDrawer={handleCloseDrawer} {...props} />
+      </Box>
+    </Drawer>
   );
 };
 

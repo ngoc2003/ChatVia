@@ -57,7 +57,8 @@ const SignUpForm = () => {
         p={4}
         borderRadius={0.5}
         bgcolor={theme.palette.common.white}
-        width={460}
+        width="100%"
+        maxWidth={460}
       >
         <Box mb={3}>
           <MSTextField
