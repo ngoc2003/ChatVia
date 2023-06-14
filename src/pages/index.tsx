@@ -14,6 +14,7 @@ import DefaultLayout from "@containers/layouts/DefaultLayout";
 import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
 import useResponsive from "@hooks/useResponsive";
+import Online from "@containers/pages/Messenger/Online";
 
 export interface FriendInformationType {
   name: string;
@@ -36,6 +37,9 @@ const Messenger = () => {
     useState<ConversationType | null>(null);
   const [arrivalConversation, setArrivalConversation] = useState<any>(null);
   const [isInitialization, setIsInitialization] = useState(false);
+  const [getMessage] = useLazyGetMessageListByConversationIdQuery();
+
+  const [isOpenUserDetail, setIsOpenUserDetail] = useState(false);
 
   useEffect(() => {
     setIsInitialization(true);
@@ -53,8 +57,6 @@ const Messenger = () => {
       setArrivalConversation(data);
     });
   }, []);
-
-  const [getMessage] = useLazyGetMessageListByConversationIdQuery();
 
   useEffect(() => {
     if (!currentConversation?._id) {
@@ -104,13 +106,19 @@ const Messenger = () => {
             messages={messages}
             flex={3}
             friendInformation={friendInformation}
+            setIsOpenUserDetail={setIsOpenUserDetail}
             receiverId={
               currentConversation?.members.find(
                 (member) => member !== user.id
               ) ?? ""
             }
           />
-          {/* <Online friendInformation={friendInformation} flex={1} /> */}
+          <Online
+            isOpenUserDetail={isOpenUserDetail}
+            setIsOpenUserDetail={setIsOpenUserDetail}
+            friendInformation={friendInformation}
+            flex={1}
+          />
         </DefaultLayout>
       )}
     </>

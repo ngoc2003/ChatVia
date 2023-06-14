@@ -54,8 +54,7 @@ const Conversation = ({
       console.log(users);
       setIsOnline(users.some((user) => user.userId === friendId));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [conversation.members, currentUserId, socket]);
 
   const [getUserById] = useLazyGetUserByIdQuery();
 

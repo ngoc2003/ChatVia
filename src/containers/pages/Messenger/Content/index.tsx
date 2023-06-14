@@ -1,13 +1,6 @@
 import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
-import {
-  Avatar,
-  Box,
-  BoxProps,
-  Drawer,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, BoxProps, Drawer, IconButton } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
@@ -24,7 +17,7 @@ import { theme } from "@theme";
 import useResponsive from "@hooks/useResponsive";
 import { FriendInformationType } from "@pages";
 import useDimensions from "react-cool-dimensions";
-import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
+import ContentHeader from "./Header";
 
 interface CurrentContentProps extends BoxProps {
   messages: MessageType[];
@@ -33,6 +26,7 @@ interface CurrentContentProps extends BoxProps {
   receiverId: string;
   conversationId: string;
   friendInformation: FriendInformationType | null;
+  setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ContentProps extends CurrentContentProps {
@@ -53,6 +47,7 @@ const DefaultContent = ({
   receiverId,
   friendInformation,
   handleCloseDrawer,
+  setIsOpenUserDetail,
   ...props
 }: ContentProps) => {
   const { t } = useTranslation();
@@ -61,7 +56,6 @@ const DefaultContent = ({
   const scrollRef = useRef<HTMLElement | null>(null);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
-  const { isDesktopLg } = useResponsive();
 
   const contentHeader = useDimensions({
     useBorderBoxSize: true,
@@ -84,13 +78,13 @@ const DefaultContent = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!currentUserId) {
+    if (!currentUserId || !text.trim()) {
       return;
     }
 
     const message = {
       sender: currentUserId,
-      text,
+      text: text.trim(),
       conversationId,
     };
 
@@ -146,37 +140,13 @@ const DefaultContent = ({
       {...props}
       ref={contentContainer.observe}
     >
-      <Box
-        borderBottom={`0.5px solid ${
-          darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
-        }`}
+      <ContentHeader
+        setIsOpenUserDetail={setIsOpenUserDetail}
+        friendInformation={friendInformation}
         ref={contentHeader.observe}
-        p={2}
-        display="flex"
-        alignItems="center"
-      >
-        {!isDesktopLg && (
-          <KeyboardArrowLeftOutlinedIcon
-            onClick={() => {
-              if (handleCloseDrawer) {
-                handleCloseDrawer();
-              }
-            }}
-            sx={{ mr: 1 }}
-          />
-        )}
-        <Avatar
-          sx={{ width: 40, height: 40, mr: 1 }}
-          src="/images/avatar-default.svg"
-        />
-        <Typography
-          ml={1}
-          color={darkMode ? theme.palette.common.white : undefined}
-          fontWeight={600}
-        >
-          {friendInformation?.name}
-        </Typography>
-      </Box>
+        handleCloseDrawer={handleCloseDrawer}
+      />
+
       <Box
         width="100%"
         height={
@@ -225,6 +195,11 @@ const DefaultContent = ({
           fullWidth
           value={text}
           onChange={handleTextChange}
+          onKeyDown={(e) => {
+            if (e.code === "Enter") {
+              handleSubmit(e);
+            }
+          }}
         />
         <IconButton
           disabled={!text || isLoading}
