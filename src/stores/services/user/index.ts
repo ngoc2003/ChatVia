@@ -11,15 +11,31 @@ const UserApi = baseRtkApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+
     getUserContact: builder.query({
       query: (params) => ({
         url: "/users/friendList",
         params,
       }),
     }),
+
+    updateUser: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        method: "POST",
+        url: "/users/updateInformation",
+        params: { userId },
+        body,
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
 export default UserApi;
 
-export const { useLazyGetUserByIdQuery, useGetUserContactQuery } = UserApi;
+export const {
+  useGetUserByIdQuery,
+  useLazyGetUserByIdQuery,
+  useGetUserContactQuery,
+  useUpdateUserMutation,
+} = UserApi;

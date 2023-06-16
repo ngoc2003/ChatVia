@@ -3,7 +3,7 @@ import Image from "next/image";
 import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 import { useRouter } from "next/router";
-import { Avatar, Box, BoxProps, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, Menu, MenuItem } from "@mui/material";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
@@ -14,8 +14,14 @@ import SwitchLanguage from "./SwitchLanguage";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@stores";
 import { darkModeActions } from "@stores/slices/darkMode";
-
+import PersonIcon from "@mui/icons-material/Person";
+import useResponsive from "@hooks/useResponsive";
+import { IconWrapper } from "./IconWrapper";
 const topLink = [
+  {
+    icon: <PersonIcon />,
+    path: "/me",
+  },
   {
     icon: <MarkChatUnreadOutlinedIcon />,
     path: "/",
@@ -26,39 +32,14 @@ const topLink = [
   },
 ];
 
-export const IconWrapper = ({ children, ...props }: BoxProps) => {
-  const { darkMode } = useSelector((state: AppState) => state.darkMode);
-
-  return (
-    <Box
-      display="grid"
-      borderRadius={1}
-      sx={{
-        placeItems: "center",
-        cursor: "pointer",
-        "&:hover": {
-          bgcolor: darkMode
-            ? theme.palette.darkTheme.lighter
-            : theme.palette.grey[100],
-        },
-      }}
-      width={40}
-      height={40}
-      color={theme.palette.grey[600]}
-      {...props}
-    >
-      {children}
-    </Box>
-  );
-};
-
 const Topbar = ({ setTabActive, tabActive }) => {
-  const { t } = useTranslation();
   const router = useRouter();
-  const { clearCookieData } = useGetCookieData();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { darkMode } = useSelector((state: AppState) => state.darkMode);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { isDesktopLg, isTablet } = useResponsive();
+  const { clearCookieData } = useGetCookieData();
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -90,7 +71,9 @@ const Topbar = ({ setTabActive, tabActive }) => {
         borderColor: darkMode ? "transparent" : theme.palette.grey[200],
       }}
     >
-      <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
+      {isDesktopLg && (
+        <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
+      )}
       <Box display="flex">
         {topLink.map((link, index) => (
           <IconWrapper
@@ -101,14 +84,10 @@ const Topbar = ({ setTabActive, tabActive }) => {
                   : theme.palette.primary.light
                 : "transparent"
             }
-            color={
-              link.path === tabActive
-                ? theme.palette.primary.main
-                : darkMode
-                ? theme.palette.text.secondary
-                : theme.palette.grey[600]
-            }
-            ml={index == 0 ? 0 : 3}
+            {...(link.path === tabActive && {
+              color: theme.palette.primary.main,
+            })}
+            ml={index == 0 ? 0 : isTablet ? 3 : 2}
             key={link.path}
             onClick={() => {
               setTabActive(link.path);
@@ -121,7 +100,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
       <Box display="flex" alignItems="center">
         <SwitchLanguage />
         <IconWrapper
-          ml={3}
+          ml={isTablet ? 3 : 2}
           onClick={() => dispatch(darkModeActions.toggleDarkMode())}
         >
           <DarkModeOutlinedIcon />
@@ -147,7 +126,6 @@ const Topbar = ({ setTabActive, tabActive }) => {
             open={!!anchorEl}
             onClose={handleClose}
           >
-            <MenuItem>{t("myProfile")}</MenuItem>
             <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
           </Menu>
         </Box>

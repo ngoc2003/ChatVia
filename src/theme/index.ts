@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 import React from "react";
 
@@ -167,33 +166,23 @@ const themeOptionCommon: ThemeOptions = {
             color: "#FFFFFF",
           },
         },
-        text: {
-          color: "#000000",
-          backgroundColor: "#ffffff",
-          borderColor: "#ffffff",
-          boxShadow: "none",
-          borderRadius: 8,
+        outlinedInherit: {
+          color: colors.grey[400],
+          borderColor: colors.primary[200],
+        },
+        outlined: {
           "&.Mui-disabled": {
-            color: colors.grey[500],
-            borderColor: colors.grey[500],
-          },
-          "&:hover": {
-            borderColor: "#ffffff",
+            color: colors.primary[500],
+            borderColor: colors.primary[500],
           },
         },
         textError: {
           color: colors.error.main,
         },
-        outlined: {
-          color: "#000000",
-          backgroundColor: "#ffffff",
-          borderRadius: 8,
-          boxShadow: "none",
+        text: {
+          backgroundColor: "transparent",
           "&.Mui-disabled": {
-            color: colors.grey[500],
-          },
-          "&:hover": {
-            borderColor: "#ffffff",
+            color: colors.primary[500],
           },
         },
       },

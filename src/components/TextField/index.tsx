@@ -35,10 +35,6 @@ const MSTextField = ({
     <FormControl
       fullWidth={fullWidth}
       sx={{
-        bgcolor:
-          !preventDarkMode && darkMode
-            ? theme.palette.darkTheme.light
-            : theme.palette.grey[400],
         overflow: "hidden",
         textAlign: "left",
         ...containerProps?.sx,
@@ -63,6 +59,12 @@ const MSTextField = ({
         borderRadius={0.5}
         overflow="hidden"
         alignItems="center"
+        sx={{
+          bgcolor:
+            !preventDarkMode && darkMode
+              ? theme.palette.darkTheme.light
+              : theme.palette.grey[400],
+        }}
         {...(!disableBorderInput && {
           border: `1px solid ${theme.palette.grey[300]}`,
         })}

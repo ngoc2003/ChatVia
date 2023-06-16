@@ -1,12 +1,9 @@
 {
   "logout": "Log out",
-  "myProfile": "My profile",
   "signIn": "Sign in",
   "signInSubTitle": "Sign in to continue to Chhatvia",
-
   "signUp": "Sign up",
   "signUpSubtitle": "Get your Chatvia account now.",
-
   "password": "Password",
   "fullname": "Fullname",
   "acceptTermOfUse": "By registering you agree to the Chatvia Terms of Use",
@@ -16,10 +13,13 @@
   "startMessage": "You havent had any messages yet. Say hi",
   "you": "You: ",
   "noConversationFounded": "No conversations founded!",
-
   "signUpNow": "Sign up now",
+  "updateYourProfile": "Update your profile",
+  "noDescriptionYet": "No description yet!",
   "button": {
-    "create": "Create"
+    "create": "Create",
+    "update": "Update",
+    "cancel": "Cancel"
   },
   "placeholder": {
     "typeEmailHere": "Type email here",
@@ -38,6 +38,18 @@
   },
   "title": {
     "contact": "Contacts",
-    "recent": "Recent"
+    "recent": "Recent",
+    "myProfile": "My profile",
+    "about": "About",
+    "socialProfile": "Social profile"
+  },
+  "field": {
+    "fullname": "Fullname",
+    "description": "Description",
+    "username": "Username",
+    "email": "Email",
+    "gender": "Gender",
+    "location": "Location",
+    "facebook": "Facebook"
   }
 }

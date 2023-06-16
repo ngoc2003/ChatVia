@@ -1,6 +1,5 @@
 {
   "logout": "Đăng xuất",
-  "myProfile": "Thông tin của tôi",
   "signIn": "Đăng nhập",
   "signInSubTitle": "Đăng nhập để tiếp tục với Chatvia",
   "signUp": "Đăng ký",
@@ -15,9 +14,12 @@
   "startMessage": "Bắt đầu cuộc trò chuyện với 1 lời chào nhé",
   "you": "Bạn: ",
   "noConversationFounded": "Không cuộc trò chuyện nào được tìm thấy",
-
+  "updateYourProfile": "Cập nhật thông tin của bạn",
+  "noDescriptionYet": "Chưa có mô tả",
   "button": {
-    "create": "Tạo mới"
+    "create": "Tạo mới",
+    "update": "Cập nhật",
+    "cancel": "Quay lại"
   },
   "placeholder": {
     "typeEmailHere": "Nhập email tại đây",
@@ -36,6 +38,18 @@
   },
   "title": {
     "contact": "Liên hệ",
-    "recent": "Mới nhất"
+    "recent": "Mới nhất",
+    "myProfile": "Thông tin của tôi",
+    "about": "Về tôi",
+    "socialProfile": "Mạng xã hội"
+  },
+  "field": {
+    "fullname": "Họ và tên",
+    "description": "Mô tả",
+    "username": "Tên",
+    "email": "Email",
+    "gender": "Giới tính",
+    "location": "Vị trí",
+    "facebook": "Facebook"
   }
 }

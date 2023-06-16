@@ -1,17 +1,19 @@
 import { Box, Menu, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import { IconWrapper } from "..";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import { theme } from "@theme";
+import useResponsive from "@hooks/useResponsive";
+import { IconWrapper } from "../IconWrapper";
 
 const SwitchLanguage = () => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+  const { isTablet } = useResponsive();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,7 +33,7 @@ const SwitchLanguage = () => {
 
   return (
     <Box>
-      <IconWrapper onClick={handleClick} ml={3}>
+      <IconWrapper onClick={handleClick} ml={isTablet ? 3 : 2}>
         <LanguageIcon />
       </IconWrapper>
       <Menu

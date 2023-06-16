@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useRef } from 'react';
 
 const useCallbackDebounce = (callback: (...args: any[]) => void, debounceTime?: number) => {

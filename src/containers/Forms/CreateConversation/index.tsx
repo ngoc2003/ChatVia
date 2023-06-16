@@ -15,8 +15,9 @@ import { useTranslation } from "next-i18next";
 
 interface CreateConversationFormProps {
   setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
-  onCloseModal?: // eslint-disable-next-line no-unused-vars
-  ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void) | undefined;
+  onCloseModal?:
+    | ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
+    | undefined;
 }
 
 const CreateConversationForm = ({
@@ -40,7 +41,7 @@ const CreateConversationForm = ({
     handleSubmit,
   } = useForm<CreateConversationParams>({ resolver: yupResolver(schema) });
 
-  const onSubmit = async (values: CreateConversationParams) => {
+  const onSubmit = (values: CreateConversationParams) => {
     if (!user.id) {
       return;
     }

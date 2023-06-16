@@ -4,6 +4,11 @@ interface BaseType {
   updatedAt: Date;
 }
 
+export enum GenderType {
+  Male = "Male",
+  Female = "Female",
+}
+
 export interface ConversationType extends BaseType {
   members: string[];
   lastMessage?: {
@@ -24,4 +29,8 @@ export interface UserType extends BaseType {
   accessToken: string;
   username: string;
   avatar?: string;
+  facebookLink?: string;
+  gender?: GenderType;
+  location?: string;
+  description?: string;
 }

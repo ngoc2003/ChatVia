@@ -1,5 +1,7 @@
 export const sayHiSymbol = "&#x1F44B";
 
+export const EMPTY_VALUE = "---";
+
 export const iconsLibrary = [
   {
     name: "Face",

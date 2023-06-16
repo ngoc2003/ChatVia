@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
 import useResponsive from "@hooks/useResponsive";
 import Online from "@containers/pages/Messenger/Online";
+import MyProfile from "@containers/pages/Messenger/MyProfile";
 
 export interface FriendInformationType {
   name: string;
@@ -97,6 +98,9 @@ const Messenger = () => {
           )}
           {tabActive === "/contact" && (
             <ContactList {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
+          )}
+          {tabActive === "/me" && (
+            <MyProfile {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
           )}
           <Content
             conversationId={currentConversation?._id ?? ""}
