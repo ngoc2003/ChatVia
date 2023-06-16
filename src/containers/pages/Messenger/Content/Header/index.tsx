@@ -59,7 +59,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
           )}
           <Avatar
             sx={{ width: 40, height: 40, mr: 1 }}
-            src="/images/avatar-default.svg"
+            src={friendInformation?.avatar ?? "/images/avatar-default.svg"}
           />
           <Typography
             ml={1}

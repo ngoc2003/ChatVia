@@ -16,13 +16,14 @@ import { CAConnectionInstance } from "@pages/api/hello";
 export interface AuthState {
   id: string | null;
   accessToken: string | null;
+  avatar: string;
 }
 
 const initialState: AuthState = {
   id: null,
   accessToken: null,
+  avatar: "",
 };
-export interface PayloadActionType {}
 
 const setAuth: CaseReducer<AuthState, PayloadAction<AuthState>> = (
   state,
@@ -30,6 +31,14 @@ const setAuth: CaseReducer<AuthState, PayloadAction<AuthState>> = (
 ) => {
   state.id = payload.id;
   state.accessToken = payload.accessToken;
+  state.avatar = payload.avatar;
+};
+
+const setAvatar: CaseReducer<
+  AuthState,
+  PayloadAction<Pick<AuthState, "avatar">>
+> = (state, { payload }) => {
+  state.avatar = payload.avatar;
 };
 
 export const handleLogin = createAsyncThunk<LoginResponse, LoginParams>(
@@ -45,6 +54,7 @@ export const handleLogin = createAsyncThunk<LoginResponse, LoginParams>(
         authActions.setAuth({
           id: data.id,
           accessToken: data.token.accessToken,
+          avatar: data?.avatar || "",
         })
       );
 
@@ -71,6 +81,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth,
+    setAvatar,
   },
 });
 

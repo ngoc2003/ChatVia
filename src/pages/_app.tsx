@@ -15,12 +15,13 @@ const ThemeWrapperProvider = dynamic(
 interface MyAppProps extends AppProps {
   token: string | null;
   id: string | null;
+  avatar: string;
 }
 
-const MyApp = ({ Component, pageProps, token, id }: MyAppProps) => {
+const MyApp = ({ Component, pageProps, token, id, avatar }: MyAppProps) => {
   return (
     <Provider store={store}>
-      <ThemeWrapperProvider token={token} id={id}>
+      <ThemeWrapperProvider token={token} id={id} avatar={avatar}>
         <DefaultSeo title="Chat via" />
         <Component {...pageProps} />
       </ThemeWrapperProvider>
@@ -36,6 +37,7 @@ MyApp.getInitialProps = async (appContext: any) => {
   try {
     let token: string | null = null;
     let id: string | null = null;
+    let avatar: string = "";
     if (tokenMessage) {
       const data = await CAConnectionInstance.post<any>(
         "/auth/me",
@@ -48,11 +50,13 @@ MyApp.getInitialProps = async (appContext: any) => {
       );
       token = data.data.accessToken;
       id = data.data._id;
+      avatar = data.data?.avatar || "";
     }
     return {
       ...appProps,
       token,
       id,
+      avatar,
     };
   } catch (error: any) {
     return { ...appProps };

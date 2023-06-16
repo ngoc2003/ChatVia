@@ -9,12 +9,14 @@ interface ThemeWrapperProviderProps {
   children: ReactNode;
   token: string | null;
   id: string | null;
+  avatar: string;
 }
 
 const ThemeWrapperProvider = ({
   children,
   token,
   id,
+  avatar,
 }: ThemeWrapperProviderProps) => {
   const wrapperRef = useRef<HTMLElement>(null);
   const dispatch = useDispatch();
@@ -25,10 +27,11 @@ const ThemeWrapperProvider = ({
         authActions.setAuth({
           accessToken: token,
           id,
+          avatar,
         })
       );
     }
-  }, [dispatch, id, token]);
+  }, [dispatch, avatar, id, token]);
 
   return (
     <ThemeProvider theme={theme}>

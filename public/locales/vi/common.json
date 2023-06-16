@@ -50,6 +50,7 @@
     "email": "Email",
     "gender": "Giới tính",
     "location": "Vị trí",
-    "facebook": "Facebook"
+    "facebook": "Facebook",
+    "avatar": "Ảnh đại diện"
   }
 }

@@ -19,7 +19,13 @@ const AuthLayout = ({ title, subTitle, children }: AuthLayoutProps) => {
     >
       <Box textAlign="center">
         <Box py={6} display="flex" alignItems="center" justifyContent="center">
-          <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
+          <Image
+            style={{ borderRadius: 9999 }}
+            src="/images/Logo.png"
+            width={30}
+            height={30}
+            alt="logo"
+          />
           <Typography variant="h5" ml={2}>
             Chatvia
           </Typography>

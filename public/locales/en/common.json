@@ -50,6 +50,7 @@
     "email": "Email",
     "gender": "Gender",
     "location": "Location",
-    "facebook": "Facebook"
+    "facebook": "Facebook",
+    "avatar": "Avatar"
   }
 }

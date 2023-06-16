@@ -107,6 +107,7 @@ const MyProfile = (props: BoxProps) => {
           </IconButton>
         </Box>
         <Image
+          style={{ borderRadius: 9999 }}
           height={96}
           width={96}
           src={data?.avatar ?? "/images/avatar-default.svg"}

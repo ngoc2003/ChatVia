@@ -19,6 +19,7 @@ export interface User {
 
 export interface AuthResponse {
   id: string;
+  avatar: string;
   token: {
     accessToken: string;
   };

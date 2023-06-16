@@ -7,23 +7,26 @@ import {
   ModalProps,
   Typography,
 } from "@mui/material";
-import { AppState } from "@stores";
+import { AppDispatch, AppState } from "@stores";
 import { theme } from "@theme";
 import { GenderType, UserType } from "@typing/common";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { useUpdateUserMutation } from "@stores/services/user";
 import { ErrorText } from "@components/TextField/ErrorText";
+import ImageUpload from "./UploadImage";
+import { authActions } from "@stores/slices/auth";
 
 interface UpdateProfileProps extends Omit<ModalProps, "children"> {
   user: UserType;
 }
 
 interface UpdateProfileParams {
+  avatar?: string;
   email: string;
   gender: GenderType;
   username: string;
@@ -34,7 +37,9 @@ interface UpdateProfileParams {
 
 const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch<AppDispatch>();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+  const [avatar, setAvatar] = useState<string>(user?.avatar ?? "");
 
   const schema = Yup.object({
     username: Yup.string().required(t("error.required")),
@@ -56,9 +61,14 @@ const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
   });
 
   const onSubmit = (values: UpdateProfileParams) => {
-    updateUser({ userId: user._id, ...values })
+    updateUser({ userId: user._id, ...values, avatar })
       .unwrap()
-      .then(() => props.onClose?.({}, "escapeKeyDown"));
+      .then(() => {
+        props.onClose?.({}, "escapeKeyDown");
+        if (avatar !== user.avatar) {
+          dispatch(authActions.setAvatar({ avatar }));
+        }
+      });
   };
 
   if (!user) {
@@ -75,6 +85,7 @@ const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
         >
           {t("updateYourProfile")}
         </Typography>
+        <ImageUpload onChange={setAvatar} defaultValue={avatar} />
         <MSTextField
           containerProps={{
             sx: {

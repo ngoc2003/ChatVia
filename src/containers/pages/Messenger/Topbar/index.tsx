@@ -36,6 +36,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
   const router = useRouter();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const user = useSelector((state: AppState) => state.auth);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { isDesktopLg, isTablet } = useResponsive();
   const { clearCookieData } = useGetCookieData();
@@ -108,7 +109,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
         <Box ml={3}>
           <Avatar
             onClick={handleClick}
-            src="/images/avatar-default.svg"
+            src={user?.avatar ?? "/images/avatar-default.svg"}
             sx={{ cursor: "pointer", width: 30, height: 30 }}
           />
           <Menu
