@@ -13,6 +13,7 @@ import {
   AccordionSummary,
   Typography,
 } from "@mui/material";
+import { EMPTY_VALUE } from "@constants";
 
 interface CAAccordionItem {
   title: string;
@@ -58,9 +59,9 @@ export const CAAccordion = ({ list }: CAAccordionProps) => {
               <Information
                 key={detail.title}
                 title={detail.title}
-                {...(detail?.content
-                  ? { content: detail.content }
-                  : { href: detail.href ?? "" })}
+                {...(detail?.href
+                  ? { href: detail.href }
+                  : { content: detail.content || EMPTY_VALUE })}
               />
             ))}
           </AccordionDetails>

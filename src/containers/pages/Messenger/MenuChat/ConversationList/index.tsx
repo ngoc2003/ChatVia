@@ -15,7 +15,7 @@ interface ConversationListProps {
     React.SetStateAction<ConversationType | null>
   >;
   setFriendInformation: React.Dispatch<
-    React.SetStateAction<FriendInformationType>
+    React.SetStateAction<FriendInformationType | null>
   >;
 }
 

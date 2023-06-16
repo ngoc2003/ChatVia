@@ -29,7 +29,7 @@ interface MenuChatProps extends BoxProps {
     React.SetStateAction<ConversationType | null>
   >;
   setFriendInformation: React.Dispatch<
-    React.SetStateAction<FriendInformationType>
+    React.SetStateAction<FriendInformationType | null>
   >;
   currentConversationId: string;
 }

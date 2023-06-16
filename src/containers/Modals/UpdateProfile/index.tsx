@@ -27,7 +27,7 @@ interface UpdateProfileParams {
   email: string;
   gender: GenderType;
   username: string;
-  facebookLink: string;
+  facebookLink?: string;
   location: string;
   description: string;
 }
@@ -40,7 +40,7 @@ const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
     username: Yup.string().required(t("error.required")),
     email: Yup.string().email(t("error.invalid")),
     gender: Yup.string().oneOf(["Male", "Female"]),
-    facebookLink: Yup.string().required(t("error.required")),
+    facebookLink: Yup.string(),
     location: Yup.string().required(t("error.required")),
     description: Yup.string().required(t("error.required")),
   }).required();

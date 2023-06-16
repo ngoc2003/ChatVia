@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
+import { omit } from "lodash";
 
 const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
   "& .MuiBadge-badge": {
@@ -25,7 +26,7 @@ const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
 interface ConversationProps extends BoxProps {
   conversation: ConversationType;
   setFriendInformation: React.Dispatch<
-    React.SetStateAction<FriendInformationType>
+    React.SetStateAction<FriendInformationType | null>
   >;
   onClick: () => void;
   isActive: boolean;
@@ -85,7 +86,10 @@ const Conversation = ({
       {...props}
       onClick={() => {
         onClick();
-        setFriendInformation({ name: friend.username });
+        setFriendInformation({
+          name: friend.username,
+          ...omit(friend, ["username"]),
+        });
       }}
       sx={{
         p: 1.5,

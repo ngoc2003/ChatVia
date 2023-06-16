@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
-import { ConversationType, MessageType } from "@typing/common";
+import { ConversationType, MessageType, UserType } from "@typing/common";
 import DefaultLayout from "@containers/layouts/DefaultLayout";
 import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
@@ -17,9 +17,8 @@ import useResponsive from "@hooks/useResponsive";
 import Online from "@containers/pages/Messenger/Online";
 import MyProfile from "@containers/pages/Messenger/MyProfile";
 
-export interface FriendInformationType {
+export interface FriendInformationType extends Omit<UserType, "username"> {
   name: string;
-  avatar?: string;
 }
 
 export interface ArrivalMessageType
