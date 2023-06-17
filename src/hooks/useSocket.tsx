@@ -17,12 +17,8 @@ const useSocket = () => {
   useEffect(() => {
     if (user.id && socket?.current) {
       socket.current.emit("addUser", user.id);
-      socket.current.on("getUsers ", (users) => {
-        console.log(users);
-      });
-      socket.current.on("getConversation ", (conversation) => {
-        console.log(conversation);
-      });
+      socket.current.on("getUsers ", () => {});
+      socket.current.on("getConversation ", () => {});
     }
   }, [user.id]);
 

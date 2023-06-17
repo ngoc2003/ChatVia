@@ -20,6 +20,7 @@ import { useUpdateUserMutation } from "@stores/services/user";
 import { ErrorText } from "@components/TextField/ErrorText";
 import ImageUpload from "./UploadImage";
 import { authActions } from "@stores/slices/auth";
+import { commonActions } from "@stores/slices/common";
 
 interface UpdateProfileProps extends Omit<ModalProps, "children"> {
   user: UserType;
@@ -68,6 +69,12 @@ const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
         if (avatar !== user.avatar) {
           dispatch(authActions.setAvatar({ avatar }));
         }
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "success",
+            message: "Update successfully!",
+          })
+        );
       });
   };
 

@@ -6,6 +6,7 @@ import App, { AppProps } from "next/app";
 import cookie from "cookie";
 import { CAConnectionInstance } from "./api/hello";
 import { appWithTranslation } from "next-i18next";
+import CustomizedSnackbars from "@components/Snackbar";
 
 const ThemeWrapperProvider = dynamic(
   () => import("../containers/layouts/ThemeWrapper"),
@@ -23,6 +24,7 @@ const MyApp = ({ Component, pageProps, token, id, avatar }: MyAppProps) => {
     <Provider store={store}>
       <ThemeWrapperProvider token={token} id={id} avatar={avatar}>
         <DefaultSeo title="Chat via" />
+        <CustomizedSnackbars />
         <Component {...pageProps} />
       </ThemeWrapperProvider>
     </Provider>

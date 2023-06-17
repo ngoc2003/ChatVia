@@ -6,12 +6,13 @@ import { ErrorText } from "@components/TextField/ErrorText";
 import { Button, Box, CircularProgress } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateConversationParams } from "@containers/Modals/CreateConversation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
 import { useCreateConversationMutation } from "@stores/services/conversation";
 import { ConversationType } from "@typing/common";
 import { useTranslation } from "next-i18next";
+import { commonActions } from "@stores/slices/common";
 
 interface CreateConversationFormProps {
   setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
@@ -26,6 +27,7 @@ const CreateConversationForm = ({
 }: CreateConversationFormProps) => {
   const { t } = useTranslation();
   const socket = useSocket();
+  const dispatch = useDispatch();
   const user = useSelector((state: AppState) => state.auth);
 
   const [createConversation, { isLoading: isCreateConversationLoading }] =
@@ -41,7 +43,7 @@ const CreateConversationForm = ({
     handleSubmit,
   } = useForm<CreateConversationParams>({ resolver: yupResolver(schema) });
 
-  const onSubmit = (values: CreateConversationParams) => {
+  const onSubmit = async (values: CreateConversationParams) => {
     if (!user.id) {
       return;
     }
@@ -53,11 +55,18 @@ const CreateConversationForm = ({
       .unwrap()
       .then((response) => {
         setConversation((prev) => [response, ...prev]);
-
         socket.current.emit("createConversation", {
           ...response,
           receiverId: response.members.find((conv: string) => conv !== user.id),
         });
+
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "success",
+            message: "Create conversation successfully!",
+          })
+        );
+
         if (onCloseModal) {
           onCloseModal({}, "escapeKeyDown");
         }

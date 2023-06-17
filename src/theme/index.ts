@@ -28,7 +28,7 @@ const colors = {
     lighter: "#3e4a56",
   },
   error: { main: "#ef476f" },
-  success: { main: "#06d6a0", light: "#cdf7ec", dark: "#025640" },
+  success: { main: "rgb(46, 125, 50)" },
   warning: { main: "#f9b5c5", light: "#fcdae2", dark: "#601c2c" },
   text: { primary: "#7a7f9a", secondary: "#a6b0cf" },
 };

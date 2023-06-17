@@ -14,6 +14,7 @@ import MSTextField from "@components/TextField";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { useTranslation } from "next-i18next";
+import { commonActions } from "@stores/slices/common";
 const LoginForm = () => {
   const router = useRouter();
   const { t } = useTranslation();
@@ -41,6 +42,12 @@ const LoginForm = () => {
       .then((response) => {
         setCookieData("tokenMessage", response.token);
         router.push("/");
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "success",
+            message: "Sign in successfully",
+          })
+        );
       })
       .finally(() => {
         setIsLoading(false);

@@ -17,6 +17,7 @@ import { darkModeActions } from "@stores/slices/darkMode";
 import PersonIcon from "@mui/icons-material/Person";
 import useResponsive from "@hooks/useResponsive";
 import { IconWrapper } from "./IconWrapper";
+import { commonActions } from "@stores/slices/common";
 const topLink = [
   {
     icon: <PersonIcon />,
@@ -53,6 +54,12 @@ const Topbar = ({ setTabActive, tabActive }) => {
   const handleLogout = () => {
     handleClose();
     router.push("/auth");
+    dispatch(
+      commonActions.showAlertMessage({
+        type: "success",
+        message: "Log out successfully!",
+      })
+    );
     clearCookieData(publicRuntimeConfig.ACCESS_TOKEN_SECRET as string);
   };
 

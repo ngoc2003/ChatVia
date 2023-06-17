@@ -25,7 +25,6 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
   ({ friendInformation, handleCloseDrawer, setIsOpenUserDetail }, ref) => {
     const { darkMode } = useSelector((state: AppState) => state.darkMode);
     const { isDesktopLg } = useResponsive();
-
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,6 +34,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
     const handleClose = () => {
       setAnchorEl(null);
     };
+
     return (
       <Box
         borderBottom={`0.5px solid ${

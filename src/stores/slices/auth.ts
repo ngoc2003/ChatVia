@@ -12,6 +12,7 @@ import {
   LoginResponse,
 } from "../../typing/auth";
 import { CAConnectionInstance } from "@pages/api/hello";
+import { commonActions } from "./common";
 
 export interface AuthState {
   id: string | null;
@@ -60,6 +61,23 @@ export const handleLogin = createAsyncThunk<LoginResponse, LoginParams>(
 
       return { token: data.token.accessToken };
     } catch (error: any) {
+      if (error.response.status === 403) {
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "error",
+            message: "Password does not match",
+          })
+        );
+      }
+
+      if (error.response.status === 401) {
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "error",
+            message: "Email is wrong, please check again",
+          })
+        );
+      }
       throw new Error(error);
     }
   }

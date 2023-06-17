@@ -13,13 +13,12 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { omit } from "lodash";
 
-const StyledBadge = styled(Badge)<{ isOnline: boolean }>(({ isOnline }) => ({
+const StyledBadge = styled(Badge)(() => ({
   "& .MuiBadge-badge": {
     width: 10,
     height: 10,
     borderRadius: 9999,
     border: "2px solid #fff",
-    backgroundColor: isOnline ? "#44b700" : theme.palette.grey[700],
   },
 }));
 
@@ -52,7 +51,6 @@ const Conversation = ({
     );
 
     socket?.current.on("getUsers", (users) => {
-      console.log(users);
       setIsOnline(users.some((user) => user.userId === friendId));
     });
   }, [conversation.members, currentUserId, socket]);
@@ -114,7 +112,11 @@ const Conversation = ({
     >
       <Box mr={2}>
         <StyledBadge
-          isOnline={isOnline}
+          sx={{
+            "& .MuiBadge-badge": {
+              backgroundColor: isOnline ? "#44b700" : theme.palette.grey[700],
+            },
+          }}
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"
