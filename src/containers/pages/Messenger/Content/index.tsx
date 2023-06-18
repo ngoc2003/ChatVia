@@ -1,7 +1,7 @@
 import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
 import { Box, BoxProps, Drawer, IconButton } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
@@ -56,6 +56,7 @@ const DefaultContent = ({
   const scrollRef = useRef<HTMLElement | null>(null);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+  const audio = useMemo(() => new Audio("sound.mp3"), []);
 
   const contentHeader = useDimensions({
     useBorderBoxSize: true,
@@ -108,9 +109,11 @@ const DefaultContent = ({
   }, [messages?.length]);
 
   useEffect(() => {
-    arrivalMessage &&
+    if (arrivalMessage) {
       setMessages((prev: MessageType[]) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, setMessages]);
+      audio.play();
+    }
+  }, [arrivalMessage, audio, setMessages]);
 
   if (!receiverId) {
     return (
