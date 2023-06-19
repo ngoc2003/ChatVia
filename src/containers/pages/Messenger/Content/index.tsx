@@ -15,14 +15,15 @@ import EmojiCategory from "./EmojiCategory";
 import { useTranslation } from "next-i18next";
 import { theme } from "@theme";
 import useResponsive from "@hooks/useResponsive";
-import { FriendInformationType } from "@pages";
+import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useDimensions from "react-cool-dimensions";
 import ContentHeader from "./Header";
+import { omit } from "lodash";
 
 interface CurrentContentProps extends BoxProps {
   messages: MessageType[];
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
-  arrivalMessage: MessageType;
+  arrivalMessage: ArrivalMessageType | null;
   receiverId: string;
   conversationId: string;
   friendInformation: FriendInformationType | null;
@@ -110,7 +111,10 @@ const DefaultContent = ({
 
   useEffect(() => {
     if (arrivalMessage) {
-      setMessages((prev: MessageType[]) => [...prev, arrivalMessage]);
+      setMessages((prev: MessageType[]) => [
+        ...prev,
+        omit(arrivalMessage, ["conversationId"]) as MessageType,
+      ]);
       audio.play();
     }
   }, [arrivalMessage, audio, setMessages]);

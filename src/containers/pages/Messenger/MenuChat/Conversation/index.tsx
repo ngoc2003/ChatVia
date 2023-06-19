@@ -104,6 +104,7 @@ const Conversation = ({
             ? theme.palette.darkTheme.light
             : theme.palette.grey[400],
           borderRadius: 0.5,
+          pointerEvents: "none",
         }),
       }}
       display="flex"

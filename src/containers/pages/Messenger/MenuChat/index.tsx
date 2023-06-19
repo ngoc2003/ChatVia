@@ -13,17 +13,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
-import useSocket from "@hooks/useSocket";
 import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
-import { ConversationType, MessageType } from "@typing/common";
+import { ConversationType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
 import { useTranslation } from "next-i18next";
 
 interface MenuChatProps extends BoxProps {
-  messages: MessageType[];
-  arrivalMessage: ArrivalMessageType;
+  arrivalMessage: ArrivalMessageType | null;
   arrivalConversation: ConversationType;
   setCurrentConversation: React.Dispatch<
     React.SetStateAction<ConversationType | null>
@@ -35,7 +33,6 @@ interface MenuChatProps extends BoxProps {
 }
 
 const MenuChat: React.FC<MenuChatProps> = ({
-  messages,
   arrivalMessage,
   setCurrentConversation,
   setFriendInformation,
@@ -44,7 +41,6 @@ const MenuChat: React.FC<MenuChatProps> = ({
   ...props
 }: MenuChatProps) => {
   const { t } = useTranslation();
-  const socket = useSocket();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
@@ -72,7 +68,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
       const handleUpdateMessage = () => {
         setConversations(
           conversations.map((conv) => {
-            if (conv._id !== currentConversationId) {
+            if (conv._id !== arrivalMessage.conversationId) {
               return conv;
             }
             return {
@@ -87,39 +83,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
         );
       };
 
-      socket.current.on("getMessage", () => {
-        handleUpdateMessage();
-      });
+      handleUpdateMessage();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [arrivalMessage?.text]);
-
-  useEffect(() => {
-    if (messages.length) {
-      const lastMessages = messages[messages.length - 1];
-
-      if (!currentConversationId || !lastMessages) {
-        return;
-      }
-
-      setConversations(
-        conversations.map((conv) => {
-          if (conv._id !== currentConversationId) {
-            return conv;
-          }
-          return {
-            ...conv,
-            lastMessage: {
-              id: lastMessages?.sender,
-              text: lastMessages?.text,
-              createdAt: lastMessages?.createdAt,
-            },
-          };
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages.length]);
+  }, [arrivalMessage?.createdAt]);
 
   useEffect(() => {
     if (user.id) {

@@ -22,15 +22,19 @@ export interface FriendInformationType extends Omit<UserType, "username"> {
 }
 
 export interface ArrivalMessageType
-  extends Pick<MessageType, "sender" | "text" | "createdAt"> {}
+  extends Pick<MessageType, "sender" | "text" | "createdAt"> {
+  conversationId: string;
+}
 
 const Messenger = () => {
   const socket = useSocket();
   const router = useRouter();
   const user = useSelector((state: AppState) => state.auth);
+  const { isDesktopLg } = useResponsive();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [tabActive, setTabActive] = useState<any>(router.pathname);
-  const [arrivalMessage, setArrivalMessage] = useState<any>(null);
+  const [arrivalMessage, setArrivalMessage] =
+    useState<ArrivalMessageType | null>(null);
   const [friendInformation, setFriendInformation] =
     useState<FriendInformationType | null>(null);
   const [currentConversation, setCurrentConversation] =
@@ -48,6 +52,7 @@ const Messenger = () => {
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
+        conversationId: data.conversationId,
         sender: data.senderId,
         text: data.text,
         createdAt: new Date(),
@@ -62,6 +67,7 @@ const Messenger = () => {
     if (!currentConversation?._id) {
       return;
     }
+
     getMessage({ conversationId: currentConversation?._id })
       .unwrap()
       .then((response) => {
@@ -69,7 +75,6 @@ const Messenger = () => {
       });
   }, [currentConversation?._id, getMessage]);
 
-  const { isDesktopLg } = useResponsive();
   if (!socket) {
     return;
   }
@@ -86,7 +91,6 @@ const Messenger = () => {
 
           {tabActive === "/" && (
             <MenuChat
-              messages={messages}
               arrivalMessage={arrivalMessage}
               arrivalConversation={arrivalConversation}
               currentConversationId={currentConversation?._id ?? ""}
