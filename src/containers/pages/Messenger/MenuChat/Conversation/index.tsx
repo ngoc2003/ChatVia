@@ -124,7 +124,7 @@ const Conversation = ({
         >
           <Avatar
             sx={{ width: 36, height: 36 }}
-            src={friend?.avatar ?? "/images/avatar-default.svg"}
+            src={friend?.avatar || "/images/avatar-default.svg"}
           />
         </StyledBadge>
       </Box>

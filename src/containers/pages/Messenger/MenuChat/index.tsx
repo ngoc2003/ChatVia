@@ -13,7 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
-import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
+import { useGetConversationListByUserIdQuery } from "@stores/services/conversation";
 import { ConversationType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
@@ -48,8 +48,11 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
 
-  const [getConversation, { isFetching: isGetConversationFetching }] =
-    useLazyGetConversationListByUserIdQuery();
+  const { data, isFetching: isGetConversationFetching } =
+    useGetConversationListByUserIdQuery({
+      userId: user.id as string,
+      query: { searchValue },
+    });
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -89,13 +92,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   }, [arrivalMessage?.createdAt]);
 
   useEffect(() => {
-    if (user.id) {
-      getConversation({ userId: user.id, query: { searchValue } })
-        .unwrap()
-        .then((response) => setConversations(response));
+    if (data?.length) {
+      setConversations(data);
     }
-  }, [setConversations, user.id, getConversation, searchValue]);
-
+  }, [data]);
   useEffect(() => {
     arrivalConversation &&
       setConversations((prev) => [arrivalConversation, ...prev]);

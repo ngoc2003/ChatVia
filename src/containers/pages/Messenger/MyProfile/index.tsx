@@ -110,7 +110,7 @@ const MyProfile = (props: BoxProps) => {
           style={{ borderRadius: 9999 }}
           height={96}
           width={96}
-          src={data?.avatar ?? "/images/avatar-default.svg"}
+          src={data?.avatar || "/images/avatar-default.svg"}
           alt="avatar"
         />
         <Typography

@@ -40,7 +40,7 @@ const UpdateProfile = ({ user, ...props }: UpdateProfileProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
-  const [avatar, setAvatar] = useState<string>(user?.avatar ?? "");
+  const [avatar, setAvatar] = useState<string>(user?.avatar || "");
 
   const schema = Yup.object({
     username: Yup.string().required(t("error.required")),

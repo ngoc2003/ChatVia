@@ -4,11 +4,16 @@ import React from "react";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
+import ChatOption from "./ChatOption";
+import { MessageType } from "@typing/common";
 interface ChatContentProps {
   me?: boolean;
   text: string;
   createdAt: Date;
   avatar?: string;
+  messageId: string;
+  isLast: boolean;
+  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
 
 const handleRenderText = (str: string, me: boolean) => {
@@ -25,7 +30,7 @@ const handleRenderText = (str: string, me: boolean) => {
 };
 // eslint-disable-next-line react/display-name
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
-  ({ me, text, avatar }, ref) => {
+  ({ me, text, avatar, messageId, setMessages, isLast }, ref) => {
     const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
     return (
@@ -40,10 +45,20 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
         {!me && (
           <Avatar
             sx={{ width: 30, height: 30, mr: 1 }}
-            src={avatar ?? "/images/avatar-default.svg"}
+            src={avatar || "/images/avatar-default.svg"}
           />
         )}
-        <Box>
+        <Box
+          display="flex"
+          flexDirection={me ? "row-reverse" : "row"}
+          sx={{
+            "&:hover": {
+              ".MuiSvgIcon-root": {
+                display: "block",
+              },
+            },
+          }}
+        >
           <Box
             p={1}
             px={2}
@@ -76,6 +91,11 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
               {handleRenderText(text, me as boolean)}
             </Typography>
           </Box>
+          <ChatOption
+            canDelete={!isLast}
+            setMessages={setMessages}
+            messageId={messageId}
+          />
         </Box>
       </Box>
     );

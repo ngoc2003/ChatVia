@@ -97,7 +97,7 @@ const Online = ({
         >
           <Image
             style={{ borderRadius: 9999 }}
-            src={friendInformation?.avatar ?? "/images/avatar-default.svg"}
+            src={friendInformation?.avatar || "/images/avatar-default.svg"}
             height={80}
             width={80}
             alt={friendInformation?.name}

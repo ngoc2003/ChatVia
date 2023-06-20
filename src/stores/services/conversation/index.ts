@@ -16,7 +16,7 @@ const ConversationApi = baseRtkApi.injectEndpoints({
         url: "/conversations",
         body,
       }),
-      invalidatesTags: ["conversation"],
+      invalidatesTags: (result) => [{ type: "conversation", id: result?._id }],
     }),
     getConversationListByUserId: builder.query<
       ConversationType[],

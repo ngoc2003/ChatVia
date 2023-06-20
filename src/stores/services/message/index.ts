@@ -24,6 +24,14 @@ const MessageApi = baseRtkApi.injectEndpoints({
       }),
       invalidatesTags: (result) => [{ type: "message", id: result?._id }],
     }),
+    deleteMessage: builder.mutation({
+      query: ({ messageId, userId }) => ({
+        method: "POST",
+        url: `/messages/${messageId}`,
+        body: { userId },
+      }),
+      invalidatesTags: (result) => [{ type: "message", id: result?._id }],
+    }),
   }),
 });
 
@@ -32,4 +40,5 @@ export default MessageApi;
 export const {
   useCreateMessageMutation,
   useLazyGetMessageListByConversationIdQuery,
+  useDeleteMessageMutation,
 } = MessageApi;

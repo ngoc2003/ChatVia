@@ -107,7 +107,7 @@ const DefaultContent = ({
 
   useEffect(() => {
     scrollRef?.current?.scrollIntoView();
-  }, [messages?.length]);
+  }, [messages?.length, conversationId]);
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -166,14 +166,17 @@ const DefaultContent = ({
         sx={{ overflowY: "auto" }}
       >
         {messages?.length ? (
-          messages.map((message: MessageType) => (
+          messages.map((message: MessageType, index: number) => (
             <ChatContent
+              isLast={index === messages.length - 1}
               ref={scrollRef}
+              setMessages={setMessages}
               key={message._id}
+              messageId={message._id}
               me={currentUserId === message.sender}
               createdAt={message.createdAt}
               text={message.text}
-              avatar={friendInformation?.avatar ?? ""}
+              avatar={friendInformation?.avatar || ""}
             />
           ))
         ) : (

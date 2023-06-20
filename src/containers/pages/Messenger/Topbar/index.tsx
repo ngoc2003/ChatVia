@@ -116,7 +116,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
         <Box ml={3}>
           <Avatar
             onClick={handleClick}
-            src={user?.avatar ?? "/images/avatar-default.svg"}
+            src={user?.avatar || "/images/avatar-default.svg"}
             sx={{ cursor: "pointer", width: 30, height: 30 }}
           />
           <Menu
