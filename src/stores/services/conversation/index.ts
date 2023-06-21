@@ -29,12 +29,21 @@ const ConversationApi = baseRtkApi.injectEndpoints({
       }),
       providesTags: ["conversation"],
     }),
+    deleteConversation: builder.mutation({
+      query: ({ conversationId, userId }) => ({
+        method: "POST",
+        url: `/conversations/delete/${conversationId}`,
+        body: { userId },
+      }),
+      invalidatesTags: (result) => [{ type: "conversation", id: result?._id }],
+    }),
   }),
 });
 
 export default ConversationApi;
 
 export const {
+  useDeleteConversationMutation,
   useCreateConversationMutation,
   useGetConversationListByUserIdQuery,
   useLazyGetConversationListByUserIdQuery,

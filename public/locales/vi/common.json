@@ -16,10 +16,13 @@
   "noConversationFounded": "Không cuộc trò chuyện nào được tìm thấy",
   "updateYourProfile": "Cập nhật thông tin của bạn",
   "noDescriptionYet": "Chưa có mô tả",
+  "profile": "Thông tin cá nhân",
+
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
-    "cancel": "Quay lại"
+    "cancel": "Quay lại",
+    "delete": "Xoá"
   },
   "placeholder": {
     "typeEmailHere": "Nhập email tại đây",
@@ -41,7 +44,8 @@
     "recent": "Mới nhất",
     "myProfile": "Thông tin của tôi",
     "about": "Về tôi",
-    "socialProfile": "Mạng xã hội"
+    "socialProfile": "Mạng xã hội",
+    "deleteConversation": "Bạn có chắc chắn muốn xoá cuộc trò chuyện này?"
   },
   "field": {
     "fullname": "Họ và tên",

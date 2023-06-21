@@ -1,5 +1,6 @@
 export interface GetMessageListByConversationIdRequest {
   conversationId: string;
+  userId: string;
 }
 
 export interface CreateMessageBody {

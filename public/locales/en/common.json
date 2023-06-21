@@ -16,10 +16,12 @@
   "signUpNow": "Sign up now",
   "updateYourProfile": "Update your profile",
   "noDescriptionYet": "No description yet!",
+  "profile": "Profile",
   "button": {
     "create": "Create",
     "update": "Update",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "placeholder": {
     "typeEmailHere": "Type email here",
@@ -41,7 +43,8 @@
     "recent": "Recent",
     "myProfile": "My profile",
     "about": "About",
-    "socialProfile": "Social profile"
+    "socialProfile": "Social profile",
+    "deleteConversation": "Are you sure to delete this conversation?"
   },
   "field": {
     "fullname": "Fullname",

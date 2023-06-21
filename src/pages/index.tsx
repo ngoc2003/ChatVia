@@ -64,11 +64,11 @@ const Messenger = () => {
   }, []);
 
   useEffect(() => {
-    if (!currentConversation?._id) {
+    if (!currentConversation?._id || !user?.id) {
       return;
     }
 
-    getMessage({ conversationId: currentConversation?._id })
+    getMessage({ conversationId: currentConversation?._id, userId: user.id })
       .unwrap()
       .then((response) => {
         setMessages(response);

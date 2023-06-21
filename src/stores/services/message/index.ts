@@ -11,8 +11,9 @@ const MessageApi = baseRtkApi.injectEndpoints({
       MessageType[],
       GetMessageListByConversationIdRequest
     >({
-      query: ({ conversationId }) => ({
+      query: ({ conversationId, userId }) => ({
         url: `/messages/${conversationId}`,
+        params: { userId },
       }),
       providesTags: ["message"],
     }),
@@ -27,7 +28,7 @@ const MessageApi = baseRtkApi.injectEndpoints({
     deleteMessage: builder.mutation({
       query: ({ messageId, userId }) => ({
         method: "POST",
-        url: `/messages/${messageId}`,
+        url: `/messages/delete/${messageId}`,
         body: { userId },
       }),
       invalidatesTags: (result) => [{ type: "message", id: result?._id }],

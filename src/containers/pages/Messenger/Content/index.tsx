@@ -148,6 +148,7 @@ const DefaultContent = ({
       ref={contentContainer.observe}
     >
       <ContentHeader
+        conversationId={conversationId}
         setIsOpenUserDetail={setIsOpenUserDetail}
         friendInformation={friendInformation}
         ref={contentHeader.observe}

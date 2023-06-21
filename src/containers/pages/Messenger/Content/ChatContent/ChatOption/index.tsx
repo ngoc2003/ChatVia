@@ -7,6 +7,7 @@ import { theme } from "@theme";
 import { useDeleteMessageMutation } from "@stores/services/message";
 import { commonActions } from "@stores/slices/common";
 import { MessageType } from "@typing/common";
+import { useTranslation } from "react-i18next";
 
 interface ChatOptionProps {
   messageId: string;
@@ -15,6 +16,7 @@ interface ChatOptionProps {
 }
 
 const ChatOption = ({ messageId, setMessages, canDelete }: ChatOptionProps) => {
+  const { t } = useTranslation();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const user = useSelector((state: AppState) => state.auth);
   const dispatch = useDispatch();
@@ -87,7 +89,7 @@ const ChatOption = ({ messageId, setMessages, canDelete }: ChatOptionProps) => {
             handleDelete();
           }}
         >
-          Delete
+          {t("button.delete")}
         </MenuItem>
       </Menu>
     </Box>

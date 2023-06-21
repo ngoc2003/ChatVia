@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Conversation from "../Conversation";
 import { ConversationType } from "@typing/common";
 import { FriendInformationType } from "@pages";
@@ -27,6 +27,16 @@ const ConversationList = ({
 }: ConversationListProps) => {
   const { t } = useTranslation();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
+  useEffect(() => {
+    if (
+      conversations.length &&
+      currentConversationId &&
+      !conversations.map((item) => item._id).includes(currentConversationId)
+    ) {
+      setCurrentConversation(null);
+    }
+  }, [conversations, currentConversationId, setCurrentConversation]);
 
   return (
     <>

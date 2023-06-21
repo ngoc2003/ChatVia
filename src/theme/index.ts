@@ -181,6 +181,7 @@ const themeOptionCommon: ThemeOptions = {
         },
         text: {
           backgroundColor: "transparent",
+          color: colors.primary.main,
           "&.Mui-disabled": {
             color: colors.primary[500],
           },

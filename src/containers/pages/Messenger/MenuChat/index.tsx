@@ -48,11 +48,14 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
 
-  const { data, isFetching: isGetConversationFetching } =
-    useGetConversationListByUserIdQuery({
-      userId: user.id as string,
-      query: { searchValue },
-    });
+  const {
+    data,
+    refetch,
+    isFetching: isGetConversationFetching,
+  } = useGetConversationListByUserIdQuery({
+    userId: user.id as string,
+    query: { searchValue },
+  });
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -67,7 +70,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   });
 
   useEffect(() => {
-    if (arrivalMessage) {
+    if (
+      arrivalMessage &&
+      arrivalMessage.conversationId === currentConversationId
+    ) {
       const handleUpdateMessage = () => {
         setConversations(
           conversations.map((conv) => {
@@ -88,6 +94,13 @@ const MenuChat: React.FC<MenuChatProps> = ({
 
       handleUpdateMessage();
     }
+
+    if (
+      arrivalMessage &&
+      !data?.some((item) => item._id === arrivalMessage.conversationId)
+    ) {
+      refetch();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrivalMessage?.createdAt]);
 
@@ -96,6 +109,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
       setConversations(data);
     }
   }, [data]);
+
   useEffect(() => {
     arrivalConversation &&
       setConversations((prev) => [arrivalConversation, ...prev]);
