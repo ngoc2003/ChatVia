@@ -63,7 +63,9 @@ const ChatOption = ({ messageId, setMessages, canDelete }: ChatOptionProps) => {
     <Box>
       <IconButton onClick={handleClick}>
         <MoreVertOutlinedIcon
-          sx={{ display: "none" }}
+          sx={{
+            opacity: 0,
+          }}
           color="primary"
           fontSize="small"
         />

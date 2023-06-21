@@ -1,6 +1,6 @@
 import { Avatar, Box } from "@mui/material";
 import { theme } from "@theme";
-import React from "react";
+import React, { useState } from "react";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
@@ -18,7 +18,13 @@ interface ChatContentProps {
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
 
-const handleRenderText = (str: string, me: boolean) => {
+const specialText = (str: string) => {
+  const urlRegex = /^[> ]/;
+
+  return urlRegex.test(str);
+};
+
+const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
   const urlRegex = /(https?:\/\/[^\s]+)/;
 
   if (urlRegex.test(str)) {
@@ -29,18 +35,21 @@ const handleRenderText = (str: string, me: boolean) => {
             ${
               isImageLink(str)
                 ? `<img src="${str}" style="width:100%; max-width: 400px" alt="" />`
+                : isSpecialText
+                ? str.replace(/^> /, "c")
                 : str
             }
           </a>
         `);
   }
-  return str;
+  return isSpecialText ? str.replace(/^> /, "") : str;
 };
 
 // eslint-disable-next-line react/display-name
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
   ({ me, text, avatar, messageId, setMessages, isLast }, ref) => {
     const { darkMode } = useSelector((state: AppState) => state.darkMode);
+    const [isSpecialText] = useState(specialText(text));
 
     return (
       <Box
@@ -63,7 +72,7 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
           sx={{
             "&:hover": {
               ".MuiSvgIcon-root": {
-                display: "block",
+                opacity: 1,
               },
             },
           }}
@@ -83,21 +92,34 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
                 : theme.palette.grey[50],
             }}
           >
-            <CATypography
-              fontWeight={400}
-              variant="body2"
-              height="auto"
-              width="100%"
+            <Box
               sx={{
-                color: me
-                  ? theme.palette.common.white
-                  : darkMode
-                  ? theme.palette.common.white
-                  : theme.palette.text.primary,
+                ...(isSpecialText && {
+                  borderLeft: `3px solid ${theme.palette.grey[500]} `,
+                  borderRadius: 0.5,
+                  px: 1,
+                }),
               }}
             >
-              {handleRenderText(text, me as boolean)}
-            </CATypography>
+              <CATypography
+                fontWeight={400}
+                variant="body2"
+                height="auto"
+                width="100%"
+                fontStyle={isSpecialText ? "italic" : "unset"}
+                sx={{
+                  color: isSpecialText
+                    ? theme.palette.grey[500]
+                    : me
+                    ? theme.palette.common.white
+                    : darkMode
+                    ? theme.palette.common.white
+                    : theme.palette.text.primary,
+                }}
+              >
+                {handleRenderText(text, me as boolean, isSpecialText)}
+              </CATypography>
+            </Box>
           </Box>
           <ChatOption
             canDelete={!isLast}
