@@ -31,19 +31,23 @@ const Messenger = () => {
   const router = useRouter();
   const user = useSelector((state: AppState) => state.auth);
   const { isDesktopLg } = useResponsive();
+  const [tabActive, setTabActive] = useState<string>(router.pathname);
+  const [isInitialization, setIsInitialization] = useState<boolean>(false);
+
+  const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const [tabActive, setTabActive] = useState<any>(router.pathname);
-  const [arrivalMessage, setArrivalMessage] =
-    useState<ArrivalMessageType | null>(null);
-  const [friendInformation, setFriendInformation] =
-    useState<FriendInformationType | null>(null);
   const [currentConversation, setCurrentConversation] =
     useState<ConversationType | null>(null);
-  const [arrivalConversation, setArrivalConversation] = useState<any>(null);
-  const [isInitialization, setIsInitialization] = useState(false);
-  const [getMessage] = useLazyGetMessageListByConversationIdQuery();
 
-  const [isOpenUserDetail, setIsOpenUserDetail] = useState(false);
+  const [isOpenUserDetail, setIsOpenUserDetail] = useState<boolean>(false);
+  const [friendInformation, setFriendInformation] =
+    useState<FriendInformationType | null>(null);
+
+  const [arrivalMessage, setArrivalMessage] =
+    useState<ArrivalMessageType | null>(null);
+  const [arrivalConversation, setArrivalConversation] = useState<any>(null);
+
+  const [getMessage] = useLazyGetMessageListByConversationIdQuery();
 
   useEffect(() => {
     setIsInitialization(true);
@@ -91,6 +95,9 @@ const Messenger = () => {
 
           {tabActive === "/" && (
             <MenuChat
+              conversations={conversations}
+              setConversations={setConversations}
+              lastMessages={messages[messages.length - 1] || null}
               arrivalMessage={arrivalMessage}
               arrivalConversation={arrivalConversation}
               currentConversationId={currentConversation?._id ?? ""}
@@ -106,6 +113,7 @@ const Messenger = () => {
             <MyProfile {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
           )}
           <Content
+            setConversations={setConversations}
             conversationId={currentConversation?._id ?? ""}
             setCurrentConversation={setCurrentConversation}
             arrivalMessage={arrivalMessage}

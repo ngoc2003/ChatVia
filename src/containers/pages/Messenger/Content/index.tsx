@@ -19,6 +19,7 @@ import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useDimensions from "react-cool-dimensions";
 import ContentHeader from "./Header";
 import { omit } from "lodash";
+import { handleSortConversations } from "@utils/conversations";
 
 interface CurrentContentProps extends BoxProps {
   messages: MessageType[];
@@ -28,6 +29,7 @@ interface CurrentContentProps extends BoxProps {
   conversationId: string;
   friendInformation: FriendInformationType | null;
   setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  setConversations: React.Dispatch<React.SetStateAction<ConversationType[]>>;
 }
 
 interface ContentProps extends CurrentContentProps {
@@ -49,6 +51,7 @@ const DefaultContent = ({
   friendInformation,
   handleCloseDrawer,
   setIsOpenUserDetail,
+  setConversations,
   ...props
 }: ContentProps) => {
   const { t } = useTranslation();
@@ -95,6 +98,24 @@ const DefaultContent = ({
       .then((response) => {
         setMessages([...messages, response]);
         setText("");
+
+        setConversations((prev: ConversationType[]) =>
+          handleSortConversations(
+            prev.map((conv) => {
+              if (conv._id !== response.conversationId) {
+                return conv;
+              }
+              return {
+                ...conv,
+                lastMessage: {
+                  id: currentUserId,
+                  text,
+                  createdAt: response.createdAt,
+                },
+              };
+            })
+          )
+        );
 
         socket.current.emit("sendMessage", {
           conversationId,

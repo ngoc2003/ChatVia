@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   BoxProps,
@@ -14,11 +15,12 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
 import { useGetConversationListByUserIdQuery } from "@stores/services/conversation";
-import { ConversationType } from "@typing/common";
+import { ConversationType, MessageType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
 import { useTranslation } from "next-i18next";
+import { handleSortConversations } from "@utils/conversations";
 
 interface MenuChatProps extends BoxProps {
   arrivalMessage: ArrivalMessageType | null;
@@ -30,6 +32,9 @@ interface MenuChatProps extends BoxProps {
     React.SetStateAction<FriendInformationType | null>
   >;
   currentConversationId: string;
+  lastMessages: MessageType | null;
+  conversations: ConversationType[];
+  setConversations: React.Dispatch<React.SetStateAction<ConversationType[]>>;
 }
 
 const MenuChat: React.FC<MenuChatProps> = ({
@@ -38,12 +43,13 @@ const MenuChat: React.FC<MenuChatProps> = ({
   setFriendInformation,
   currentConversationId,
   arrivalConversation,
+  conversations,
+  setConversations,
   ...props
 }: MenuChatProps) => {
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
-  const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
@@ -70,12 +76,9 @@ const MenuChat: React.FC<MenuChatProps> = ({
   });
 
   useEffect(() => {
-    if (
-      arrivalMessage &&
-      arrivalMessage.conversationId === currentConversationId
-    ) {
-      const handleUpdateMessage = () => {
-        setConversations(
+    if (arrivalMessage) {
+      setConversations(
+        handleSortConversations(
           conversations.map((conv) => {
             if (conv._id !== arrivalMessage.conversationId) {
               return conv;
@@ -89,24 +92,20 @@ const MenuChat: React.FC<MenuChatProps> = ({
               },
             };
           })
-        );
-      };
-
-      handleUpdateMessage();
+        )
+      );
     }
-
     if (
       arrivalMessage &&
       !data?.some((item) => item._id === arrivalMessage.conversationId)
     ) {
       refetch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrivalMessage?.createdAt]);
 
   useEffect(() => {
     if (data?.length) {
-      setConversations(data);
+      setConversations(handleSortConversations(data));
     }
   }, [data]);
 
