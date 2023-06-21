@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { omit } from "lodash";
+import CATypography from "@components/Typography";
 
 const StyledBadge = styled(Badge)(() => ({
   "& .MuiBadge-badge": {
@@ -108,6 +109,7 @@ const Conversation = ({
         }),
       }}
       display="flex"
+      overflow="hidden"
       alignItems="center"
       justifyContent="space-between"
     >
@@ -136,7 +138,12 @@ const Conversation = ({
           {friend.username}
         </Typography>
         {!!conversation?.lastMessage && (
-          <Typography
+          <CATypography
+            sx={{
+              width: 150,
+            }}
+            lineClamp={1}
+            width={10}
             variant="caption"
             color={
               darkMode ? theme.palette.text.secondary : theme.palette.grey[600]
@@ -146,11 +153,12 @@ const Conversation = ({
               ? t("you")
               : `${getLastWordOfString(friend?.username)}: `) +
               conversation.lastMessage.text}
-          </Typography>
+          </CATypography>
         )}
       </Box>
-      {!!conversation?.lastMessage && (
-        <Box alignSelf="flex-start">
+
+      <Box alignSelf="flex-start" mr={0.5}>
+        {!!conversation?.lastMessage && (
           <Typography
             variant="caption"
             color={
@@ -159,8 +167,8 @@ const Conversation = ({
           >
             {format(new Date(conversation.lastMessage.createdAt), "HH:mm")}
           </Typography>
-        </Box>
-      )}
+        )}
+      </Box>
     </Box>
   );
 };

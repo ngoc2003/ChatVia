@@ -1,6 +1,12 @@
 import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
-import { Box, BoxProps, Drawer, IconButton } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  Drawer,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
@@ -20,6 +26,10 @@ import useDimensions from "react-cool-dimensions";
 import ContentHeader from "./Header";
 import { omit } from "lodash";
 import { handleSortConversations } from "@utils/conversations";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import axios from "axios";
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
 
 interface CurrentContentProps extends BoxProps {
   messages: MessageType[];
@@ -61,6 +71,7 @@ const DefaultContent = ({
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
+  const uploadImageRef = useRef<HTMLInputElement | null>(null);
 
   const contentHeader = useDimensions({
     useBorderBoxSize: true,
@@ -80,16 +91,13 @@ const DefaultContent = ({
 
   const [createMessage, { isLoading }] = useCreateMessageMutation();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    if (!currentUserId || !text.trim()) {
+  const handleCreateMessage = (input: string) => {
+    if (!currentUserId || !input.trim()) {
       return;
     }
-
     const message = {
       sender: currentUserId,
-      text: text.trim(),
+      text: input.trim(),
       conversationId,
     };
 
@@ -97,11 +105,10 @@ const DefaultContent = ({
       .unwrap()
       .then((response) => {
         setMessages([...messages, response]);
-        setText("");
 
         setConversations((prev: ConversationType[]) =>
           handleSortConversations(
-            prev.map((conv) => {
+            prev.map((conv: any) => {
               if (conv._id !== response.conversationId) {
                 return conv;
               }
@@ -116,14 +123,85 @@ const DefaultContent = ({
             })
           )
         );
-
-        socket.current.emit("sendMessage", {
-          conversationId,
-          senderId: currentUserId,
-          receiverId: receiverId,
-          text,
-        });
       });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 800; // Maximum width for the resized image
+        const MAX_HEIGHT = 600; // Maximum height for the resized image
+        let width = image.width;
+        let height = image.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(image, 0, 0, width, height);
+
+          canvas.toBlob(async (blob) => {
+            if (blob) {
+              const resizedFile = new File([blob], file.name, {
+                type: file.type,
+              });
+
+              const bodyFormData = new FormData();
+              bodyFormData.append("image", resizedFile);
+              const response = await axios({
+                method: "POST",
+                url: publicRuntimeConfig.IMGBB_API,
+                data: bodyFormData,
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              handleCreateMessage(response.data.data.url);
+            }
+          }, file.type);
+        }
+      };
+      if (typeof event?.target?.result === "string") {
+        image.src = event.target.result;
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!currentUserId || !text.trim()) {
+      return;
+    }
+
+    handleCreateMessage(text);
+    setText("");
+
+    socket.current.emit("sendMessage", {
+      conversationId,
+      senderId: currentUserId,
+      receiverId: receiverId,
+      text,
+    });
   };
 
   useEffect(() => {
@@ -218,6 +296,27 @@ const DefaultContent = ({
         }`}
       >
         <MSTextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    uploadImageRef.current?.click();
+                  }}
+                >
+                  <>
+                    <input
+                      ref={uploadImageRef}
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={handleImageChange}
+                    />
+                    <InsertPhotoIcon color="primary" />
+                  </>
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           placeholder="Aa"
           containerProps={{
             sx: {

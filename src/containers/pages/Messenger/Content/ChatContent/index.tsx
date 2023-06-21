@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import { theme } from "@theme";
 import React from "react";
 import parse from "html-react-parser";
@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import ChatOption from "./ChatOption";
 import { MessageType } from "@typing/common";
+import { isImageLink } from "@utils/common";
+import CATypography from "@components/Typography";
 interface ChatContentProps {
   me?: boolean;
   text: string;
@@ -20,14 +22,21 @@ const handleRenderText = (str: string, me: boolean) => {
   const urlRegex = /(https?:\/\/[^\s]+)/;
 
   if (urlRegex.test(str)) {
-    return parse(
-      `<a href=${str} style="color: ${
-        me ? theme.palette.common.white : theme.palette.text.primary
-      }" target="_blank" rel="noopener noreferrer">${str}</a>`
-    );
+    return parse(`
+          <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+      me ? theme.palette.common.white : theme.palette.text.primary
+    }">
+            ${
+              isImageLink(str)
+                ? `<img src="${str}" style="width:100%; max-width: 400px" alt="" />`
+                : str
+            }
+          </a>
+        `);
   }
   return str;
 };
+
 // eslint-disable-next-line react/display-name
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
   ({ me, text, avatar, messageId, setMessages, isLast }, ref) => {
@@ -74,12 +83,11 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
                 : theme.palette.grey[50],
             }}
           >
-            <Typography
+            <CATypography
               fontWeight={400}
               variant="body2"
               height="auto"
               width="100%"
-              whiteSpace="pre-line"
               sx={{
                 color: me
                   ? theme.palette.common.white
@@ -89,7 +97,7 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
               }}
             >
               {handleRenderText(text, me as boolean)}
-            </Typography>
+            </CATypography>
           </Box>
           <ChatOption
             canDelete={!isLast}

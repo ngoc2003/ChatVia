@@ -11,6 +11,7 @@ const nextConfig = {
     BASE_API: process.env.BASE_API,
     SOCKET_API: process.env.SOCKET_API,
     IMGBB_API: process.env.IMGBB_API,
+    IMAGES: process.env.IMAGES,
   },
   images: {
     domains: (process.env.IMAGES || "").split(","),

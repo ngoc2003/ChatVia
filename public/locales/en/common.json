@@ -17,6 +17,8 @@
   "updateYourProfile": "Update your profile",
   "noDescriptionYet": "No description yet!",
   "profile": "Profile",
+  "hide": "...Hide...",
+  "all": "...All...",
   "button": {
     "create": "Create",
     "update": "Update",

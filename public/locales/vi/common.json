@@ -17,7 +17,8 @@
   "updateYourProfile": "Cập nhật thông tin của bạn",
   "noDescriptionYet": "Chưa có mô tả",
   "profile": "Thông tin cá nhân",
-
+  "hide": "...Ẩn...",
+  "all": "...Hiện...",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
