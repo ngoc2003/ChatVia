@@ -67,7 +67,7 @@ const DefaultContent = ({
   const { t } = useTranslation();
   const socket = useSocket();
   const [text, setText] = useState<string>("");
-  const scrollRef = useRef<HTMLElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const currentUserId = useSelector((state: AppState) => state.auth.id);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
@@ -205,7 +205,7 @@ const DefaultContent = ({
   };
 
   useEffect(() => {
-    scrollRef?.current?.scrollIntoView();
+    scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
   }, [messages?.length, conversationId]);
 
   useEffect(() => {
@@ -255,6 +255,7 @@ const DefaultContent = ({
       />
 
       <Box
+        ref={scrollRef}
         width="100%"
         height={
           contentContainer.height - contentHeader.height - contentFooter.height
@@ -269,7 +270,6 @@ const DefaultContent = ({
           messages.map((message: MessageType, index: number) => (
             <ChatContent
               isLast={index === messages.length - 1}
-              ref={scrollRef}
               setMessages={setMessages}
               key={message._id}
               messageId={message._id}

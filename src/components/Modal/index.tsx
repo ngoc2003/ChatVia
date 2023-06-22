@@ -37,14 +37,14 @@ const CAModal = ({
           bgcolor: darkMode
             ? theme.palette.darkTheme.main
             : theme.palette.common.white,
-          width: theme.spacing(30),
+          width: theme.spacing(50),
           py: theme.spacing(3),
           px: hasPaddingHorizontal ? theme.spacing(3) : 0,
           [theme.breakpoints.up("md")]: {
-            width: theme.spacing(55),
+            width: theme.spacing(70),
           },
           [theme.breakpoints.up("lg")]: {
-            width: theme.spacing(70),
+            width: theme.spacing(80),
           },
           ...containerProps?.sx,
         }}

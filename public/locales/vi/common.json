@@ -19,6 +19,10 @@
   "profile": "Thông tin cá nhân",
   "hide": "...Ẩn...",
   "all": "...Hiện...",
+  "mediaAndLinks": "Ảnh và liên kết",
+  "noImageFounded":"Không có ảnh nào được tìm thấy!",
+  "media": "Ảnh",
+  "links": "Liên kết",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",

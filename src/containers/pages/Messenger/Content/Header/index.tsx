@@ -16,6 +16,7 @@ import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeft
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import DeleteConversationModal from "@containers/Modals/DeleteConversation";
 import { useTranslation } from "react-i18next";
+import MediaAndLinksModal from "@containers/Modals/MediaAndLinks";
 
 interface ContentHeaderProps {
   conversationId: string;
@@ -23,6 +24,12 @@ interface ContentHeaderProps {
   handleCloseDrawer?: () => void;
   setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+enum ModalType {
+  DeleteConversation = "DeleteConversation",
+  MediaAndLinks = "MediaAndLinks",
+}
+
 // eslint-disable-next-line react/display-name
 const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
   (
@@ -38,8 +45,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
     const { darkMode } = useSelector((state: AppState) => state.darkMode);
     const { isDesktopLg } = useResponsive();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [openDeleteConversationModal, setOpenDeleteConversationModel] =
-      useState<boolean>(false);
+    const [openModal, setOpenModal] = useState<ModalType | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
@@ -49,16 +55,21 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
       setAnchorEl(null);
     };
 
-    const handleCloseDeleteConversationModal = () => {
-      setOpenDeleteConversationModel(false);
+    const handleCloseModal = () => {
+      setOpenModal(null);
     };
 
     return (
       <>
         <DeleteConversationModal
-          open={openDeleteConversationModal}
-          onClose={handleCloseDeleteConversationModal}
+          open={openModal === ModalType.DeleteConversation}
+          onClose={handleCloseModal}
           conversationId={conversationId}
+        />
+        <MediaAndLinksModal
+          open={openModal === ModalType.MediaAndLinks}
+          conversationId={conversationId}
+          onClose={handleCloseModal}
         />
         <Box
           borderBottom={`0.5px solid ${
@@ -126,7 +137,15 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
               <MenuItem
                 onClick={() => {
                   setAnchorEl(null);
-                  setOpenDeleteConversationModel(true);
+                  setOpenModal(ModalType.MediaAndLinks);
+                }}
+              >
+                {t("mediaAndLinks")}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setAnchorEl(null);
+                  setOpenModal(ModalType.DeleteConversation);
                 }}
               >
                 {t("button.delete")}

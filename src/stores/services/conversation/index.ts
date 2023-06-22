@@ -3,6 +3,8 @@ import baseRtkApi from "..";
 import {
   CreateConversationBody,
   GetConversationListByUserIdReqest,
+  GetImageParams,
+  ImageWithUserInformation,
 } from "./typing";
 
 const ConversationApi = baseRtkApi.injectEndpoints({
@@ -37,12 +39,21 @@ const ConversationApi = baseRtkApi.injectEndpoints({
       }),
       invalidatesTags: (result) => [{ type: "conversation", id: result?._id }],
     }),
+    getImage: builder.query<ImageWithUserInformation[], GetImageParams>({
+      query: ({ conversationId }) => ({
+        method: "GET",
+        url: `/conversations/image`,
+        params: { conversationId },
+      }),
+      providesTags: ["conversation", "image"],
+    }),
   }),
 });
 
 export default ConversationApi;
 
 export const {
+  useGetImageQuery,
   useDeleteConversationMutation,
   useCreateConversationMutation,
   useGetConversationListByUserIdQuery,

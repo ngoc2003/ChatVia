@@ -19,6 +19,10 @@
   "profile": "Profile",
   "hide": "...Hide...",
   "all": "...All...",
+  "media": "Media",
+  "links": "Links",
+  "mediaAndLinks": "Media and links",
+  "noImageFounded": "No image founded!",
   "button": {
     "create": "Create",
     "update": "Update",

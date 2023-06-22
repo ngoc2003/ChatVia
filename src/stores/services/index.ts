@@ -55,7 +55,7 @@ const baseRtkApi = createApi({
   keepUnusedDataFor: 15,
   refetchOnReconnect: true,
   endpoints: () => ({}),
-  tagTypes: ["conversation", "message", "user"],
+  tagTypes: ["conversation", "message", "user", "image"],
 });
 
 export default baseRtkApi;
