@@ -8,31 +8,7 @@ import { AppState } from "@stores";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import { useGetUserContactQuery } from "@stores/services/user";
 import { useTranslation } from "next-i18next";
-
-const handleFormat = (input) => {
-  if (!input) {
-    return null;
-  }
-  const separatedNames = {};
-
-  for (const user of input) {
-    const arrayOfName = user.username.split(" ");
-    const lastWord = arrayOfName?.[arrayOfName?.length - 1];
-    const firstChar = lastWord?.charAt(0)?.toUpperCase();
-
-    if (!separatedNames[firstChar]) {
-      separatedNames[firstChar] = [];
-    }
-
-    separatedNames[firstChar].push(user);
-  }
-
-  const result = Object.entries(separatedNames)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([character, names]) => ({ character, names }));
-
-  return result;
-};
+import { handleFormatContactListUser } from "@utils/common";
 
 const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();
@@ -43,7 +19,7 @@ const ContactList = (props: BoxProps) => {
 
   useEffect(() => {
     if (data) {
-      setFriend(handleFormat(data));
+      setFriend(handleFormatContactListUser(data));
     }
   }, [data]);
 

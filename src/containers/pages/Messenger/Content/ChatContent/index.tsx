@@ -8,6 +8,8 @@ import ChatOption from "./ChatOption";
 import { MessageType } from "@typing/common";
 import { isImageLink } from "@utils/common";
 import CATypography from "@components/Typography";
+import { isSpecialText as checkSpecialText } from "@utils/common";
+
 interface ChatContentProps {
   me?: boolean;
   text: string;
@@ -17,12 +19,6 @@ interface ChatContentProps {
   isLast: boolean;
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
-
-const specialText = (str: string) => {
-  const urlRegex = /^[> ]/;
-
-  return urlRegex.test(str);
-};
 
 const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
   const urlRegex = /(https?:\/\/[^\s]+)/;
@@ -49,7 +45,7 @@ const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
 const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
   ({ me, text, avatar, messageId, setMessages, isLast }, ref) => {
     const { darkMode } = useSelector((state: AppState) => state.darkMode);
-    const [isSpecialText] = useState(specialText(text));
+    const [isSpecialText] = useState(checkSpecialText(text));
 
     return (
       <Box
