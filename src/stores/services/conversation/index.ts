@@ -5,6 +5,7 @@ import {
   GetConversationListByUserIdReqest,
   GetImageParams,
   ImageWithUserInformation,
+  UpdateConversationRequest,
 } from "./typing";
 
 const ConversationApi = baseRtkApi.injectEndpoints({
@@ -47,6 +48,16 @@ const ConversationApi = baseRtkApi.injectEndpoints({
       }),
       providesTags: ["conversation", "image"],
     }),
+    updateConversation: builder.mutation<void, UpdateConversationRequest>({
+      query: ({ conversationId, ...body }) => ({
+        method: "POST",
+        url: `/conversations/update/${conversationId}`,
+        body,
+      }),
+      invalidatesTags: (_, __, par) => [
+        { type: "conversation", id: par.conversationId },
+      ],
+    }),
   }),
 });
 
@@ -54,6 +65,7 @@ export default ConversationApi;
 
 export const {
   useGetImageQuery,
+  useUpdateConversationMutation,
   useDeleteConversationMutation,
   useCreateConversationMutation,
   useGetConversationListByUserIdQuery,

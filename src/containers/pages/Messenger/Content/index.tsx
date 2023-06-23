@@ -33,6 +33,7 @@ interface CurrentContentProps extends BoxProps {
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
   arrivalMessage: ArrivalMessageType | null;
   receiverId: string;
+  emoji: string;
   conversationId: string;
   friendInformation: FriendInformationType | null;
   setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,6 +52,7 @@ interface WrapperContentProps extends CurrentContentProps {
 
 const DefaultContent = ({
   conversationId,
+  emoji,
   setMessages,
   messages,
   arrivalMessage,
@@ -69,19 +71,20 @@ const DefaultContent = ({
   const [text, setText] = useState<string>("");
   const uploadImageRef = useRef<HTMLInputElement | null>(null);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
-  
+  const [newEmoji, setEmoji] = useState<string>(emoji);
+
   const contentHeader = useDimensions({
     useBorderBoxSize: true,
   });
-  
+
   const contentFooter = useDimensions({
     useBorderBoxSize: true,
   });
-  
+
   const contentContainer = useDimensions({
     useBorderBoxSize: true,
   });
-  
+
   const [createMessage, { isLoading }] = useCreateMessageMutation();
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,8 +149,19 @@ const DefaultContent = ({
   };
 
   useEffect(() => {
+    socket.current.on("getIconChanged", (data) => {
+      setEmoji(data.icon);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
   }, [messages?.length, conversationId]);
+
+  useEffect(() => {
+    setEmoji(emoji);
+  }, [conversationId, emoji]);
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -179,6 +193,8 @@ const DefaultContent = ({
     );
   }
 
+  console.log(arrivalMessage);
+
   return (
     <Box
       position="relative"
@@ -188,6 +204,7 @@ const DefaultContent = ({
       ref={contentContainer.observe}
     >
       <ContentHeader
+        setEmoji={setEmoji}
         conversationId={conversationId}
         setIsOpenUserDetail={setIsOpenUserDetail}
         friendInformation={friendInformation}
@@ -288,7 +305,7 @@ const DefaultContent = ({
         </IconButton>
         <IconButton
           onClick={() => {
-            handleCreateMessage("❤️");
+            handleCreateMessage(newEmoji);
           }}
           sx={{
             "&:hover": {
@@ -296,7 +313,7 @@ const DefaultContent = ({
             },
           }}
         >
-          ❤️
+          {newEmoji}
         </IconButton>
         <Box>
           <EmojiCategory setText={setText} />

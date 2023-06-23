@@ -17,17 +17,20 @@ import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import DeleteConversationModal from "@containers/Modals/DeleteConversation";
 import { useTranslation } from "react-i18next";
 import MediaAndLinksModal from "@containers/Modals/MediaAndLinks";
+import ChangeEmojiModal from "@containers/Modals/ChangeEmoji";
 
 interface ContentHeaderProps {
   conversationId: string;
   friendInformation: FriendInformationType | null;
   handleCloseDrawer?: () => void;
   setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  setEmoji: React.Dispatch<React.SetStateAction<string>>;
 }
 
 enum ModalType {
   DeleteConversation = "DeleteConversation",
   MediaAndLinks = "MediaAndLinks",
+  ChangeEmoji = "ChangeEmoji",
 }
 
 // eslint-disable-next-line react/display-name
@@ -38,6 +41,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
       handleCloseDrawer,
       setIsOpenUserDetail,
       conversationId,
+      setEmoji,
     },
     ref
   ) => {
@@ -69,6 +73,13 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
         <MediaAndLinksModal
           open={openModal === ModalType.MediaAndLinks}
           conversationId={conversationId}
+          onClose={handleCloseModal}
+        />
+        <ChangeEmojiModal
+          friendId={friendInformation?._id || ""}
+          conversationId={conversationId}
+          setEmoji={setEmoji}
+          open={openModal === ModalType.ChangeEmoji}
           onClose={handleCloseModal}
         />
         <Box
@@ -141,6 +152,14 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
                 }}
               >
                 {t("mediaAndLinks")}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setAnchorEl(null);
+                  setOpenModal(ModalType.ChangeEmoji);
+                }}
+              >
+                {t("changeEmoji")}
               </MenuItem>
               <MenuItem
                 onClick={() => {

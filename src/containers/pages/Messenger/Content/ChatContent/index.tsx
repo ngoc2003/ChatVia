@@ -104,6 +104,7 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
                 width="100%"
                 fontStyle={isSpecialText ? "italic" : "unset"}
                 sx={{
+                  wordBreak: "break-all",
                   color: isSpecialText
                     ? theme.palette.grey[500]
                     : me

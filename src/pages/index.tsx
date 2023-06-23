@@ -113,6 +113,7 @@ const Messenger = () => {
             <MyProfile {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
           )}
           <Content
+            emoji={currentConversation?.emoji ?? ""}
             setConversations={setConversations}
             conversationId={currentConversation?._id ?? ""}
             setCurrentConversation={setCurrentConversation}

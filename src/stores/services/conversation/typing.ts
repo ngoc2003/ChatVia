@@ -24,3 +24,8 @@ export interface ImageWithUserInformation {
 export interface GetImageParams {
   conversationId: string;
 }
+
+export interface UpdateConversationRequest {
+  conversationId: string;
+  emoji?: string;
+}

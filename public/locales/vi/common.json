@@ -20,9 +20,10 @@
   "hide": "...Ẩn...",
   "all": "...Hiện...",
   "mediaAndLinks": "Ảnh và liên kết",
-  "noImageFounded":"Không có ảnh nào được tìm thấy!",
+  "noImageFounded": "Không có ảnh nào được tìm thấy!",
   "media": "Ảnh",
   "links": "Liên kết",
+  "changeEmoji": "Thay kí tự đặc biệt",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
