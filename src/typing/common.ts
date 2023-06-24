@@ -8,6 +8,11 @@ export enum GenderType {
   Male = "Male",
   Female = "Female",
 }
+
+export enum ConversationStatus {
+  Pending = "pending",
+  Accept = "accept",
+}
 interface DeletedByType {
   userId: string;
   deletedAt: Date;
@@ -22,6 +27,8 @@ export interface ConversationType extends BaseType {
   };
   deletedBy?: DeletedByType[];
   emoji: string;
+  status: ConversationStatus;
+  createdBy: string;
 }
 
 export interface MessageType extends BaseType {

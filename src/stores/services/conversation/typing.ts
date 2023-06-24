@@ -1,3 +1,5 @@
+import { ConversationStatus } from "@typing/common";
+
 export interface CreateConversationBody {
   senderId: string;
   receiverEmail: string;
@@ -6,7 +8,8 @@ export interface CreateConversationBody {
 export interface GetConversationListByUserIdReqest {
   userId: string;
   query: {
-    searchValue: string;
+    searchValue?: string;
+    status?: ConversationStatus;
   };
 }
 
@@ -28,4 +31,5 @@ export interface GetImageParams {
 export interface UpdateConversationRequest {
   conversationId: string;
   emoji?: string;
+  status?: ConversationStatus;
 }

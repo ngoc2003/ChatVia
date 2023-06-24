@@ -24,6 +24,7 @@
   "media": "Ảnh",
   "links": "Liên kết",
   "changeEmoji": "Thay kí tự đặc biệt",
+  "pendingConversationWarning": "Nếu bạn trả lời, đoạn chat sẽ chuyển sang trạng thái chấp nhận",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
@@ -51,6 +52,7 @@
     "myProfile": "Thông tin của tôi",
     "about": "Về tôi",
     "socialProfile": "Mạng xã hội",
+    "pendingConversation": "Cuộc trò chuyện chờ",
     "deleteConversation": "Bạn có chắc chắn muốn xoá cuộc trò chuyện này?"
   },
   "field": {

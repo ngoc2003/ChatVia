@@ -1,11 +1,9 @@
-import MSTextField from "@components/TextField";
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
 import {
   Box,
   BoxProps,
   Drawer,
   IconButton,
-  InputAdornment,
 } from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
@@ -15,7 +13,11 @@ import { sayHiSymbol } from "@constants";
 import parser from "html-react-parser";
 import useSocket from "@hooks/useSocket";
 import { useCreateMessageMutation } from "@stores/services/message";
-import { ConversationType, MessageType } from "@typing/common";
+import {
+  ConversationStatus,
+  ConversationType,
+  MessageType,
+} from "@typing/common";
 import EmojiCategory from "./EmojiCategory";
 import { useTranslation } from "next-i18next";
 import { theme } from "@theme";
@@ -25,11 +27,15 @@ import useDimensions from "react-cool-dimensions";
 import ContentHeader from "./Header";
 import { omit } from "lodash";
 import { handleSortConversations } from "@utils/conversations";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import { handleUploadImage } from "@utils/common";
+import { useUpdateConversationMutation } from "@stores/services/conversation";
+import PendingConversationWarning from "./PendingConversationWarning";
+import TextBox from "./TextBox";
 
 interface CurrentContentProps extends BoxProps {
+  createdById?: string;
   messages: MessageType[];
+  conversationStatus?: ConversationStatus;
   setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
   arrivalMessage: ArrivalMessageType | null;
   receiverId: string;
@@ -51,7 +57,9 @@ interface WrapperContentProps extends CurrentContentProps {
 }
 
 const DefaultContent = ({
+  createdById,
   conversationId,
+  conversationStatus,
   emoji,
   setMessages,
   messages,
@@ -72,6 +80,9 @@ const DefaultContent = ({
   const uploadImageRef = useRef<HTMLInputElement | null>(null);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
   const [newEmoji, setEmoji] = useState<string>(emoji);
+  const [isPendingConversation, setIsPendingConversation] = useState<boolean>(
+    conversationStatus === ConversationStatus.Pending
+  );
 
   const contentHeader = useDimensions({
     useBorderBoxSize: true,
@@ -85,7 +96,11 @@ const DefaultContent = ({
     useBorderBoxSize: true,
   });
 
-  const [createMessage, { isLoading }] = useCreateMessageMutation();
+  const [createMessage, { isLoading: isCreateMessageLoading }] =
+    useCreateMessageMutation();
+
+  const [updateConversation, { isLoading: isUpdateConversationLoading }] =
+    useUpdateConversationMutation();
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -145,14 +160,32 @@ const DefaultContent = ({
       senderId: currentUserId,
       receiverId: receiverId,
       text,
+      conversationStatus,
     });
+
+    if (
+      conversationStatus === ConversationStatus.Pending &&
+      currentUserId !== createdById
+    ) {
+      setConversations((prev) =>
+        prev.filter((conv) => conv._id !== conversationId)
+      );
+      updateConversation({
+        conversationId,
+        status: ConversationStatus.Accept,
+      })
+        .unwrap()
+        .then(() => {
+          setIsPendingConversation(false);
+        });
+    }
   };
 
   useEffect(() => {
     socket.current.on("getIconChanged", (data) => {
       setEmoji(data.icon);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -164,10 +197,17 @@ const DefaultContent = ({
   }, [conversationId, emoji]);
 
   useEffect(() => {
+    setIsPendingConversation(conversationStatus === ConversationStatus.Pending);
+  }, [conversationStatus, setIsOpenUserDetail]);
+
+  useEffect(() => {
     if (arrivalMessage) {
       setMessages((prev: MessageType[]) => [
         ...prev,
-        omit(arrivalMessage, ["conversationId"]) as MessageType,
+        omit(arrivalMessage, [
+          "conversationId",
+          "conversationType",
+        ]) as MessageType,
       ]);
       audio.play();
     }
@@ -192,8 +232,6 @@ const DefaultContent = ({
       </Box>
     );
   }
-
-  console.log(arrivalMessage);
 
   return (
     <Box
@@ -243,80 +281,59 @@ const DefaultContent = ({
           </Box>
         )}
       </Box>
-      <Box
-        display="flex"
-        alignItems="center"
-        py={1}
-        px={2}
-        ref={contentFooter.observe}
-        bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
-        borderTop={`0.5px solid ${
-          darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
-        }`}
-      >
-        <MSTextField
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    uploadImageRef.current?.click();
-                  }}
-                >
-                  <>
-                    <input
-                      ref={uploadImageRef}
-                      type="file"
-                      style={{ display: "none" }}
-                      onChange={handleImageChange}
-                    />
-                    <InsertPhotoIcon color="primary" />
-                  </>
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          placeholder="Aa"
-          containerProps={{
-            sx: {
-              height: 40,
-            },
-          }}
-          disableBorderInput
-          fullWidth
-          value={text}
-          onChange={handleTextChange}
-          onKeyDown={(e) => {
-            if (e.code === "Enter") {
-              handleSubmit(e);
+      <Box ref={contentFooter.observe}>
+        {isPendingConversation && createdById !== currentUserId && (
+          <PendingConversationWarning />
+        )}
+        <Box
+          display="flex"
+          alignItems="center"
+          py={1}
+          px={2}
+          bgcolor={darkMode ? theme.palette.darkTheme.dark : undefined}
+          borderTop={`0.5px solid ${
+            darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
+          }`}
+        >
+          <TextBox
+            text={text}
+            ref={uploadImageRef}
+            handleSubmit={handleSubmit}
+            handleImageChange={handleImageChange}
+            handleTextChange={handleTextChange}
+            imageClick={() => {
+              uploadImageRef.current?.click();
+            }}
+          />
+          
+          <IconButton
+            disabled={
+              !text || isCreateMessageLoading || isUpdateConversationLoading
             }
-          }}
-        />
-        <IconButton
-          disabled={!text || isLoading}
-          onClick={handleSubmit}
-          sx={{
-            "&:hover": {
-              backgroundColor: "transparent",
-            },
-          }}
-        >
-          <SendIcon color={text ? "primary" : "disabled"} />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            handleCreateMessage(newEmoji);
-          }}
-          sx={{
-            "&:hover": {
-              backgroundColor: "transparent",
-            },
-          }}
-        >
-          {newEmoji}
-        </IconButton>
-        <Box>
-          <EmojiCategory setText={setText} />
+            onClick={handleSubmit}
+            sx={{
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            <SendIcon color={text ? "primary" : "disabled"} />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              handleCreateMessage(newEmoji);
+            }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            {newEmoji}
+          </IconButton>
+          <Box>
+            <EmojiCategory setText={setText} />
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -24,6 +24,7 @@
   "mediaAndLinks": "Media and links",
   "noImageFounded": "No image founded!",
   "changeEmoji": "Change emoji",
+  "pendingConversationWarning": "If you reply, this conversation will be send to available conversation",
   "button": {
     "create": "Create",
     "update": "Update",
@@ -51,6 +52,7 @@
     "myProfile": "My profile",
     "about": "About",
     "socialProfile": "Social profile",
+    "pendingConversation": "Pending conversation",
     "deleteConversation": "Are you sure to delete this conversation?"
   },
   "field": {

@@ -30,7 +30,7 @@ const ConversationList = ({
 
   useEffect(() => {
     if (
-      conversations.length &&
+      conversations?.length &&
       currentConversationId &&
       !conversations.map((item) => item._id).includes(currentConversationId)
     ) {
@@ -40,7 +40,7 @@ const ConversationList = ({
 
   return (
     <>
-      {!conversations.length ? (
+      {!conversations?.length ? (
         <Typography
           color={darkMode ? theme.palette.text.secondary : undefined}
           fontStyle="italic"

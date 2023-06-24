@@ -5,27 +5,33 @@ const { publicRuntimeConfig } = getConfig();
 import { useRouter } from "next/router";
 import { Avatar, Box, Menu, MenuItem } from "@mui/material";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import { useTranslation } from "next-i18next";
 import useGetCookieData from "@hooks/useGetCookieData";
 import { theme } from "@theme";
-import SwitchLanguage from "./SwitchLanguage";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@stores";
-import { darkModeActions } from "@stores/slices/darkMode";
 import PersonIcon from "@mui/icons-material/Person";
 import useResponsive from "@hooks/useResponsive";
 import { IconWrapper } from "./IconWrapper";
 import { commonActions } from "@stores/slices/common";
+import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
+// import SwitchLanguage from "./SwitchLanguage";
+// import { darkModeActions } from "@stores/slices/darkMode";
+// import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+
 const topLink = [
-  {
-    icon: <PersonIcon />,
-    path: "/me",
-  },
   {
     icon: <MarkChatUnreadOutlinedIcon />,
     path: "/",
+  },
+  {
+    icon: <SmsOutlinedIcon />,
+    path: "/pending",
+  },
+  {
+    icon: <PersonIcon />,
+    path: "/me",
   },
   {
     icon: <ContactsOutlinedIcon />,
@@ -82,7 +88,11 @@ const Topbar = ({ setTabActive, tabActive }) => {
       {isDesktopLg && (
         <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
       )}
-      <Box display="flex">
+      <Box
+        display="flex"
+        justifyContent="space-evenly"
+        {...(!isDesktopLg ? { flex: 1 } : { width: 450 })}
+      >
         {topLink.map((link, index) => (
           <IconWrapper
             bgcolor={
@@ -106,13 +116,13 @@ const Topbar = ({ setTabActive, tabActive }) => {
         ))}
       </Box>
       <Box display="flex" alignItems="center">
-        <SwitchLanguage />
+        {/* <SwitchLanguage />
         <IconWrapper
           ml={isTablet ? 3 : 2}
           onClick={() => dispatch(darkModeActions.toggleDarkMode())}
         >
           <DarkModeOutlinedIcon />
-        </IconWrapper>
+        </IconWrapper> */}
         <Box ml={3}>
           <Avatar
             onClick={handleClick}

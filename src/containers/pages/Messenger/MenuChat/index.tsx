@@ -15,7 +15,11 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
 import { useGetConversationListByUserIdQuery } from "@stores/services/conversation";
-import { ConversationType, MessageType } from "@typing/common";
+import {
+  ConversationStatus,
+  ConversationType,
+  MessageType,
+} from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
@@ -23,8 +27,8 @@ import { useTranslation } from "next-i18next";
 import { handleSortConversations } from "@utils/conversations";
 
 interface MenuChatProps extends BoxProps {
+  tabActive: string;
   arrivalMessage: ArrivalMessageType | null;
-  arrivalConversation: ConversationType;
   setCurrentConversation: React.Dispatch<
     React.SetStateAction<ConversationType | null>
   >;
@@ -38,11 +42,11 @@ interface MenuChatProps extends BoxProps {
 }
 
 const MenuChat: React.FC<MenuChatProps> = ({
+  tabActive,
   arrivalMessage,
   setCurrentConversation,
   setFriendInformation,
   currentConversationId,
-  arrivalConversation,
   conversations,
   setConversations,
   ...props
@@ -60,8 +64,12 @@ const MenuChat: React.FC<MenuChatProps> = ({
     isFetching: isGetConversationFetching,
   } = useGetConversationListByUserIdQuery({
     userId: user.id as string,
-    query: { searchValue },
+    query: { searchValue, status: ConversationStatus.Accept },
   });
+
+  useEffect(() => {
+    refetch();
+  }, [tabActive]);
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -95,9 +103,14 @@ const MenuChat: React.FC<MenuChatProps> = ({
         )
       );
     }
+
     if (
       arrivalMessage &&
-      !data?.some((item) => item._id === arrivalMessage.conversationId)
+      data?.some(
+        (item) =>
+          item._id !== arrivalMessage.conversationId &&
+          arrivalMessage.conversationStatus !== ConversationStatus.Pending
+      )
     ) {
       refetch();
     }
@@ -108,11 +121,6 @@ const MenuChat: React.FC<MenuChatProps> = ({
       setConversations(handleSortConversations(data));
     }
   }, [data]);
-
-  useEffect(() => {
-    arrivalConversation &&
-      setConversations((prev) => [arrivalConversation, ...prev]);
-  }, [arrivalConversation]);
 
   return (
     <Box

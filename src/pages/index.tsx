@@ -9,13 +9,20 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import useSocket from "@hooks/useSocket";
 import { useLazyGetMessageListByConversationIdQuery } from "@stores/services/message";
-import { ConversationType, MessageType, UserType } from "@typing/common";
+import {
+  ConversationStatus,
+  ConversationType,
+  MessageType,
+  UserType,
+} from "@typing/common";
 import DefaultLayout from "@containers/layouts/DefaultLayout";
 import { useRouter } from "next/router";
 import ContactList from "@containers/pages/Messenger/ContactList";
 import useResponsive from "@hooks/useResponsive";
 import Online from "@containers/pages/Messenger/Online";
 import MyProfile from "@containers/pages/Messenger/MyProfile";
+import PendingConversation from "@containers/pages/Messenger/PendingConversation";
+import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
 
 export interface FriendInformationType extends Omit<UserType, "username"> {
   name: string;
@@ -24,6 +31,7 @@ export interface FriendInformationType extends Omit<UserType, "username"> {
 export interface ArrivalMessageType
   extends Pick<MessageType, "sender" | "text" | "createdAt"> {
   conversationId: string;
+  conversationStatus: ConversationStatus;
 }
 
 const Messenger = () => {
@@ -48,14 +56,33 @@ const Messenger = () => {
   const [arrivalConversation, setArrivalConversation] = useState<any>(null);
 
   const [getMessage] = useLazyGetMessageListByConversationIdQuery();
+  const [getConversation, { isFetching: isGetConversationFetching }] =
+    useLazyGetConversationListByUserIdQuery();
 
   useEffect(() => {
     setIsInitialization(true);
   }, []);
 
   useEffect(() => {
+    if (user.id) {
+      getConversation({
+        userId: user.id,
+        query: {
+          status:
+            tabActive === "/pending"
+              ? ConversationStatus.Pending
+              : ConversationStatus.Accept,
+        },
+      })
+        .unwrap()
+        .then((response) => setConversations(response));
+    }
+  }, [getConversation, tabActive, user.id]);
+
+  useEffect(() => {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
+        conversationStatus: data.conversationStatus,
         conversationId: data.conversationId,
         sender: data.senderId,
         text: data.text,
@@ -95,11 +122,11 @@ const Messenger = () => {
 
           {tabActive === "/" && (
             <MenuChat
+              tabActive={tabActive}
               conversations={conversations}
               setConversations={setConversations}
               lastMessages={messages[messages.length - 1] || null}
               arrivalMessage={arrivalMessage}
-              arrivalConversation={arrivalConversation}
               currentConversationId={currentConversation?._id ?? ""}
               setCurrentConversation={setCurrentConversation}
               setFriendInformation={setFriendInformation}
@@ -112,7 +139,23 @@ const Messenger = () => {
           {tabActive === "/me" && (
             <MyProfile {...(isDesktopLg ? { width: 380 } : { flex: 1 })} />
           )}
+          {tabActive === "/pending" && (
+            <PendingConversation
+              isFetching={isGetConversationFetching}
+              tabActive={tabActive}
+              conversations={conversations}
+              setConversations={setConversations}
+              arrivalMessage={arrivalMessage}
+              arrivalConversation={arrivalConversation}
+              currentConversationId={currentConversation?._id ?? ""}
+              setCurrentConversation={setCurrentConversation}
+              setFriendInformation={setFriendInformation}
+              {...(isDesktopLg ? { width: 380 } : { flex: 1 })}
+            />
+          )}
           <Content
+            createdById={currentConversation?.createdBy}
+            conversationStatus={currentConversation?.status}
             emoji={currentConversation?.emoji ?? ""}
             setConversations={setConversations}
             conversationId={currentConversation?._id ?? ""}
