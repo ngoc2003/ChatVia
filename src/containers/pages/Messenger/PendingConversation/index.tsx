@@ -5,6 +5,22 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import ConversationList from "../MenuChat/ConversationList";
+import { ConversationType } from "@typing/common";
+import { FriendInformationType } from "@pages";
+
+interface PendingConversationProps {
+  isFetching: boolean;
+  conversations: ConversationType[];
+  arrivalConversation: any;
+  currentConversationId: string;
+  setCurrentConversation: React.Dispatch<
+    React.SetStateAction<ConversationType | null>
+  >;
+  setFriendInformation: React.Dispatch<
+    React.SetStateAction<FriendInformationType | null>
+  >;
+  setConversations: React.Dispatch<React.SetStateAction<ConversationType[]>>;
+}
 
 const PendingConversation = ({
   isFetching,
@@ -15,7 +31,7 @@ const PendingConversation = ({
   setFriendInformation,
   arrivalConversation,
   ...props
-}) => {
+}: PendingConversationProps) => {
   const { t } = useTranslation();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
 

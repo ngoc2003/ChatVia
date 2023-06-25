@@ -25,6 +25,7 @@ const AuthLayout = ({ title, subTitle, children }: AuthLayoutProps) => {
             width={30}
             height={30}
             alt="logo"
+            priority={true}
           />
           <Typography variant="h5" ml={2}>
             Chatvia

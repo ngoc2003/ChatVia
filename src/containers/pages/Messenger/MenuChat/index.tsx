@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   BoxProps,
@@ -7,19 +6,15 @@ import {
   Typography,
 } from "@mui/material";
 import { theme } from "@theme";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import MSTextField from "@components/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import CreateConversationModal from "@containers/Modals/CreateConversation";
-import { useGetConversationListByUserIdQuery } from "@stores/services/conversation";
-import {
-  ConversationStatus,
-  ConversationType,
-  MessageType,
-} from "@typing/common";
+import { useLazyGetConversationListByUserIdQuery } from "@stores/services/conversation";
+import { ConversationStatus, ConversationType } from "@typing/common";
 import { ArrivalMessageType, FriendInformationType } from "@pages";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
@@ -36,7 +31,6 @@ interface MenuChatProps extends BoxProps {
     React.SetStateAction<FriendInformationType | null>
   >;
   currentConversationId: string;
-  lastMessages: MessageType | null;
   conversations: ConversationType[];
   setConversations: React.Dispatch<React.SetStateAction<ConversationType[]>>;
 }
@@ -54,22 +48,22 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOpenAddConversationModal, setIsOpenAddConversationModal] =
     useState<boolean>(false);
 
-  const {
-    data,
-    refetch,
-    isFetching: isGetConversationFetching,
-  } = useGetConversationListByUserIdQuery({
-    userId: user.id as string,
-    query: { searchValue, status: ConversationStatus.Accept },
-  });
+  const [getConversation, { isFetching: isGetConversationFetching }] =
+    useLazyGetConversationListByUserIdQuery();
 
-  useEffect(() => {
-    refetch();
-  }, [tabActive]);
+  const handleFetchConversation = useCallback(() => {
+    getConversation({
+      userId: user.id as string,
+      query: { searchValue, status: ConversationStatus.Accept },
+    })
+      .unwrap()
+      .then((response) => setConversations(response));
+  }, [getConversation, searchValue, setConversations, user.id]);
 
   const handleOpenAddConversationModal = () => {
     setIsOpenAddConversationModal(true);
@@ -82,6 +76,10 @@ const MenuChat: React.FC<MenuChatProps> = ({
   const handleChangeText = useCallbackDebounce((e) => {
     setSearchValue(e.target.value);
   });
+
+  useEffect(() => {
+    handleFetchConversation();
+  }, [handleFetchConversation, tabActive]);
 
   useEffect(() => {
     if (arrivalMessage) {
@@ -106,21 +104,23 @@ const MenuChat: React.FC<MenuChatProps> = ({
 
     if (
       arrivalMessage &&
-      data?.some(
+      conversations?.some(
         (item) =>
           item._id !== arrivalMessage.conversationId &&
           arrivalMessage.conversationStatus !== ConversationStatus.Pending
       )
     ) {
-      refetch();
+      handleFetchConversation();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrivalMessage?.createdAt]);
 
   useEffect(() => {
-    if (data?.length) {
-      setConversations(handleSortConversations(data));
+    if (conversations?.length) {
+      setConversations(handleSortConversations(conversations));
     }
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversations?.length]);
 
   return (
     <Box

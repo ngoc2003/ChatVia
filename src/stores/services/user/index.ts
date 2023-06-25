@@ -36,6 +36,6 @@ export default UserApi;
 export const {
   useGetUserByIdQuery,
   useLazyGetUserByIdQuery,
-  useGetUserContactQuery,
   useUpdateUserMutation,
+  useLazyGetUserContactQuery,
 } = UserApi;

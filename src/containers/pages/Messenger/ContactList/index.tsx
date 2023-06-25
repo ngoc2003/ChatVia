@@ -6,22 +6,34 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import { useGetUserContactQuery } from "@stores/services/user";
+import { useLazyGetUserContactQuery } from "@stores/services/user";
 import { useTranslation } from "next-i18next";
 import { handleFormatContactListUser } from "@utils/common";
+import useCallbackDebounce from "@hooks/useCallbackDebounce";
 
 const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const [friend, setFriend] = useState<any>();
-  const { data, isFetching } = useGetUserContactQuery({ userId: user.id });
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const [getContact, { isFetching }] = useLazyGetUserContactQuery();
+
+  const handleTextChange = useCallbackDebounce((e) => {
+    setSearchValue(e.target.value);
+  });
 
   useEffect(() => {
-    if (data) {
-      setFriend(handleFormatContactListUser(data));
-    }
-  }, [data]);
+    getContact({
+      userId: user.id,
+      searchValue,
+    })
+      .unwrap()
+      .then((response) => {
+        setFriend(handleFormatContactListUser(response));
+      });
+  }, [getContact, searchValue, user.id]);
 
   return (
     <Box
@@ -54,6 +66,7 @@ const ContactList = (props: BoxProps) => {
             pr: 0,
           },
         }}
+        onChange={handleTextChange}
         disableBorderInput
         fullWidth
         placeholder={t("placeholder.searchForUser")}
@@ -105,7 +118,12 @@ const ContactList = (props: BoxProps) => {
             </Box>
           ))
         ) : (
-          <Typography fontStyle="italic">{t("noContact")}</Typography>
+          <Typography
+            fontStyle="italic"
+            color={darkMode ? theme.palette.text.secondary : undefined}
+          >
+            {t("noContact")}
+          </Typography>
         )}
       </Box>
     </Box>

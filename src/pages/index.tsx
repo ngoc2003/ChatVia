@@ -125,7 +125,6 @@ const Messenger = () => {
               tabActive={tabActive}
               conversations={conversations}
               setConversations={setConversations}
-              lastMessages={messages[messages.length - 1] || null}
               arrivalMessage={arrivalMessage}
               currentConversationId={currentConversation?._id ?? ""}
               setCurrentConversation={setCurrentConversation}
@@ -142,10 +141,8 @@ const Messenger = () => {
           {tabActive === "/pending" && (
             <PendingConversation
               isFetching={isGetConversationFetching}
-              tabActive={tabActive}
               conversations={conversations}
               setConversations={setConversations}
-              arrivalMessage={arrivalMessage}
               arrivalConversation={arrivalConversation}
               currentConversationId={currentConversation?._id ?? ""}
               setCurrentConversation={setCurrentConversation}

@@ -90,7 +90,13 @@ const Topbar = ({ setTabActive, tabActive }) => {
       }}
     >
       {isDesktopLg && (
-        <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
+        <Image
+          src="/images/Logo.png"
+          width={30}
+          height={30}
+          alt="logo"
+          priority={true}
+        />
       )}
       <SettingModal
         open={openSettingModal}
