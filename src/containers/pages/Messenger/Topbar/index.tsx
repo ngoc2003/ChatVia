@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
@@ -16,9 +16,7 @@ import useResponsive from "@hooks/useResponsive";
 import { IconWrapper } from "./IconWrapper";
 import { commonActions } from "@stores/slices/common";
 import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
-// import SwitchLanguage from "./SwitchLanguage";
-// import { darkModeActions } from "@stores/slices/darkMode";
-// import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import SettingModal from "@containers/Modals/Setting";
 
 const topLink = [
   {
@@ -43,14 +41,20 @@ const Topbar = ({ setTabActive, tabActive }) => {
   const router = useRouter();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const user = useSelector((state: AppState) => state.auth);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { isDesktopLg, isTablet } = useResponsive();
   const { clearCookieData } = useGetCookieData();
+  const { isDesktopLg, isTablet } = useResponsive();
+  const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openSettingModal, setOpenSettingModal] = useState<boolean>(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleOpenSettingModal = () => {
+    setOpenSettingModal(true);
   };
 
   const handleClose = () => {
@@ -88,6 +92,10 @@ const Topbar = ({ setTabActive, tabActive }) => {
       {isDesktopLg && (
         <Image src="/images/Logo.png" width={30} height={30} alt="logo" />
       )}
+      <SettingModal
+        open={openSettingModal}
+        onClose={() => setOpenSettingModal(false)}
+      />
       <Box
         display="flex"
         justifyContent="space-evenly"
@@ -116,13 +124,6 @@ const Topbar = ({ setTabActive, tabActive }) => {
         ))}
       </Box>
       <Box display="flex" alignItems="center">
-        {/* <SwitchLanguage />
-        <IconWrapper
-          ml={isTablet ? 3 : 2}
-          onClick={() => dispatch(darkModeActions.toggleDarkMode())}
-        >
-          <DarkModeOutlinedIcon />
-        </IconWrapper> */}
         <Box ml={3}>
           <Avatar
             onClick={handleClick}
@@ -144,6 +145,7 @@ const Topbar = ({ setTabActive, tabActive }) => {
             open={!!anchorEl}
             onClose={handleClose}
           >
+            <MenuItem onClick={handleOpenSettingModal}>{t("setting")}</MenuItem>
             <MenuItem onClick={handleLogout}>{t("logout")}</MenuItem>
           </Menu>
         </Box>

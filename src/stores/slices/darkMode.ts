@@ -27,19 +27,19 @@ const initialState: DarkModeState = {
   darkMode: initializeState(),
 };
 
-const toggleDarkMode: CaseReducer<DarkModeState, PayloadAction<void>> = (
-  state
-) => {
-  const isDarkMode = state.darkMode;
-  state.darkMode = !isDarkMode;
-  setLocalDarkMode(isDarkMode ? "light" : "dark");
+const changeDarkMode: CaseReducer<
+  DarkModeState,
+  PayloadAction<DarkModeState>
+> = (state, { payload }) => {
+  state.darkMode = payload.darkMode;
+  setLocalDarkMode(payload.darkMode ? "dark" : "light");
 };
 
 const darkModeSlice = createSlice({
   name: "darkMode",
   initialState,
   reducers: {
-    toggleDarkMode,
+    changeDarkMode,
   },
 });
 

@@ -25,6 +25,11 @@
   "noImageFounded": "No image founded!",
   "changeEmoji": "Change emoji",
   "pendingConversationWarning": "If you reply, this conversation will be send to available conversation",
+  "setting": "Setting",
+  "language": "Language",
+  "theme": "Theme",
+  "lightMode": "Light mode",
+  "darkMode": "Dark mode",
   "button": {
     "create": "Create",
     "update": "Update",

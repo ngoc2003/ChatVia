@@ -25,6 +25,11 @@
   "links": "Liên kết",
   "changeEmoji": "Thay kí tự đặc biệt",
   "pendingConversationWarning": "Nếu bạn trả lời, đoạn chat sẽ chuyển sang trạng thái chấp nhận",
+  "setting": "Cài đặt",
+  "language": "Ngôn ngữ",
+  "theme": "Chủ đề",
+  "lightMode": "Sáng",
+  "darkMode": "Tối",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
