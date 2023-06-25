@@ -1,10 +1,5 @@
 import ChatContent from "@containers/pages/Messenger/Content/ChatContent";
-import {
-  Box,
-  BoxProps,
-  Drawer,
-  IconButton,
-} from "@mui/material";
+import { Box, BoxProps, Drawer, IconButton } from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
@@ -139,6 +134,14 @@ const DefaultContent = ({
           )
         );
       });
+      
+    socket.current.emit("sendMessage", {
+      conversationId,
+      senderId: currentUserId,
+      receiverId: receiverId,
+      text: input,
+      conversationStatus,
+    });
   };
 
   const handleImageChange = (e) => {
@@ -154,14 +157,6 @@ const DefaultContent = ({
 
     handleCreateMessage(text);
     setText("");
-
-    socket.current.emit("sendMessage", {
-      conversationId,
-      senderId: currentUserId,
-      receiverId: receiverId,
-      text,
-      conversationStatus,
-    });
 
     if (
       conversationStatus === ConversationStatus.Pending &&
@@ -305,7 +300,7 @@ const DefaultContent = ({
               uploadImageRef.current?.click();
             }}
           />
-          
+
           <IconButton
             disabled={
               !text || isCreateMessageLoading || isUpdateConversationLoading
