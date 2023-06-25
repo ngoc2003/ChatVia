@@ -140,8 +140,8 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 | Tools  | Versions |
 | ------ | -------- |
-| yarn   | 6.1.0    |
-| nodejs | 10.7.0   |
+| yarn   | 1.22.19  |
+| nodejs | v16.20.0 |
 
 #### Web Client
 
