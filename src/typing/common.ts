@@ -29,6 +29,7 @@ export interface ConversationType extends BaseType {
   emoji: string;
   status: ConversationStatus;
   createdBy: string;
+  blockedByUser?: string;
 }
 
 export interface MessageType extends BaseType {

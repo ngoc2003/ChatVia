@@ -80,6 +80,46 @@ const Messenger = () => {
   }, [getConversation, tabActive, user.id]);
 
   useEffect(() => {
+    const conv = conversations.find(
+      (item) => item._id === currentConversation?._id
+    );
+    if (conv) {
+      setCurrentConversation(conv);
+    }
+  }, [conversations]);
+
+  useEffect(() => {
+    socket.current.on("getIconChanged", (data) => {
+      setConversations((prev) =>
+        prev.map((conv) => ({
+          ...conv,
+          ...(data.conversationId === conv?._id && {
+            emoji: data.icon,
+          }),
+        }))
+      );
+      data.conversationId === currentConversation?._id &&
+        setCurrentConversation(
+          (prev) => ({ ...prev, emoji: data.icon } as ConversationType)
+        );
+    });
+
+    socket.current.on("getBlockedConversation", (data) => {
+      setConversations((prev) =>
+        prev.map((conv) => ({
+          ...conv,
+          ...(data.conversationId === conv?._id && {
+            blockedByUser: data.senderId,
+          }),
+        }))
+      );
+      data.conversationId === currentConversation?._id &&
+        setCurrentConversation(
+          (prev) =>
+            ({ ...prev, blockedByUser: data.senderId } as ConversationType)
+        );
+    });
+
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         conversationStatus: data.conversationStatus,
@@ -151,6 +191,7 @@ const Messenger = () => {
             />
           )}
           <Content
+            blockedByUser={currentConversation?.blockedByUser}
             createdById={currentConversation?.createdBy}
             conversationStatus={currentConversation?.status}
             emoji={currentConversation?.emoji ?? ""}

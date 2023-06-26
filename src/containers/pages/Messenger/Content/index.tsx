@@ -26,8 +26,10 @@ import { handleUploadImage } from "@utils/common";
 import { useUpdateConversationMutation } from "@stores/services/conversation";
 import PendingConversationWarning from "./PendingConversationWarning";
 import TextBox from "./TextBox";
+import BlockBox from "./BlockBox";
 
 interface CurrentContentProps extends BoxProps {
+  blockedByUser?: string;
   createdById?: string;
   messages: MessageType[];
   conversationStatus?: ConversationStatus;
@@ -52,6 +54,7 @@ interface WrapperContentProps extends CurrentContentProps {
 }
 
 const DefaultContent = ({
+  blockedByUser,
   createdById,
   conversationId,
   conversationStatus,
@@ -75,6 +78,7 @@ const DefaultContent = ({
   const uploadImageRef = useRef<HTMLInputElement | null>(null);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
   const [newEmoji, setEmoji] = useState<string>(emoji);
+  const [blocked, setBlocked] = useState<string>(blockedByUser ?? "");
   const [isPendingConversation, setIsPendingConversation] = useState<boolean>(
     conversationStatus === ConversationStatus.Pending
   );
@@ -134,7 +138,7 @@ const DefaultContent = ({
           )
         );
       });
-      
+
     socket.current.emit("sendMessage", {
       conversationId,
       senderId: currentUserId,
@@ -177,19 +181,16 @@ const DefaultContent = ({
   };
 
   useEffect(() => {
-    socket.current.on("getIconChanged", (data) => {
-      setEmoji(data.icon);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
+    messages?.length &&
+      scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
   }, [messages?.length, conversationId]);
 
   useEffect(() => {
-    setEmoji(emoji);
-  }, [conversationId, emoji]);
+    if (emoji) {
+      setEmoji(emoji);
+    }
+    setBlocked(blockedByUser as string);
+  }, [blockedByUser, conversationId, emoji]);
 
   useEffect(() => {
     setIsPendingConversation(conversationStatus === ConversationStatus.Pending);
@@ -238,6 +239,7 @@ const DefaultContent = ({
     >
       <ContentHeader
         setEmoji={setEmoji}
+        setBlocked={setBlocked}
         conversationId={conversationId}
         setIsOpenUserDetail={setIsOpenUserDetail}
         friendInformation={friendInformation}
@@ -290,45 +292,56 @@ const DefaultContent = ({
             darkMode ? theme.palette.darkTheme.light : theme.palette.grey[400]
           }`}
         >
-          <TextBox
-            text={text}
-            ref={uploadImageRef}
-            handleSubmit={handleSubmit}
-            handleImageChange={handleImageChange}
-            handleTextChange={handleTextChange}
-            imageClick={() => {
-              uploadImageRef.current?.click();
-            }}
-          />
+          {!blocked ? (
+            <>
+              <TextBox
+                text={text}
+                ref={uploadImageRef}
+                handleSubmit={handleSubmit}
+                handleImageChange={handleImageChange}
+                handleTextChange={handleTextChange}
+                imageClick={() => {
+                  uploadImageRef.current?.click();
+                }}
+              />
 
-          <IconButton
-            disabled={
-              !text || isCreateMessageLoading || isUpdateConversationLoading
-            }
-            onClick={handleSubmit}
-            sx={{
-              "&:hover": {
-                backgroundColor: "transparent",
-              },
-            }}
-          >
-            <SendIcon color={text ? "primary" : "disabled"} />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              handleCreateMessage(newEmoji);
-            }}
-            sx={{
-              "&:hover": {
-                backgroundColor: "transparent",
-              },
-            }}
-          >
-            {newEmoji}
-          </IconButton>
-          <Box>
-            <EmojiCategory setText={setText} />
-          </Box>
+              <IconButton
+                disabled={
+                  !text || isCreateMessageLoading || isUpdateConversationLoading
+                }
+                onClick={handleSubmit}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                <SendIcon color={text ? "primary" : "disabled"} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  handleCreateMessage(newEmoji);
+                }}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                {newEmoji}
+              </IconButton>
+              <Box>
+                <EmojiCategory setText={setText} />
+              </Box>
+            </>
+          ) : (
+            <BlockBox
+              setBlocked={setBlocked}
+              userBlockedId={friendInformation?._id ?? ""}
+              conversationId={conversationId}
+              blockedByUser={blocked}
+            />
+          )}
         </Box>
       </Box>
     </Box>

@@ -84,14 +84,25 @@ export const handleUploadImage = (e: any, func1: any, func2?: any) => {
     if (ctx) {
       ctx.drawImage(this, 0, 0, width, height);
 
-      canvas.toBlob(async (blob) => {
-        if (blob) {
+      const promise = new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Failed to convert canvas to blob."));
+          }
+        }, file.type);
+      });
+
+      promise
+        .then(async (blob: any) => {
           const resizedFile = new File([blob], file.name, {
             type: file.type,
           });
 
           const bodyFormData = new FormData();
           bodyFormData.append("image", resizedFile);
+
           const response = await axios({
             method: "POST",
             url: publicRuntimeConfig.IMGBB_API,
@@ -102,11 +113,14 @@ export const handleUploadImage = (e: any, func1: any, func2?: any) => {
           });
 
           func1(response.data.data.url);
+
           if (func2) {
             func2(response.data.data.url);
           }
-        }
-      }, file.type);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }
 

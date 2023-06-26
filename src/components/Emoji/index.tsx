@@ -1,7 +1,9 @@
 import { iconsLibrary } from "@constants";
 import { Box, Typography } from "@mui/material";
+import { AppState } from "@stores";
 import { theme } from "@theme";
 import React from "react";
+import { useSelector } from "react-redux";
 
 interface EmojiProps {
   onClick: (emofi: string) => void;
@@ -9,6 +11,7 @@ interface EmojiProps {
 }
 
 const Emoji = ({ keyName, onClick }: EmojiProps) => {
+  const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const handleClick = (item: string) => {
     onClick(item);
   };
@@ -16,7 +19,12 @@ const Emoji = ({ keyName, onClick }: EmojiProps) => {
     <>
       {iconsLibrary.map((icons) => (
         <Box key={icons.name}>
-          <Typography mx={1} variant="body3" fontWeight={600}>
+          <Typography
+            color={darkMode ? theme.palette.common.white : undefined}
+            mx={1}
+            variant="body3"
+            fontWeight={600}
+          >
             {icons.name}
           </Typography>
           <Box display="flex" flexWrap="wrap">

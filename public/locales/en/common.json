@@ -28,11 +28,19 @@
   "theme": "Theme",
   "lightMode": "Light mode",
   "darkMode": "Dark mode",
+  "blockConversation": " Block conversation",
+  "blockUser": {
+    "blocking": "You've block this user",
+    "blocked": "You've been blocked by this user",
+    "sub": " You can't message or receive their message"
+  },
   "button": {
     "create": "Create",
     "update": "Update",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "block": "Block",
+    "unBlock": "Unblock"
   },
   "placeholder": {
     "typeEmailHere": "Type email here",
@@ -46,6 +54,7 @@
     "max": "Max 50 characters"
   },
   "question": {
+    "areYouSureToBlockThisConversation": "Are you sure to block this conversation?",
     "alreadyHaveAnAccount": "Already have an account ?",
     "dontHaveAnAccount": "Dont have an account?"
   },
