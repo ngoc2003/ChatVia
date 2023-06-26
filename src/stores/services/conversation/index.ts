@@ -58,6 +58,25 @@ const ConversationApi = baseRtkApi.injectEndpoints({
         { type: "conversation", id: par.conversationId },
       ],
     }),
+    blockConversation: builder.mutation({
+      query: ({ conversationId, userId }) => ({
+        method: "POST",
+        url: `/conversations/block/${conversationId}`,
+        body: { userId },
+      }),
+      invalidatesTags: (_, __, par) => [
+        { type: "conversation", id: par.conversationId },
+      ],
+    }),
+    unBlockConversation: builder.mutation({
+      query: ({ conversationId }) => ({
+        method: "POST",
+        url: `/conversations/unblock/${conversationId}`,
+      }),
+      invalidatesTags: (_, __, par) => [
+        { type: "conversation", id: par.conversationId },
+      ],
+    }),
   }),
 });
 
@@ -65,9 +84,11 @@ export default ConversationApi;
 
 export const {
   useGetImageQuery,
+  useBlockConversationMutation,
   useUpdateConversationMutation,
   useDeleteConversationMutation,
   useCreateConversationMutation,
+  useUnBlockConversationMutation,
   useGetConversationListByUserIdQuery,
   useLazyGetConversationListByUserIdQuery,
 } = ConversationApi;

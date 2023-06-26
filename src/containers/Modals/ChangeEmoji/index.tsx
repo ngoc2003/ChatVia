@@ -33,6 +33,7 @@ const ChangeEmojiModal = ({
     socket.current.emit("changeIcon", {
       receiverId: friendId,
       icon: input,
+      conversationId,
     });
   };
 

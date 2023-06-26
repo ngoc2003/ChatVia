@@ -32,7 +32,15 @@
     "create": "Tạo mới",
     "update": "Cập nhật",
     "cancel": "Quay lại",
-    "delete": "Xoá"
+    "delete": "Xoá",
+    "block": "Chặn",
+    "unBlock": "Bỏ chặn"
+  },
+  "blockConversation": "Chặn cuộc trò chuyện",
+  "blockUser": {
+    "blocking": "Bạn đã chặn người dùng này",
+    "blocked": "Bạn đã bị người dùng này chặn",
+    "sub": "Bạn không thể gửi hay nhận tin nhắn từ người dùng này"
   },
   "placeholder": {
     "typeEmailHere": "Nhập email tại đây",
@@ -46,6 +54,7 @@
     "max": "Nhiều nhất 50 ký tự"
   },
   "question": {
+    "areYouSureToBlockThisConversation": "Bạn có chắc muốn chặn cuộc hội thoại này?",
     "dontHaveAnAccount": "Chưa có tài khoản?",
     "alreadyHaveAnAccount": "Đã có tài khoản?"
   },

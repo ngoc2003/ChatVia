@@ -18,6 +18,7 @@ import DeleteConversationModal from "@containers/Modals/DeleteConversation";
 import { useTranslation } from "react-i18next";
 import MediaAndLinksModal from "@containers/Modals/MediaAndLinks";
 import ChangeEmojiModal from "@containers/Modals/ChangeEmoji";
+import BlockConversationModal from "@containers/Modals/BlockConversation";
 
 interface ContentHeaderProps {
   conversationId: string;
@@ -25,12 +26,14 @@ interface ContentHeaderProps {
   handleCloseDrawer?: () => void;
   setIsOpenUserDetail: React.Dispatch<React.SetStateAction<boolean>>;
   setEmoji: React.Dispatch<React.SetStateAction<string>>;
+  setBlocked: React.Dispatch<React.SetStateAction<string>>;
 }
 
 enum ModalType {
   DeleteConversation = "DeleteConversation",
   MediaAndLinks = "MediaAndLinks",
   ChangeEmoji = "ChangeEmoji",
+  BlockConversation = "BlockConversation",
 }
 
 // eslint-disable-next-line react/display-name
@@ -42,6 +45,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
       setIsOpenUserDetail,
       conversationId,
       setEmoji,
+      setBlocked,
     },
     ref
   ) => {
@@ -81,6 +85,13 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
           setEmoji={setEmoji}
           open={openModal === ModalType.ChangeEmoji}
           onClose={handleCloseModal}
+        />
+        <BlockConversationModal
+          userBlockedId={friendInformation?._id || ""}
+          conversationId={conversationId}
+          open={openModal === ModalType.BlockConversation}
+          onClose={handleCloseModal}
+          setBlocked={setBlocked}
         />
         <Box
           borderBottom={`0.5px solid ${
@@ -160,6 +171,14 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
                 }}
               >
                 {t("changeEmoji")}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setAnchorEl(null);
+                  setOpenModal(ModalType.BlockConversation);
+                }}
+              >
+                {t("blockConversation")}
               </MenuItem>
               <MenuItem
                 onClick={() => {
