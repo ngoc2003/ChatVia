@@ -16,7 +16,7 @@ import { commonActions } from "@stores/slices/common";
 
 interface CreateConversationFormProps {
   setConversation: React.Dispatch<React.SetStateAction<ConversationType[]>>;
-  onCloseModal?:
+  onCloseModal:
     | ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
     | undefined;
 }

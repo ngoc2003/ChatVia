@@ -1,6 +1,9 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
-const useCallbackDebounce = (callback: (...args: any[]) => void, debounceTime?: number) => {
+const useCallbackDebounce = (
+  callback: (...args: any[]) => void,
+  debounceTime?: number
+) => {
   // eslint-disable-next-line no-undef
   const timer = useRef<NodeJS.Timeout | null>(null);
 
@@ -8,7 +11,7 @@ const useCallbackDebounce = (callback: (...args: any[]) => void, debounceTime?: 
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    timer.current = setTimeout(() => callback(...args), debounceTime || 500);
+    timer.current = setTimeout(() => callback(...args), debounceTime ?? 500);
   };
 
   return debounce;

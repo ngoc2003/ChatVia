@@ -267,7 +267,7 @@ const DefaultContent = ({
               me={currentUserId === message.sender}
               createdAt={message.createdAt}
               text={message.text}
-              avatar={friendInformation?.avatar || ""}
+              avatar={friendInformation?.avatar ?? ""}
             />
           ))
         ) : (

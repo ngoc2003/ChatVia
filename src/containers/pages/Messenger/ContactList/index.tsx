@@ -1,21 +1,21 @@
-import MSTextField from "@components/TextField";
 import { Box, BoxProps, CircularProgress, Typography } from "@mui/material";
-import { theme } from "@theme";
+import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search";
 import { AppState } from "@stores";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import { useLazyGetUserContactQuery } from "@stores/services/user";
-import { useTranslation } from "next-i18next";
 import { handleFormatContactListUser } from "@utils/common";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
+import MSTextField from "@components/TextField";
+import { theme } from "@theme";
 
 const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();
   const user = useSelector((state: AppState) => state.auth);
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
-  const [friend, setFriend] = useState<any>();
+  const [friend, setFriend] = useState<any>(null);
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [getContact, { isFetching }] = useLazyGetUserContactQuery();

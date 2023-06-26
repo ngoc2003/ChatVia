@@ -61,7 +61,7 @@ export const CAAccordion = ({ list }: CAAccordionProps) => {
                 title={detail.title}
                 {...(detail?.href
                   ? { href: detail.href }
-                  : { content: detail.content || EMPTY_VALUE })}
+                  : { content: detail.content ?? EMPTY_VALUE })}
               />
             ))}
           </AccordionDetails>
