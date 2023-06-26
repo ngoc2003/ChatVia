@@ -22,29 +22,28 @@ interface ChatContentProps {
 const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
   const urlRegex = /(https?:\/\/[^\s]+)/;
 
-  if (urlRegex.test(str)) {
-    if (isImageLink(str)) {
-      return parse(`<a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
-        me ? theme.palette.common.white : theme.palette.text.primary
-      }">
+  const strResult = isSpecialText ? str.replace(/^> /, "") : str;
+
+  if (!urlRegex.test(str)) {
+    return strResult;
+  }
+
+  if (isImageLink(str)) {
+    return parse(`<a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+      me ? theme.palette.common.white : theme.palette.text.primary
+    }">
       <img src="${str}" style="width:100%; max-width: 400px" alt="" />
     </a>`);
-    } else if (isSpecialText) {
-      return parse(` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
-        me ? theme.palette.common.white : theme.palette.text.primary
-      }"
-    >${str.replace(/^> /, "c")}</a>`);
-    } else {
-      return parse(
-        ` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
-          me ? theme.palette.common.white : theme.palette.text.primary
-        }"
-    >${str}</a>`
-      );
-    }
-  } else {
-    return isSpecialText ? str.replace(/^> /, "") : str;
   }
+
+  if (isSpecialText) {
+    return parse(` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+      me ? theme.palette.common.white : theme.palette.text.primary
+    }"
+  >${strResult}</a>`);
+  }
+
+  return strResult;
 };
 
 // eslint-disable-next-line react/display-name
