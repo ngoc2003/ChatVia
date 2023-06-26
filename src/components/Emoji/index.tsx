@@ -32,7 +32,7 @@ const Emoji = ({ keyName, onClick }: EmojiProps) => {
                     bgcolor: theme.palette.primary.light,
                   },
                 }}
-                key={(keyName || "") + item}
+                key={(keyName ?? "") + item}
               >
                 {item}
               </Box>

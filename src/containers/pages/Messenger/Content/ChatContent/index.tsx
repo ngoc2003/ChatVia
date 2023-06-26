@@ -6,9 +6,8 @@ import { useSelector } from "react-redux";
 import { AppState } from "@stores";
 import ChatOption from "./ChatOption";
 import { MessageType } from "@typing/common";
-import { isImageLink } from "@utils/common";
+import { isImageLink, isSpecialText as checkSpecialText } from "@utils/common";
 import CATypography from "@components/Typography";
-import { isSpecialText as checkSpecialText } from "@utils/common";
 
 interface ChatContentProps {
   me?: boolean;
@@ -23,22 +22,24 @@ interface ChatContentProps {
 const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
   const urlRegex = /(https?:\/\/[^\s]+)/;
 
-  if (urlRegex.test(str)) {
-    return parse(`
-          <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+  const strResult = isSpecialText ? str.replace(/^> /, "") : str;
+
+  if (!urlRegex.test(str)) {
+    return strResult;
+  }
+
+  if (isImageLink(strResult)) {
+    return parse(`<a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
       me ? theme.palette.common.white : theme.palette.text.primary
     }">
-            ${
-              isImageLink(str)
-                ? `<img src="${str}" style="width:100%; max-width: 400px" alt="" />`
-                : isSpecialText
-                ? str.replace(/^> /, "c")
-                : str
-            }
-          </a>
-        `);
+      <img src="${str}" style="width:100%; max-width: 400px" alt="" />
+    </a>`);
   }
-  return isSpecialText ? str.replace(/^> /, "") : str;
+
+  return parse(` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+    me ? theme.palette.common.white : theme.palette.text.primary
+  }"
+  >${strResult}</a>`);
 };
 
 // eslint-disable-next-line react/display-name

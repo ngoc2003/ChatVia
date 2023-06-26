@@ -54,60 +54,66 @@ export const handleUploadImage = (e: any, func1: any, func2?: any) => {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function (event) {
+  reader.onload = handleImageLoad;
+  reader.readAsDataURL(file);
+
+  function handleImageLoad(event: any) {
     const image = new Image();
-    image.onload = function () {
-      const canvas = document.createElement("canvas");
-      const MAX_WIDTH = 800; // Maximum width for the resized image
-      const MAX_HEIGHT = 600; // Maximum height for the resized image
-      let width = image.width;
-      let height = image.height;
-
-      if (width > height) {
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width;
-          width = MAX_WIDTH;
-        }
-      } else {
-        if (height > MAX_HEIGHT) {
-          width *= MAX_HEIGHT / height;
-          height = MAX_HEIGHT;
-        }
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(image, 0, 0, width, height);
-
-        canvas.toBlob(async (blob) => {
-          if (blob) {
-            const resizedFile = new File([blob], file.name, {
-              type: file.type,
-            });
-
-            const bodyFormData = new FormData();
-            bodyFormData.append("image", resizedFile);
-            const response = await axios({
-              method: "POST",
-              url: publicRuntimeConfig.IMGBB_API,
-              data: bodyFormData,
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            func1(response.data.data.url);
-            if (func2) {
-              func2(response.data.data.url);
-            }
-          }
-        }, file.type);
-      }
-    };
+    image.onload = handleImageResize;
     if (typeof event?.target?.result === "string") {
       image.src = event.target.result;
     }
-  };
-  reader.readAsDataURL(file);
+  }
+
+  function handleImageResize() {
+    const MAX_WIDTH = 800; // Maximum width for the resized image
+    const MAX_HEIGHT = 600; // Maximum height for the resized image
+    let width = this.width;
+    let height = this.height;
+
+    if (width > height && width > MAX_WIDTH) {
+      height *= MAX_WIDTH / width;
+      width = MAX_WIDTH;
+    } else if (height > MAX_HEIGHT) {
+      width *= MAX_HEIGHT / height;
+      height = MAX_HEIGHT;
+    }
+
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(this, 0, 0, width, height);
+
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          const resizedFile = new File([blob], file.name, {
+            type: file.type,
+          });
+
+          const bodyFormData = new FormData();
+          bodyFormData.append("image", resizedFile);
+          const response = await axios({
+            method: "POST",
+            url: publicRuntimeConfig.IMGBB_API,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          func1(response.data.data.url);
+          if (func2) {
+            func2(response.data.data.url);
+          }
+        }
+      }, file.type);
+    }
+  }
+
+  function createCanvas(width: number, height: number) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
 };

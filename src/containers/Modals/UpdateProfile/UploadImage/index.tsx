@@ -15,7 +15,7 @@ function ImageUpload({ onChange = () => {}, defaultValue }: ImageUploadProps) {
   const { t } = useTranslation();
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
-  const [imagePreview, setImagePreview] = useState<string>(defaultValue || "");
+  const [imagePreview, setImagePreview] = useState<string>(defaultValue ?? "");
 
   const handleChange = async (e) => {
     handleUploadImage(e, setImagePreview, onChange);
