@@ -28,7 +28,7 @@ const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
     return strResult;
   }
 
-  if (isImageLink(str)) {
+  if (isImageLink(strResult)) {
     return parse(`<a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
       me ? theme.palette.common.white : theme.palette.text.primary
     }">
@@ -36,14 +36,10 @@ const handleRenderText = (str: string, me: boolean, isSpecialText: boolean) => {
     </a>`);
   }
 
-  if (isSpecialText) {
-    return parse(` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
-      me ? theme.palette.common.white : theme.palette.text.primary
-    }"
+  return parse(` <a href="${str}" target="_blank" rel="noopener noreferrer" style="color: ${
+    me ? theme.palette.common.white : theme.palette.text.primary
+  }"
   >${strResult}</a>`);
-  }
-
-  return strResult;
 };
 
 // eslint-disable-next-line react/display-name
