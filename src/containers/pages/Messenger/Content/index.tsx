@@ -75,6 +75,8 @@ const DefaultContent = ({
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [text, setText] = useState<string>("");
+  const [pinnedMessage, setPinnedMessage] = useState<string>("");
+  const pinnedMessageRef = useRef<HTMLElement | null>(null);
   const uploadImageRef = useRef<HTMLInputElement | null>(null);
   const audio = useMemo(() => new Audio("sound.mp3"), []);
   const [newEmoji, setEmoji] = useState<string>(emoji);
@@ -181,8 +183,10 @@ const DefaultContent = ({
   };
 
   useEffect(() => {
-    messages?.length &&
-      scrollRef?.current?.scrollIntoView({ block: "end", inline: "nearest" });
+    if (messages?.length && scrollRef?.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      setPinnedMessage("");
+    }
   }, [messages?.length, conversationId]);
 
   useEffect(() => {
@@ -208,6 +212,12 @@ const DefaultContent = ({
       audio.play();
     }
   }, [arrivalMessage, audio, setMessages]);
+
+  useEffect(() => {
+    if (pinnedMessageRef?.current && pinnedMessage) {
+      pinnedMessageRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [pinnedMessage]);
 
   if (!receiverId) {
     return (
@@ -238,6 +248,7 @@ const DefaultContent = ({
       ref={contentContainer.observe}
     >
       <ContentHeader
+        isBlock={!!blocked}
         setEmoji={setEmoji}
         setBlocked={setBlocked}
         conversationId={conversationId}
@@ -245,6 +256,7 @@ const DefaultContent = ({
         friendInformation={friendInformation}
         ref={contentHeader.observe}
         handleCloseDrawer={handleCloseDrawer}
+        setPinnedMessage={setPinnedMessage}
       />
 
       <Box
@@ -262,6 +274,7 @@ const DefaultContent = ({
         {messages?.length ? (
           messages.map((message: MessageType, index: number) => (
             <ChatContent
+              ref={pinnedMessage === message._id ? pinnedMessageRef : null}
               isLast={index === messages.length - 1}
               setMessages={setMessages}
               key={message._id}

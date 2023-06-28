@@ -1,6 +1,7 @@
 export interface GetMessageListByConversationIdRequest {
   conversationId: string;
   userId: string;
+  isPin?: boolean;
 }
 
 export interface CreateMessageBody {

@@ -4,7 +4,10 @@ import { Box, IconButton, Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "@stores";
 import { theme } from "@theme";
-import { useDeleteMessageMutation } from "@stores/services/message";
+import {
+  useDeleteMessageMutation,
+  usePinMessageMutation,
+} from "@stores/services/message";
 import { commonActions } from "@stores/slices/common";
 import { MessageType } from "@typing/common";
 import { useTranslation } from "react-i18next";
@@ -22,6 +25,28 @@ const ChatOption = ({ messageId, setMessages, canDelete }: ChatOptionProps) => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [deleteMessage] = useDeleteMessageMutation();
+  const [pinMessage] = usePinMessageMutation();
+
+  const handlePin = () => {
+    pinMessage({
+      messageId,
+    })
+      .unwrap()
+      .then(() => {
+        dispatch(
+          commonActions.showAlertMessage({
+            type: "success",
+            message: "Pin message successfully!",
+          })
+        );
+        setMessages((prev) =>
+          prev.map((item) => ({
+            ...item,
+            ...(item._id === messageId && { isPin: true }),
+          }))
+        );
+      });
+  };
 
   const handleDelete = () => {
     if (canDelete) {
@@ -85,6 +110,14 @@ const ChatOption = ({ messageId, setMessages, canDelete }: ChatOptionProps) => {
         open={!!anchorEl}
         onClose={handleClose}
       >
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            handlePin();
+          }}
+        >
+          {t("button.pin")}
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setAnchorEl(null);
