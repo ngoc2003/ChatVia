@@ -1,14 +1,7 @@
-import {
-  Box,
-  BoxProps,
-  CircularProgress,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, BoxProps, CircularProgress, Typography } from "@mui/material";
 import { theme } from "@theme";
 import React, { useState, useEffect, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import MSTextField from "@components/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
@@ -20,6 +13,7 @@ import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
 import { useTranslation } from "next-i18next";
 import { handleSortConversations } from "@utils/conversations";
+import LeftSideContainer from "@containers/LeftSideContainer";
 
 interface MenuChatProps extends BoxProps {
   tabActive: string;
@@ -57,12 +51,14 @@ const MenuChat: React.FC<MenuChatProps> = ({
     useLazyGetConversationListByUserIdQuery();
 
   const handleFetchConversation = useCallback(() => {
-    getConversation({
-      userId: user.id as string,
-      query: { searchValue, status: ConversationStatus.Accept },
-    })
-      .unwrap()
-      .then((response) => setConversations(response));
+    if (user?.id) {
+      getConversation({
+        userId: user.id,
+        query: { searchValue, status: ConversationStatus.Accept },
+      })
+        .unwrap()
+        .then((response) => setConversations(response));
+    }
   }, [getConversation, searchValue, setConversations, user.id]);
 
   const handleOpenAddConversationModal = () => {
@@ -123,50 +119,18 @@ const MenuChat: React.FC<MenuChatProps> = ({
   }, [conversations?.length]);
 
   return (
-    <Box
+    <LeftSideContainer
+      title="Chat"
+      icon={<AddIcon color="primary" />}
+      iconInput={<SearchIcon fontSize="small" />}
+      onClickIcon={handleOpenAddConversationModal}
+      onChangeInput={handleChangeText}
       {...props}
-      bgcolor={
-        darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
-      }
-      sx={{ overflowY: "hidden" }}
-      p={3}
-      display="flex"
-      flexDirection="column"
     >
       <CreateConversationModal
         open={isOpenAddConversationModal}
         setConversation={setConversations}
         onClose={handleCloseAddConversationModal}
-      />
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          color={darkMode ? theme.palette.common.white : undefined}
-        >
-          Chat
-        </Typography>
-        <IconButton size="small" onClick={handleOpenAddConversationModal}>
-          <AddIcon color="primary" />
-        </IconButton>
-      </Box>
-      <MSTextField
-        iconProps={{
-          sx: {
-            bgcolor: "transparent",
-            pr: 0,
-          },
-        }}
-        disableBorderInput
-        fullWidth
-        placeholder={t("placeholder.searchForMessageOrUser")}
-        icon={<SearchIcon fontSize="small" />}
-        onChange={handleChangeText}
       />
       <Typography
         variant="subtitle2"
@@ -194,7 +158,7 @@ const MenuChat: React.FC<MenuChatProps> = ({
           currentConversationId={currentConversationId}
         />
       )}
-    </Box>
+    </LeftSideContainer>
   );
 };
 

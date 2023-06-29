@@ -8,8 +8,8 @@ import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import { useLazyGetUserContactQuery } from "@stores/services/user";
 import { handleFormatContactListUser } from "@utils/common";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
-import MSTextField from "@components/TextField";
 import { theme } from "@theme";
+import LeftSideContainer from "@containers/LeftSideContainer";
 
 const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();
@@ -25,53 +25,25 @@ const ContactList = (props: BoxProps) => {
   });
 
   useEffect(() => {
-    getContact({
-      userId: user.id,
-      searchValue,
-    })
-      .unwrap()
-      .then((response) => {
-        setFriend(handleFormatContactListUser(response));
-      });
+    if (user?.id) {
+      getContact({
+        userId: user.id,
+        searchValue,
+      })
+        .unwrap()
+        .then((response) => {
+          setFriend(handleFormatContactListUser(response));
+        });
+    }
   }, [getContact, searchValue, user.id]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      p={3}
-      bgcolor={
-        darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
-      }
+    <LeftSideContainer
+      title={t("title.contact")}
+      iconInput={<SearchIcon fontSize="small" />}
+      onChangeInput={handleTextChange}
       {...props}
     >
-      <Box
-        mb={3}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Typography
-          color={darkMode ? theme.palette.common.white : undefined}
-          variant="h5"
-          fontWeight={600}
-        >
-          {t("title.contact")}
-        </Typography>
-      </Box>
-      <MSTextField
-        iconProps={{
-          sx: {
-            bgcolor: "transparent",
-            pr: 0,
-          },
-        }}
-        onChange={handleTextChange}
-        disableBorderInput
-        fullWidth
-        placeholder={t("placeholder.searchForUser")}
-        icon={<SearchIcon fontSize="small" />}
-      />
       <Box my={3}>
         {isFetching ? (
           <Box
@@ -126,7 +98,7 @@ const ContactList = (props: BoxProps) => {
           </Typography>
         )}
       </Box>
-    </Box>
+    </LeftSideContainer>
   );
 };
 

@@ -1,12 +1,10 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { AppState } from "@stores";
-import { theme } from "@theme";
+import { Box, CircularProgress } from "@mui/material";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import ConversationList from "../MenuChat/ConversationList";
 import { ConversationType } from "@typing/common";
 import { FriendInformationType } from "@pages";
+import LeftSideContainer from "@containers/LeftSideContainer";
 
 interface PendingConversationProps {
   isFetching: boolean;
@@ -33,7 +31,6 @@ const PendingConversation = ({
   ...props
 }: PendingConversationProps) => {
   const { t } = useTranslation();
-  const { darkMode } = useSelector((state: AppState) => state.darkMode);
 
   useEffect(() => {
     if (arrivalConversation) {
@@ -42,25 +39,7 @@ const PendingConversation = ({
   }, [arrivalConversation, setConversations]);
 
   return (
-    <Box
-      p={3}
-      bgcolor={
-        darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
-      }
-      sx={{
-        overflowY: "scroll",
-      }}
-      {...props}
-    >
-      <Box mb={3}>
-        <Typography
-          color={darkMode ? theme.palette.common.white : undefined}
-          variant="h5"
-          fontWeight={600}
-        >
-          {t("title.pendingConversation")}
-        </Typography>
-      </Box>
+    <LeftSideContainer title={t("title.pendingConversation")} {...props}>
       <Box flex={1}>
         {isFetching ? (
           <Box
@@ -82,7 +61,7 @@ const PendingConversation = ({
           />
         )}
       </Box>
-    </Box>
+    </LeftSideContainer>
   );
 };
 
