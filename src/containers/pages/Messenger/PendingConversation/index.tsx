@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import ConversationList from "../MenuChat/ConversationList";
 import { ConversationType } from "@typing/common";
 import { FriendInformationType } from "@pages";
-import LeftSideContainer from "@containers/LeftSideContainer";
+import LeftSideContainer from "@containers/layouts/LeftSideContainer";
 
 interface PendingConversationProps {
   isFetching: boolean;

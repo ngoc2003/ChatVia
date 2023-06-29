@@ -1,4 +1,11 @@
-import { Box, BoxProps, Modal, ModalProps, Typography } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Modal,
+  ModalProps,
+  Typography,
+} from "@mui/material";
 import { omit } from "lodash";
 import React from "react";
 
@@ -6,7 +13,7 @@ import * as Styles from "./Modal.styled";
 import { theme } from "@theme";
 import { useSelector } from "react-redux";
 import { AppState } from "@stores";
-
+import CloseIcon from "@mui/icons-material/Close";
 export interface CAModalButtonProps {
   color?: string;
   label: string;
@@ -50,6 +57,14 @@ const CAModal = ({
         }}
         {...omit(containerProps, ["sx"])}
       >
+        <Box textAlign="right">
+          <IconButton
+            size="small"
+            onClick={() => props.onClose?.({}, "escapeKeyDown")}
+          >
+            <CloseIcon color="primary" fontSize="small" />
+          </IconButton>
+        </Box>
         <Box>
           {title && (
             <Box width="100%" pb={3}>

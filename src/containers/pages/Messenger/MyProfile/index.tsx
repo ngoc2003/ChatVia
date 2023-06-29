@@ -10,7 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import UpdateProfile from "@containers/Modals/UpdateProfile";
 import { UserType } from "@typing/common";
 import { CAAccordion } from "@components/Accordion";
-import LeftSideContainer from "@containers/LeftSideContainer";
+import LeftSideContainer from "@containers/layouts/LeftSideContainer";
 
 const MyProfile = (props: BoxProps) => {
   const { t } = useTranslation();

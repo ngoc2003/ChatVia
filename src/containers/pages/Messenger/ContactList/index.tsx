@@ -9,7 +9,7 @@ import { useLazyGetUserContactQuery } from "@stores/services/user";
 import { handleFormatContactListUser } from "@utils/common";
 import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import { theme } from "@theme";
-import LeftSideContainer from "@containers/LeftSideContainer";
+import LeftSideContainer from "@containers/layouts/LeftSideContainer";
 
 const ContactList = (props: BoxProps) => {
   const { t } = useTranslation();

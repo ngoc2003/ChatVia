@@ -13,7 +13,7 @@ import useCallbackDebounce from "@hooks/useCallbackDebounce";
 import ConversationList from "./ConversationList";
 import { useTranslation } from "next-i18next";
 import { handleSortConversations } from "@utils/conversations";
-import LeftSideContainer from "@containers/LeftSideContainer";
+import LeftSideContainer from "@containers/layouts/LeftSideContainer";
 
 interface MenuChatProps extends BoxProps {
   tabActive: string;

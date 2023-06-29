@@ -64,14 +64,15 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 ## Implementation Highlights
 
-- Utilized React, TypeScript, and Next.js for building the web client, providing a robust and efficient user interface.
-- Leveraged Redux, Redux Toolkit, and Redux Toolkit Query for effective client-side data management and seamless data fetching from the server.
-- Implemented the Node.js framework with Express.js to develop a scalable and performant web server.
-- Utilized MongoDB as the persisted database to store and manage user data securely.
-- Integrated Socket.IO to establish real-time communication between the server and clients, enabling instant updates and notifications.
-- Implemented ESLint for code linting, ensuring consistent code style and identifying potential errors or issues early in the development process.
-- Utilized commitlint and Husky for enforcing commit message conventions and pre-commit hooks, promoting code quality and maintainability.
-- Documented the codebase and provided clear and concise comments to enhance code readability and facilitate future maintenance and updates.
+- `Front-end Technologies`: React, TypeScript, and Next.js were used to develop the web client, ensuring a robust and efficient user interface.
+- `State Management`: Redux, Redux Toolkit, and Redux Toolkit Query were employed for effective client-side data management and seamless data fetching from the server.
+- `Back-end Framework`: The Node.js framework with Express.js was chosen to build a scalable and high-performance web server.
+- `Database`: MongoDB was used as the persisted database, providing a secure and reliable storage solution for managing user data.
+- `Real-time` Communication: Socket.IO was integrated to establish real-time communication between the server and clients, enabling instant updates and notifications.
+- `Code Quality`: ESLint was implemented for code linting, ensuring consistent code style and identifying potential errors or issues early in the development process.
+- `Commit Conventions`: Commitlint and Husky were utilized to enforce commit message conventions and pre-commit hooks, promoting code quality and maintainability.
+- `Code Analysis`: SonarCloud was integrated for static code analysis and code quality checks, allowing continuous monitoring and improvement of code quality. It helps identify code smells, bugs, vulnerabilities, and maintain a high level of code quality.
+- `Documentation`: The codebase was documented with clear and concise comments, enhancing code readability and facilitating future maintenance and updates.
 
 ---
 
@@ -89,6 +90,8 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 - Users are able to change the primary emoji in a conversation.
 - Users are able to edit and delete messages that they have sent.
 - Users are able to view all the images they have shared in a conversation.
+- Users can block conversations. When a conversation is blocked, users cannot send any messages until they unblock it.
+- Users are able to pin or unpin a message.
 
 ### Available conversation section
 
@@ -119,12 +122,10 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 ### Current Plans for Expansion
 
-- Block conversation
-- Pin and UnPin a conversation/ messages
+- Containerize services and database with Docker
 
 ### Future Plans for Expansion
 
-- Containerize services and database with Docker
 - Video call online 1-1
 
 ---
