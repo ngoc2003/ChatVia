@@ -29,6 +29,7 @@
   "lightMode": "Light mode",
   "darkMode": "Dark mode",
   "blockConversation": " Block conversation",
+  "pinnedMessage": "Pinned message",
   "blockUser": {
     "blocking": "You've block this user",
     "blocked": "You've been blocked by this user",
@@ -40,7 +41,9 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "block": "Block",
-    "unBlock": "Unblock"
+    "unBlock": "Unblock",
+    "pin": "Pin",
+    "unPin": "Unpin"
   },
   "placeholder": {
     "typeEmailHere": "Type email here",

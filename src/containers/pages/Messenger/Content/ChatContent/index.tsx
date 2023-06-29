@@ -81,7 +81,6 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
             overflow="hidden"
             sx={{
               wordWrap: "break-word",
-              whiteSpace: "normal",
               bgcolor: me
                 ? theme.palette.primary.main
                 : darkMode

@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 interface CASelectProps {
   value: string;
   children: ReactNode;
-  handleChange: (event: SelectChangeEvent) => void;
+  handleChange: (event: SelectChangeEvent<any>) => void;
   containerProps?: FormControlProps;
   selectProps?: SelectProps;
 }
@@ -24,7 +24,7 @@ const CASelect = ({
   handleChange,
   children,
   containerProps,
-  ...selectProps
+  selectProps,
 }: CASelectProps) => {
   const { darkMode } = useSelector((state: AppState) => state.darkMode);
   return (
@@ -37,7 +37,7 @@ const CASelect = ({
           p: 1.5,
         },
         ".MuiSelect-icon": {
-          color: theme.palette.primary.main,
+          color: `${theme.palette.primary.main} !important`,
         },
       }}
       {...containerProps}

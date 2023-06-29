@@ -11,9 +11,9 @@ const MessageApi = baseRtkApi.injectEndpoints({
       MessageType[],
       GetMessageListByConversationIdRequest
     >({
-      query: ({ conversationId, userId }) => ({
+      query: ({ conversationId, ...params }) => ({
         url: `/messages/${conversationId}`,
-        params: { userId },
+        params,
       }),
       providesTags: ["message"],
     }),
@@ -33,13 +33,34 @@ const MessageApi = baseRtkApi.injectEndpoints({
       }),
       invalidatesTags: (result) => [{ type: "message", id: result?._id }],
     }),
+    pinMessage: builder.mutation({
+      query: ({ messageId }) => ({
+        method: "POST",
+        url: `/messages/pin/${messageId}`,
+      }),
+      invalidatesTags: (_, __, par) => [
+        { type: "message", id: par?.messageId },
+      ],
+    }),
+    unPinMessage: builder.mutation({
+      query: ({ messageId }) => ({
+        method: "POST",
+        url: `/messages/unpin/${messageId}`,
+      }),
+      invalidatesTags: (_, __, par) => [
+        { type: "message", id: par?.messageId },
+      ],
+    }),
   }),
 });
 
 export default MessageApi;
 
 export const {
+  usePinMessageMutation,
+  useUnPinMessageMutation,
   useCreateMessageMutation,
   useLazyGetMessageListByConversationIdQuery,
+  useGetMessageListByConversationIdQuery,
   useDeleteMessageMutation,
 } = MessageApi;

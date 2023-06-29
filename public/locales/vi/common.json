@@ -28,13 +28,16 @@
   "theme": "Chủ đề",
   "lightMode": "Sáng",
   "darkMode": "Tối",
+  "pinnedMessage": "Tin nhắn được ghim",
   "button": {
     "create": "Tạo mới",
     "update": "Cập nhật",
     "cancel": "Quay lại",
     "delete": "Xoá",
     "block": "Chặn",
-    "unBlock": "Bỏ chặn"
+    "unBlock": "Bỏ chặn",
+    "pin": "Ghim",
+    "unPin": "Bỏ ghim"
   },
   "blockConversation": "Chặn cuộc trò chuyện",
   "blockUser": {

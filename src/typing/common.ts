@@ -37,6 +37,7 @@ export interface MessageType extends BaseType {
   sender: string;
   text: string;
   deletedBy?: DeletedByType[];
+  isPin: boolean;
 }
 
 export interface UserType extends BaseType {
