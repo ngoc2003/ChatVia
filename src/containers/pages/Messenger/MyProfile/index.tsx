@@ -1,4 +1,4 @@
-import { Box, BoxProps, IconButton, Typography } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import { theme } from "@theme";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import UpdateProfile from "@containers/Modals/UpdateProfile";
 import { UserType } from "@typing/common";
 import { CAAccordion } from "@components/Accordion";
+import LeftSideContainer from "@containers/LeftSideContainer";
 
 const MyProfile = (props: BoxProps) => {
   const { t } = useTranslation();
@@ -69,67 +70,40 @@ const MyProfile = (props: BoxProps) => {
         open={isOpenUpdateProfile}
         onClose={handleCloseUpdateProfile}
       />
-      <Box
-        p={3}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        bgcolor={
-          darkMode ? theme.palette.darkTheme.main : theme.palette.primary.light
-        }
-        sx={{
-          overflowY: "scroll",
+      <LeftSideContainer
+        title={t("title.myProfile")}
+        icon={<EditIcon color="primary" />}
+        onClickIcon={() => {
+          setIsOpenUpdateProfile(true);
         }}
         {...props}
       >
-        <Box
-          mb={3}
-          width="100%"
-          display="flex"
-          alignSelf="start"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Box textAlign="center">
+          <Image
+            style={{ borderRadius: 9999 }}
+            height={96}
+            width={96}
+            src={data?.avatar || "/images/avatar-default.svg"}
+            alt="avatar"
+          />
           <Typography
-            color={darkMode ? theme.palette.common.white : undefined}
-            variant="h5"
+            mt={3}
+            mb={1}
             fontWeight={600}
+            color={darkMode ? theme.palette.common.white : undefined}
           >
-            {t("title.myProfile")}
+            {data.username}
           </Typography>
-          <IconButton
-            color="primary"
-            onClick={() => {
-              setIsOpenUpdateProfile(true);
-            }}
+          <Typography
+            fontStyle="italic"
+            variant="body2"
+            color={
+              darkMode ? theme.palette.text.secondary : theme.palette.grey[600]
+            }
           >
-            <EditIcon />
-          </IconButton>
+            {data?.description || t("noDescriptionYet")}
+          </Typography>
         </Box>
-        <Image
-          style={{ borderRadius: 9999 }}
-          height={96}
-          width={96}
-          src={data?.avatar || "/images/avatar-default.svg"}
-          alt="avatar"
-        />
-        <Typography
-          mt={3}
-          mb={1}
-          fontWeight={600}
-          color={darkMode ? theme.palette.common.white : undefined}
-        >
-          {data.username}
-        </Typography>
-        <Typography
-          fontStyle="italic"
-          variant="body2"
-          color={
-            darkMode ? theme.palette.text.secondary : theme.palette.grey[600]
-          }
-        >
-          {data?.description || t("noDescriptionYet")}
-        </Typography>
         <Box
           my={3}
           sx={{
@@ -150,7 +124,7 @@ const MyProfile = (props: BoxProps) => {
         >
           <CAAccordion list={listData} />
         </Box>
-      </Box>
+      </LeftSideContainer>
     </>
   );
 };

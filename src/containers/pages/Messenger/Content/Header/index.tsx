@@ -178,7 +178,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
                   {t("mediaAndLinks")}
                 </MenuItem>
                 {!isBlock && (
-                  <>
+                  <Box>
                     <MenuItem
                       onClick={() => {
                         setAnchorEl(null);
@@ -195,7 +195,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
                     >
                       {t("blockConversation")}
                     </MenuItem>
-                  </>
+                  </Box>
                 )}
 
                 <MenuItem
@@ -222,7 +222,7 @@ const ContentHeader = React.forwardRef<HTMLElement, ContentHeaderProps>(
               setOpenModal(ModalType.PinnedMessage);
             }}
           >
-            <Typography variant="body2" fontStyle="italic">
+            <Typography variant="body2" color={theme.palette.primary.main}>
               {t("pinnedMessage")}
             </Typography>
             <ArrowForwardIosIcon color="primary" fontSize="small" />

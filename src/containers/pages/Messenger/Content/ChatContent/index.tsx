@@ -54,8 +54,13 @@ const ChatContent = React.forwardRef<HTMLElement, ChatContentProps>(
         display="flex"
         alignItems="end"
         maxWidth="70%"
-        mt={0.5}
+        mt={1}
         {...(me ? { alignSelf: "end" } : { alignSelf: "start" })}
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            maxWidth: "100%",
+          },
+        }}
       >
         {!me && (
           <Avatar
