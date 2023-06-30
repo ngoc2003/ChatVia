@@ -85,19 +85,19 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 ### Main chat page
 
-- Users are able to receive real-time notifications for new messages.
-- Users are able to send text messages, emojis, and images in a conversation.
-- Users are able to change the primary emoji in a conversation.
-- Users are able to edit and delete messages that they have sent.
-- Users are able to view all the images they have shared in a conversation.
-- Users can block conversations. When a conversation is blocked, users cannot send any messages until they unblock it.
-- Users are able to pin or unpin a message.
+- Users are able to **receive real-time** notifications for new messages.
+- Users are able to **send text** messages, emojis, and images in a conversation.
+- Users are able to **change the primary emoji** in a conversation.
+- Users are able to **edit and delete messages** that they have sent.
+- Users are able to **view all the images** they have shared in a conversation.
+- Users can **block conversations**. When a conversation is blocked, users cannot send any messages until they unblock it.
+- Users are able to **pin** or **unpin** a message.
 
 ### Available conversation section
 
-- Users can see who is online or offline.
-- Users are able to start a new conversation with a contact by providing their email.
-- Users are able to delete a conversation. After a conversation is deleted, the latest message will be the message sent after the deletion.
+- Users can see who is **online** or **offline**.
+- Users are able to **start a new conversation** with a contact by providing their email.
+- Users are able to **delete a conversation**. After a conversation is deleted, the latest message will be the message sent after the deletion.
 
 ### Pending conversation section
 
@@ -106,17 +106,17 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 ### Profile section
 
-- Users are able to customize their profile.
+- Users are able to **customize their profile**.
 
 ### Contact section
 
-- Users are able to search in their contact list.
-- Users are able to view their contact list.
+- Users are able to **search in their contact** list.
+- Users are able to **view their contact list**.
 
 ### Other
 
-- Users can switch between multiple languages.
-- Users can switch between a dark or light theme.
+- Users can **switch between multiple languages**.
+- Users can **switch between a dark or light theme**.
 
 ---
 
@@ -146,14 +146,53 @@ Demo: [Link](https://chat-via-web.vercel.app/)
 
 #### Web Client
 
+- clone project
+
+```terminal
+git clone https://github.com/ngoc2003/ChatVia.git
+
+cd ChatVia/
+
+git checkout -b Full-code
+
+git pull origin Full-code
+```
+
+- install dependencies & start server
+
+```terminal
+cd server/
+
+yarn install
+
+yarn start
+```
+
+Server will be running on `http://localhost:4000`
+
+- install dependencies & start socket server
+
+```terminal
+cd socket/
+
+yarn install
+
+yarn server
+```
+
+Server will be running on `http://localhost:5000`
+
 - install dependencies & start application
 
 ```terminal
+cd client/
+
 yarn install
+
 yarn dev
 ```
 
-Application will be serving on http://localhost:3000
+Application will be serving on `http://localhost:3000`
 
 ---
 
@@ -166,5 +205,3 @@ Application will be serving on http://localhost:3000
 ## Author
 
 - [Bui Ngoc](https://www.facebook.com/Bui.Ngoc.1302/)
-
----
