@@ -5,6 +5,7 @@ import TabPanel from "./TabPanel";
 import QuiltedImageList from "./MediaCategory";
 import useDimensions from "react-cool-dimensions";
 import { useTranslation } from "react-i18next";
+import LinkCategory from "./LinkCategory";
 
 interface MediaAndLinksModalProps extends Omit<ModalProps, "children"> {
   conversationId: string;
@@ -45,7 +46,7 @@ const MediaAndLinksModal = ({
             <QuiltedImageList conversationId={conversationId} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Links
+            <LinkCategory />
           </TabPanel>
         </Box>
       </Box>
